@@ -1,0 +1,43 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.welcome.WelcomeFragment"
+        android:label="Welcome"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_dashboardFragment"
+            app:destination="@id/navigation_dashboard" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.RegisterFragment"
+        android:label="Registrieren"
+        tools:layout="@layout/fragment_register" />
+    <action
+        android:id="@+id/action_registerFragment_to_loginFragment"
+        app:destination="@id/navigation_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardFragment"
+        android:label="dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+</navigation>

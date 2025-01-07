@@ -40,8 +40,10 @@ android {
 }
 
 dependencies {
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.9.0-1.0.13")
     implementation("androidx.room:room-runtime:2.5.0")
     ksp("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
+import kotlinx.coroutines.launch
+import androidx.activity.OnBackPressedCallback
 
-class DashboardFragment : Fragment() { //Bedeutet, das diese Klasse von Fragment erbt
+class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,17 +21,38 @@ class DashboardFragment : Fragment() { //Bedeutet, das diese Klasse von Fragment
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
-
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Benutzernamen aus SharedPreferences laden
+        val sharedPref = requireActivity().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
+        val currentUsername = sharedPref.getString("current_username", null)
+
+        if (currentUsername != null) {
+            lifecycleScope.launch {
+                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
+                val user = userDao.getUserByBenutzername(currentUsername)
+
+                if (user != null) {
+                    // Begrüßungstext mit Vorname aktualisieren
+                    binding.welcomeText.text = "Hallo, ${user.vorname}"
+                }
+            }
+        } else {
+            // Fallback, falls kein Benutzer eingeloggt ist
+            binding.welcomeText.text = "Hallo, Benutzer"
         }
-        return root
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // Nichts passiert, wenn der Benutzer die Zurück-Taste drückt
+                }
+            })
     }
 
     override fun onDestroyView() {
