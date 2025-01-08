@@ -1,9 +1,11 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -82,9 +84,23 @@ class SettingsFragment : Fragment() {
             // Fallback, falls kein Benutzer eingeloggt ist
             userNameTextView.text = "Hallo, Benutzer"
         }
-
+        // Abmelden-Bereich finden
+        val logoutSection = view.findViewById<LinearLayout>(R.id.logout_section)
+        logoutSection.setOnClickListener {
+            logoutUser()
+        }
     }
 
+    private fun logoutUser() {
+        // Lösche die gespeicherten Benutzerdaten aus SharedPreferences
+        val sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            clear() // Alle Daten löschen
+            apply()
+        }
 
+        // Navigiere zur Welcome-Seite
+        findNavController().navigate(R.id.action_settingsFragment_to_welcomeFragment)
+    }
 
 }
