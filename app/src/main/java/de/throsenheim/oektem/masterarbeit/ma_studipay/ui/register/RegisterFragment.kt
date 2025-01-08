@@ -19,7 +19,7 @@ class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-
+    private val userDao = AppDatabase.getDatabase(requireContext()).userDao()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,19 +35,28 @@ class RegisterFragment : Fragment() {
         // Registrieren-Button Logik
         binding.registerButton.setOnClickListener {
             val name = binding.nameInput.text.toString()
-            val vorname = binding.vornameInput.text.toString()
-            val benutzername = binding.benutzernameInput.text.toString()
-            val passwort = binding.passwortInput.text.toString()
+            val firstName = binding.vornameInput.text.toString()
+            val username = binding.benutzernameInput.text.toString()
+            val password = binding.passwortInput.text.toString()
+            val matrikelnumber = binding.matrikelnummerInput.text.toString()
 
-            if (name.isNotEmpty() && vorname.isNotEmpty() && benutzername.isNotEmpty() && passwort.isNotEmpty()) {
+
+            if (name.isNotEmpty() && firstName.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
                 lifecycleScope.launch {
-                    val userDao = AppDatabase.getDatabase(requireContext()).userDao()
+                    val kontonummer = generateUniqueKontonummer()
+
                     userDao.insertUser(
                         User(
-                            name = name,
-                            vorname = vorname,
-                            benutzername = benutzername,
-                            passwort = passwort
+                            lastName = name,
+                            firstName = firstName,
+                            username = username,
+                            password = password,
+                            accountNumber = kontonummer,
+                            matrikelnumber = matrikelnumber,
+                            balance = 0.0
+
+
+
                         )
                     )
                     Toast.makeText(requireContext(), "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show()
@@ -75,6 +84,14 @@ class RegisterFragment : Fragment() {
             findNavController().navigate(R.id.loginFragment, null, navOptions)
         }
     }
+    suspend fun generateUniqueKontonummer(): String {
+        var kontonummer: String
+        do {
+            kontonummer = (100000..999999).random().toString()
+        } while (userDao.countByKontonummer(kontonummer) > 0)
+        return kontonummer
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

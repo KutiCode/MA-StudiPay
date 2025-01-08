@@ -13,16 +13,30 @@ interface UserDao {
     suspend fun insertUser(user: User)
 
     // Benutzer anhand des Benutzernamens abrufen
-    @Query("SELECT * FROM users WHERE benutzername = :benutzername")
-    suspend fun getUserByBenutzername(benutzername: String): User?
+    @Query("SELECT * FROM users WHERE username = :username")
+    suspend fun getUserByUsername(username: String): User?
 
     // Alle Benutzer abrufen (z. B. für Debugging)
     @Query("SELECT * FROM users")
     suspend fun getAllUsers(): List<User>
 
-    @Query("SELECT vorname FROM users WHERE id = :userId")
-    suspend fun getUserVorname(userId: Int): String?
+    @Query("SELECT firstName FROM users WHERE id = :userId")
+    suspend fun getUserFirstName(userId: Int): String?
 
-    @Query("SELECT name FROM users WHERE id = :userId")
-    suspend fun getUserNachname(userId: Int): String?
+    @Query("SELECT lastName FROM users WHERE id = :userId")
+    suspend fun getUserLastName(userId: Int): String?
+
+    @Query("SELECT balance FROM users WHERE id = :userId")
+    suspend fun getUserBalance(userId: Int): Double?
+
+    @Query("SELECT matrikelnumber FROM users WHERE id = :userId")
+    suspend fun getUserMatrikelnumber(userId: Int): String?
+
+
+    @Query("SELECT accountNumber FROM users WHERE id = :userId")
+    suspend fun getUserAccountNumber(userId: Int): String?
+
+    @Query("SELECT COUNT(*) FROM users WHERE accountNumber = :accountNumber")
+    suspend fun countByKontonummer(accountNumber: String): Int
+
 }

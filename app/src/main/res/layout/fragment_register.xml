@@ -46,7 +46,7 @@
         android:id="@+id/vorname_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Gebe deinen Vorname ein"
+        android:hint="Gebe deinen Vornamen ein"
         app:layout_constraintTop_toBottomOf="@id/name_input_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,13 +60,33 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Matrikelnummer Eingabe -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/matrikelnummer_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Gebe deine Matrikelnummer ein"
+        app:layout_constraintTop_toBottomOf="@id/vorname_input_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/matrikelnummer_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <!-- Benutzername Eingabe -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/benutzername_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Wähle einen Benutzernamen"
-        app:layout_constraintTop_toBottomOf="@id/vorname_input_layout"
+        app:layout_constraintTop_toBottomOf="@id/matrikelnummer_input_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp"
@@ -101,27 +121,30 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Registrieren Button -->
+
+    <!-- Zurück zum Login Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/register_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/green"
         android:text="Loslegen!"
         android:textColor="@color/white"
-        android:backgroundTint="@color/green"
         app:cornerRadius="16dp"
-        app:layout_constraintTop_toBottomOf="@id/passwort_input_layout"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwort_input_layout" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/back_to_login_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="124dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/blue"
         android:text="Zurück zum Login"

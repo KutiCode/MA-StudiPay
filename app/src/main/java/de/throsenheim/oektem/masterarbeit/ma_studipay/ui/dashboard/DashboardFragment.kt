@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
@@ -13,7 +12,6 @@ import kotlinx.coroutines.launch
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 
@@ -44,11 +42,11 @@ class DashboardFragment : Fragment() {
         if (currentUsername != null) {
             lifecycleScope.launch {
                 val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByBenutzername(currentUsername)
+                val user = userDao.getUserByUsername(currentUsername)
 
                 if (user != null) {
                     // Begrüßungstext mit Vorname aktualisieren
-                    binding.welcomeText.text = "Hallo, ${user.vorname}"
+                    binding.welcomeText.text = "Hallo, ${user.firstName}"
                 }
             }
         } else {

@@ -8,8 +8,8 @@ import kotlinx.coroutines.launch
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
-    fun addUser(name: String, vorname: String, benutzername: String, passwort: String) {
-        val user = User(name = name, vorname = vorname, benutzername = benutzername, passwort = passwort)
+    fun addUser(name: String, vorname: String, benutzername: String, passwort: String, matrikelnummer: String) {
+        val user = User(lastName = name, firstName = vorname, username = benutzername, password = passwort, matrikelnumber = matrikelnummer)
         viewModelScope.launch {
             repository.insertUser(user)
         }
@@ -17,7 +17,7 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun getUserByBenutzername(benutzername: String, onResult: (User?) -> Unit) {
         viewModelScope.launch {
-            val user = repository.getUserByBenutzername(benutzername)
+            val user = repository.getUserByUserName(benutzername)
             onResult(user)
         }
     }

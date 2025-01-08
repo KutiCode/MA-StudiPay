@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.UserDao
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 
@@ -36,6 +38,15 @@ abstract class AppDatabase : RoomDatabase() {
                 ).build()
                 INSTANCE = instance
                 instance
+            }
+        }
+
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE user ADD COLUMN matrikelnummer TEXT")
+                database.execSQL("ALTER TABLE user ADD COLUMN bankleitzahl TEXT")
+                database.execSQL("ALTER TABLE user ADD COLUMN kontonummer TEXT")
+                database.execSQL("ALTER TABLE user ADD COLUMN guthaben REAL NOT NULL DEFAULT 0.0")
             }
         }
 

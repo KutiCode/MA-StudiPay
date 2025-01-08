@@ -46,9 +46,9 @@ class LoginFragment : Fragment() {
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 // Login-Logik in einer Coroutine
                 viewLifecycleOwner.lifecycleScope.launch {
-                    val user = userRepository.getUserByBenutzername(username)
+                    val user = userRepository.getUserByUserName(username)
 
-                    if (user != null && user.passwort == password) {
+                    if (user != null && user.password == password) {
                         // Benutzer erfolgreich authentifiziert
                         saveUserSession(username)
                         Toast.makeText(requireContext(), "Login erfolgreich", Toast.LENGTH_SHORT).show()

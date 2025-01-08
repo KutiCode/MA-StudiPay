@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import kotlinx.coroutines.*
 class SettingsFragment : Fragment() {
 
@@ -73,11 +72,11 @@ class SettingsFragment : Fragment() {
         if (currentUsername != null) {
             lifecycleScope.launch {
                 val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByBenutzername(currentUsername)
+                val user = userDao.getUserByUsername(currentUsername)
 
                 if (user != null) {
                     // Begrüßungstext mit Vorname aktualisieren
-                    userNameTextView.text = "${user.vorname} ${user.name}"
+                    userNameTextView.text = "${user.firstName} ${user.lastName}"
                 }
             }
         } else {
