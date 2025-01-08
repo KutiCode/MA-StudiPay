@@ -40,4 +40,20 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.SettingsFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_settings" />
+    <action
+        android:id="@+id/action_settings_to_dashboard"
+        app:destination="@id/navigation_dashboard" />
+    <action
+        android:id="@+id/action_loginFragment_to_dashboardFragment"
+        app:destination="@id/navigation_dashboard" />
+
+    <action
+        android:id="@+id/action_settingsFragment_to_loginFragment"
+        app:destination="@id/loginFragment" />
 </navigation>

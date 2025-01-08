@@ -10,7 +10,8 @@
     <color name="orange">#FFA726</color>
     <color name="green">#4CAF50</color>
     <color name="gray">#BDBDBD</color>
-    <color name="blue">#2196F3</color>
-
+    <color name="blue">#2196F3</color>>
+    <color name="light_gray">#F5F5F5</color> <!-- Hellgrau für den Hintergrund -->
+    <color name="gray_dark">#757575</color> <!-- Dunkelgrau für die Texte -->
 
 </resources>

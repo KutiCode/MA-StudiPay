@@ -1,0 +1,90 @@
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import kotlinx.coroutines.*
+class SettingsFragment : Fragment() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.fragment_settings, container, false)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val navController = findNavController()
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_dashboard -> { // Menüpunkt für Einstellungen
+                    val navOptions = NavOptions.Builder()
+                        .setEnterAnim(R.anim.slide_in_right)
+                        .setExitAnim(R.anim.slide_out_left)
+                        .setPopEnterAnim(R.anim.slide_in_left)
+                        .setPopExitAnim(R.anim.slide_out_right)
+                        .build()
+
+                    navController.navigate(R.id.navigation_dashboard, null, navOptions)
+                    true
+                }
+
+                R.id.navigation_home -> {
+                    // Optional: Verhindere Navigation zum Dashboard, wenn du bereits dort bist
+                    if (navController.currentDestination?.id != R.id.navigation_dashboard) {
+                        val navOptions = NavOptions.Builder()
+                            .setEnterAnim(R.anim.slide_in_right)
+                            .setExitAnim(R.anim.slide_out_left)
+                            .setPopEnterAnim(R.anim.slide_in_left)
+                            .setPopExitAnim(R.anim.slide_out_right)
+                            .build()
+                        navController.navigate(R.id.navigation_dashboard, null,navOptions)
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
+        val sharedPref = requireActivity().getSharedPreferences(
+            "user_prefs",
+            android.content.Context.MODE_PRIVATE
+        )
+        val currentUsername = sharedPref.getString("current_username", null)
+        val userNameTextView = view.findViewById<TextView>(R.id.user_name)
+        if (currentUsername != null) {
+            lifecycleScope.launch {
+                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
+                val user = userDao.getUserByBenutzername(currentUsername)
+
+                if (user != null) {
+                    // Begrüßungstext mit Vorname aktualisieren
+                    userNameTextView.text = "${user.vorname} ${user.name}"
+                }
+            }
+        } else {
+            // Fallback, falls kein Benutzer eingeloggt ist
+            userNameTextView.text = "Hallo, Benutzer"
+        }
+
+    }
+
+
+
+}

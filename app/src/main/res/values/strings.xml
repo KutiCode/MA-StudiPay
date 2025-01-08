@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MA-StudiPay</string>
     <string name="title_home">Home</string>
-    <string name="title_notifications">Einstellungen</string>
+    <string name="title_settings">Einstellungen</string>
 </resources>

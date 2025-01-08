@@ -4,12 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
 import kotlinx.coroutines.launch
 import androidx.activity.OnBackPressedCallback
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 
 class DashboardFragment : Fragment() {
 
@@ -29,7 +35,10 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Benutzernamen aus SharedPreferences laden
-        val sharedPref = requireActivity().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
+        val sharedPref = requireActivity().getSharedPreferences(
+            "user_prefs",
+            android.content.Context.MODE_PRIVATE
+        )
         val currentUsername = sharedPref.getString("current_username", null)
 
         if (currentUsername != null) {
@@ -53,6 +62,36 @@ class DashboardFragment : Fragment() {
                     // Nichts passiert, wenn der Benutzer die Zurück-Taste drückt
                 }
             })
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val navController = findNavController()
+
+        // Navigation für die BottomNavigationView
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_settings -> { // Menüpunkt für Einstellungen
+                    val navOptions = NavOptions.Builder()
+                        .setEnterAnim(R.anim.slide_in_right)
+                        .setExitAnim(R.anim.slide_out_left)
+                        .setPopEnterAnim(R.anim.slide_in_left)
+                        .setPopExitAnim(R.anim.slide_out_right)
+                        .build()
+
+                    navController.navigate(R.id.navigation_settings, null, navOptions)
+                    true
+                }
+
+                R.id.navigation_dashboard -> {
+                    // Optional: Verhindere Navigation zum Dashboard, wenn du bereits dort bist
+                    if (navController.currentDestination?.id != R.id.navigation_dashboard) {
+                        navController.navigate(R.id.navigation_dashboard)
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
+
     }
 
     override fun onDestroyView() {
