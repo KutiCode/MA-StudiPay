@@ -1,60 +1,34 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails
 
-import android.app.ActivityOptions
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
-import kotlinx.coroutines.launch
-import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-class DashboardFragment : Fragment() {
+import androidx.activity.OnBackPressedCallback
 
-    private var _binding: FragmentDashboardBinding? = null
-    private val binding get() = _binding!!
+class OrangeDetailsFragment : Fragment() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.fragment_orange_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Benutzernamen aus SharedPreferences laden
-        val sharedPref = requireActivity().getSharedPreferences(
-            "user_prefs",
-            android.content.Context.MODE_PRIVATE
-        )
-        val currentUsername = sharedPref.getString("current_username", null)
-
-        if (currentUsername != null) {
-            lifecycleScope.launch {
-                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByUsername(currentUsername)
-
-                if (user != null) {
-                    // Begrüßungstext mit Vorname aktualisieren
-                    binding.welcomeText.text = "Hallo, ${user.firstName}"
-                }
-            }
-        } else {
-            // Fallback, falls kein Benutzer eingeloggt ist
-            binding.welcomeText.text = "Hallo, Benutzer"
-        }
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
@@ -64,8 +38,10 @@ class DashboardFragment : Fragment() {
             })
 
 
-        val orangeCard = view.findViewById<View>(R.id.balance_card)
-        orangeCard.setOnClickListener {
+
+
+        val detailedCard = view.findViewById<View>(R.id.balance_card_detail)
+        detailedCard.setOnClickListener {
             val navOptions = NavOptions.Builder()
                 .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
                 .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
@@ -74,17 +50,20 @@ class DashboardFragment : Fragment() {
                 .build()
 
             findNavController().navigate(
-                R.id.action_dashboardFragment_to_orangeDetailsFragment,
+                R.id.action_orangeDetailsFragment_to_dashboardFragment,
                 null,
                 navOptions
             )
         }
 
-
+        // Referenz zur BottomNavigationView
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val navController = findNavController()
 
-        // Navigation für die BottomNavigationView
+        // Verknüpfe die BottomNavigationView mit dem NavController
+        val navController = findNavController()
+        bottomNavigationView.setupWithNavController(navController)
+
+        // Optionale manuelle Navigation (falls nötig)
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_settings -> { // Menüpunkt für Einstellungen
@@ -99,22 +78,26 @@ class DashboardFragment : Fragment() {
                     true
                 }
 
-                R.id.navigation_dashboard -> {
-                    // Optional: Verhindere Navigation zum Dashboard, wenn du bereits dort bist
+                R.id.navigation_home -> {
+                    // Prüfen, ob die aktuelle Seite nicht bereits das Dashboard ist
                     if (navController.currentDestination?.id != R.id.navigation_dashboard) {
-                        navController.navigate(R.id.navigation_dashboard)
+                        val navOptions = NavOptions.Builder()
+                            .setEnterAnim(R.anim.fade_in)
+                            .setExitAnim(R.anim.fade_out)
+                            .setPopEnterAnim(R.anim.fade_in)
+                            .setPopExitAnim(R.anim.fade_out)
+                            .build()
+
+                        navController.navigate(R.id.navigation_dashboard, null, navOptions)
                     }
                     true
                 }
+
 
                 else -> false
             }
         }
 
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }
+
