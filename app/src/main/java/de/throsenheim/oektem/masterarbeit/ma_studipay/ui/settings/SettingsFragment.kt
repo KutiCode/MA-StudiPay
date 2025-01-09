@@ -88,6 +88,16 @@ class SettingsFragment : Fragment() {
         logoutSection.setOnClickListener {
             logoutUser()
         }
+        val userInfoSection = view.findViewById<LinearLayout>(R.id.user_info_section)
+        userInfoSection.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.fade_in)
+                .setExitAnim(R.anim.fade_out)
+                .setPopEnterAnim(R.anim.fade_in)
+                .setPopExitAnim(R.anim.fade_out)
+                .build()
+            navController.navigate(R.id.action_settingsFragment_to_UserInfoFragment, null, navOptions)
+        }
     }
 
     private fun logoutUser() {
