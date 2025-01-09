@@ -1,7 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails
 
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import android.transition.ChangeBounds
-import android.transition.TransitionSet
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.lifecycleScope
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import kotlinx.coroutines.launch
 
 class OrangeDetailsFragment : Fragment() {
 
@@ -46,20 +40,21 @@ class OrangeDetailsFragment : Fragment() {
 
 
 
+        val detailedCard = view.findViewById<View>(R.id.balance_card_detail)
+        detailedCard.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
+                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
+                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
+                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
+                .build()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+            findNavController().navigate(
+                R.id.action_orangeDetailsFragment_to_dashboardFragment,
+                null,
+                navOptions
+            )
+        }
 
         // Referenz zur BottomNavigationView
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)

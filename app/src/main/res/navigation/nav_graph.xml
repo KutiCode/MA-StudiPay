@@ -68,4 +68,8 @@
     <action
         android:id="@+id/action_dashboardFragment_to_orangeDetailsFragment"
         app:destination="@id/orangeDetailsFragment" />
+
+    <action
+        android:id="@+id/action_orangeDetailsFragment_to_dashboardFragment"
+        app:destination="@id/navigation_dashboard" />
 </navigation>
