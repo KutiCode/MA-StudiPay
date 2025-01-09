@@ -55,6 +55,11 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.UserInfoFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_user_info" />
+    <fragment
+        android:id="@+id/fragnentBankConnection"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.BankConnectionFragment"
+        android:label="dashboard"
+        tools:layout="@layout/fragment_bank_connection" />
     <action
         android:id="@+id/action_settings_to_dashboard"
         app:destination="@id/navigation_dashboard" />
@@ -89,5 +94,11 @@
         app:destination="@id/fragmentUserInfo" />
     <action
         android:id="@+id/action_UserInfoFragment_to_settingsFragment"
+        app:destination="@id/navigation_settings" />
+    <action
+        android:id="@+id/action_settingsFragment_to_bankConnectionFragment"
+        app:destination="@id/fragnentBankConnection" />
+    <action
+        android:id="@+id/action_BankConnectionFragment_to_settingsFragment"
         app:destination="@id/navigation_settings" />
 </navigation>

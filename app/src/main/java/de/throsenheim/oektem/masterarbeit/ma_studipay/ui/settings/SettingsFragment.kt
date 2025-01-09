@@ -98,6 +98,17 @@ class SettingsFragment : Fragment() {
                 .build()
             navController.navigate(R.id.action_settingsFragment_to_UserInfoFragment, null, navOptions)
         }
+
+        val bankDetailsSection = view.findViewById<LinearLayout>(R.id.bank_connection_section)
+        bankDetailsSection.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.fade_in)
+                .setExitAnim(R.anim.fade_out)
+                .setPopEnterAnim(R.anim.fade_in)
+                .setPopExitAnim(R.anim.fade_out)
+                .build()
+            navController.navigate(R.id.action_settingsFragment_to_bankConnectionFragment, null, navOptions)
+        }
     }
 
     private fun logoutUser() {
