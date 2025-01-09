@@ -43,8 +43,11 @@
     <fragment
         android:id="@+id/lastTransactionsFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.LastTransactionsFragment"
-        android:label="dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:label="Letzte Transaktionen"
+        tools:layout="@layout/fragment_last_transaction" />
+    <action
+        android:id="@+id/action_orangeDetailsFragment_to_lastTransactionsFragment"
+        app:destination="@id/lastTransactionsFragment" />
     <fragment
         android:id="@+id/navigation_settings"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.SettingsFragment"
@@ -87,6 +90,7 @@
         android:id="@+id/action_orangeDetailsFragment_to_dashboardFragment"
         app:destination="@id/navigation_dashboard" />
     <action
+
         android:id="@+id/action_orangeDetailsFragment_to_lastTransactionsFragment"
         app:destination="@id/lastTransactionsFragment" />
     <action
@@ -101,4 +105,8 @@
     <action
         android:id="@+id/action_BankConnectionFragment_to_settingsFragment"
         app:destination="@id/navigation_settings" />
+    <action
+        android:id="@+id/action_lastTransactionsFragment_to_orangeDetailsFragment"
+        app:destination="@id/orangeDetailsFragment" />
+
 </navigation>
