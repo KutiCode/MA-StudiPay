@@ -40,7 +40,11 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_dashboard" />
-
+    <fragment
+        android:id="@+id/lastTransactionsFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.LastTransactionsFragment"
+        android:label="dashboard"
+        tools:layout="@layout/fragment_dashboard" />
     <fragment
         android:id="@+id/navigation_settings"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.SettingsFragment"
@@ -72,4 +76,7 @@
     <action
         android:id="@+id/action_orangeDetailsFragment_to_dashboardFragment"
         app:destination="@id/navigation_dashboard" />
+    <action
+        android:id="@+id/action_orangeDetailsFragment_to_lastTransactionsFragment"
+        app:destination="@id/lastTransactionsFragment" />
 </navigation>

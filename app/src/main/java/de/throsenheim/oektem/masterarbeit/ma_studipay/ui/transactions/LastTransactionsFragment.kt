@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import androidx.activity.OnBackPressedCallback
 
-class OrangeDetailsFragment : Fragment() {
+class LastTransactionsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,44 +36,6 @@ class OrangeDetailsFragment : Fragment() {
                     // Nichts passiert, wenn der Benutzer die Zurück-Taste drückt
                 }
             })
-
-
-
-
-        val detailedCard = view.findViewById<View>(R.id.balance_card_detail)
-        detailedCard.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
-                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
-                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
-                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
-                .build()
-
-            findNavController().navigate(
-                R.id.action_orangeDetailsFragment_to_dashboardFragment,
-                null,
-                navOptions
-            )
-        }
-
-
-        val lastTransactionsButton = view.findViewById<View>(R.id.transaction_button)
-        lastTransactionsButton.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
-                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
-                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
-                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
-                .build()
-
-            findNavController().navigate(
-                R.id.action_orangeDetailsFragment_to_lastTransactionsFragment,
-                null,
-                navOptions
-            )
-        }
-
-
 
         // Referenz zur BottomNavigationView
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
