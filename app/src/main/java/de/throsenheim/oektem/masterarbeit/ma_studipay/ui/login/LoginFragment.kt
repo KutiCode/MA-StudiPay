@@ -32,7 +32,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userRepository = UserRepository(AppDatabase.getInstance(requireContext()).userDao())
+        userRepository = UserRepository(AppDatabase.getDatabase(requireContext()).userDao())
 
         val usernameEditText = view.findViewById<EditText>(R.id.username)
         val passwordEditText = view.findViewById<EditText>(R.id.password)

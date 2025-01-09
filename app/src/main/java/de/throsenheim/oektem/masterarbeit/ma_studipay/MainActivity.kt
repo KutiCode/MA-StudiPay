@@ -2,6 +2,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             val navController = findNavController(R.id.nav_host_fragment)
             if (isLoggedIn) {
                 // Benutzer ist angemeldet
+                Log.d("MainActivity", "Benutzer ist angemeldet" + sharedPref.getString("username","matrikelnumber"))
                 navController.navigate(R.id.navigation_dashboard)
             } else {
                 // Benutzer ist nicht angemeldet

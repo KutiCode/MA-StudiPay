@@ -19,7 +19,10 @@ class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-    private val userDao = AppDatabase.getDatabase(requireContext()).userDao()
+    private val userDao by lazy {
+        AppDatabase.getDatabase(requireContext()).userDao()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +43,6 @@ class RegisterFragment : Fragment() {
             val password = binding.passwortInput.text.toString()
             val matrikelnumber = binding.matrikelnummerInput.text.toString()
 
-
             if (name.isNotEmpty() && firstName.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
                 lifecycleScope.launch {
                     val kontonummer = generateUniqueKontonummer()
@@ -54,9 +56,6 @@ class RegisterFragment : Fragment() {
                             accountNumber = kontonummer,
                             matrikelnumber = matrikelnumber,
                             balance = 0.0
-
-
-
                         )
                     )
                     Toast.makeText(requireContext(), "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show()
@@ -65,7 +64,7 @@ class RegisterFragment : Fragment() {
                     findNavController().navigate(
                         R.id.action_registerFragment_to_loginFragment,
                         null,
-                        androidx.navigation.NavOptions.Builder()
+                        NavOptions.Builder()
                             .setPopUpTo(R.id.registerFragment, true) // Entfernt RegisterFragment aus dem Back-Stack
                             .build()
                     )
@@ -74,6 +73,8 @@ class RegisterFragment : Fragment() {
                 Toast.makeText(requireContext(), "Bitte alle Felder ausfüllen", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Zurück-Button Logik
         binding.backToLoginButton.setOnClickListener {
             val navOptions = NavOptions.Builder()
                 .setEnterAnim(R.anim.slide_in_right)
@@ -84,14 +85,14 @@ class RegisterFragment : Fragment() {
             findNavController().navigate(R.id.loginFragment, null, navOptions)
         }
     }
-    suspend fun generateUniqueKontonummer(): String {
+
+    private suspend fun generateUniqueKontonummer(): String {
         var kontonummer: String
         do {
             kontonummer = (100000..999999).random().toString()
         } while (userDao.countByKontonummer(kontonummer) > 0)
         return kontonummer
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
