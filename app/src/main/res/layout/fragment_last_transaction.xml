@@ -9,7 +9,7 @@
 
     <!-- Begrüßungstext -->
     <TextView
-        android:id="@+id/card_welcome_text"
+        android:id="@+id/transaction_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -24,7 +24,7 @@
 
     <!-- Karte für Guthaben -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/balance_card_detail"
+        android:id="@+id/transaction_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
@@ -32,7 +32,7 @@
         app:cardElevation="8dp"
         android:transitionName="expandCard"
         app:cardBackgroundColor="@color/blue"
-        app:layout_constraintTop_toBottomOf="@id/card_welcome_text"
+        app:layout_constraintTop_toBottomOf="@id/transaction_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"/>

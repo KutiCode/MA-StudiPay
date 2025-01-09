@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,24 +56,30 @@ class OrangeDetailsFragment : Fragment() {
                 navOptions
             )
         }
-
-
-        val lastTransactionsButton = view.findViewById<View>(R.id.transaction_button)
-        lastTransactionsButton.setOnClickListener {
+        val transactionButton = view.findViewById<View>(R.id.transaction_button)
+        transactionButton.setOnClickListener {
             val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
-                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
-                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
-                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
                 .build()
+            Log.d("OrangeDetailsFragment", "Transaction button clicked")
 
-            findNavController().navigate(
-                R.id.action_orangeDetailsFragment_to_lastTransactionsFragment,
-                null,
-                navOptions
-            )
+            // Navigation sicherstellen
+            view.post {
+                try {
+                    findNavController().navigate(
+                        R.id.action_orangeDetailsFragment_to_lastTransactionsFragment,
+                        null,
+                        navOptions
+                    )
+                    Log.d("Navigation", "Navigated to LastTransactionsFragment.")
+                } catch (e: Exception) {
+                    Log.e("NavigationError", "Failed to navigate to LastTransactionsFragment.", e)
+                }
+            }
         }
-
 
 
         // Referenz zur BottomNavigationView
