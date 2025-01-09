@@ -179,8 +179,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/transaction_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="280dp"
+        android:layout_height="42dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
@@ -188,8 +188,8 @@
         android:text="Letzte Transaktionen"
         android:textColor="@color/white"
         app:cornerRadius="16dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/get_from_bank_button" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
