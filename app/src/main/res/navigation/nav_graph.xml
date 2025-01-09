@@ -87,4 +87,7 @@
     <action
         android:id="@+id/action_settingsFragment_to_UserInfoFragment"
         app:destination="@id/fragmentUserInfo" />
+    <action
+        android:id="@+id/action_UserInfoFragment_to_settingsFragment"
+        app:destination="@id/navigation_settings" />
 </navigation>
