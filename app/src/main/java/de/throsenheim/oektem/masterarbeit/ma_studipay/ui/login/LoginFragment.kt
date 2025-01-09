@@ -32,7 +32,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userRepository = UserRepository(AppDatabase.getInstance(requireContext()).userDao())
+        userRepository = UserRepository(AppDatabase.getDatabase(requireContext()).userDao())
 
         val usernameEditText = view.findViewById<EditText>(R.id.username)
         val passwordEditText = view.findViewById<EditText>(R.id.password)
@@ -46,9 +46,9 @@ class LoginFragment : Fragment() {
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 // Login-Logik in einer Coroutine
                 viewLifecycleOwner.lifecycleScope.launch {
-                    val user = userRepository.getUserByBenutzername(username)
+                    val user = userRepository.getUserByUserName(username)
 
-                    if (user != null && user.passwort == password) {
+                    if (user != null && user.password == password) {
                         // Benutzer erfolgreich authentifiziert
                         saveUserSession(username)
                         Toast.makeText(requireContext(), "Login erfolgreich", Toast.LENGTH_SHORT).show()
