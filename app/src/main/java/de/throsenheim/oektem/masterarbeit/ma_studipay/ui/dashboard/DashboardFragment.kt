@@ -1,5 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +13,10 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashbo
 import kotlinx.coroutines.launch
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavOptions
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
@@ -60,6 +62,22 @@ class DashboardFragment : Fragment() {
                     // Nichts passiert, wenn der Benutzer die Zurück-Taste drückt
                 }
             })
+
+
+        val orangeCard = view.findViewById<View>(R.id.balance_card)
+        orangeCard.setOnClickListener {
+            val navController = findNavController()
+            val extras = FragmentNavigatorExtras(
+                orangeCard to "expandCard" // Übergabe der Transition
+            )
+            navController.navigate(
+                R.id.action_dashboardFragment_to_orangeDetailsFragment,
+                null,
+                null,
+                extras
+            )
+        }
+
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
 
