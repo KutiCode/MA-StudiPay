@@ -13,14 +13,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import android.transition.ChangeBounds
 import android.transition.TransitionSet
+import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.lifecycleScope
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import kotlinx.coroutines.launch
+
 class OrangeDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = TransitionSet().apply {
-            addTransition(ChangeBounds())
-            duration = 2000 // Dauer der Animation
-        }
+
     }
 
     override fun onCreateView(
@@ -32,6 +34,32 @@ class OrangeDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    // Nichts passiert, wenn der Benutzer die Zurück-Taste drückt
+                }
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Referenz zur BottomNavigationView
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)

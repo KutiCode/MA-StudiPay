@@ -43,7 +43,7 @@
 
             <!-- Überschrift auf der Karte -->
             <TextView
-                android:id="@+id/card_title"
+                android:id="@+id/card_dashboard_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dein Guthaben:"
