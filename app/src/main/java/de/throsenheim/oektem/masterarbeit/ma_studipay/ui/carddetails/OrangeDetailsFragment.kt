@@ -87,11 +87,12 @@ class OrangeDetailsFragment : Fragment() {
                     // Prüfen, ob die aktuelle Seite nicht bereits das Dashboard ist
                     if (navController.currentDestination?.id != R.id.navigation_dashboard) {
                         val navOptions = NavOptions.Builder()
-                            .setEnterAnim(R.anim.slide_in_top)      // Dashboard kommt von oben herein
-                            .setExitAnim(R.anim.slide_out_bottom)  // Aktuelle Seite verschwindet nach unten
-                            .setPopEnterAnim(R.anim.slide_in_bottom) // Rückweg: Dashboard kommt von unten herein
-                            .setPopExitAnim(R.anim.slide_out_top)  // Rückweg: Aktuelle Seite verschwindet nach oben
+                            .setEnterAnim(R.anim.fade_in)
+                            .setExitAnim(R.anim.fade_out)
+                            .setPopEnterAnim(R.anim.fade_in)
+                            .setPopExitAnim(R.anim.fade_out)
                             .build()
+
                         navController.navigate(R.id.navigation_dashboard, null, navOptions)
                     }
                     true

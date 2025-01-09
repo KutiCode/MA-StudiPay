@@ -67,10 +67,10 @@ class DashboardFragment : Fragment() {
         val orangeCard = view.findViewById<View>(R.id.balance_card)
         orangeCard.setOnClickListener {
             val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_top)       // Slide-In von oben
-                .setExitAnim(R.anim.slide_out_bottom)   // Slide-Out nach unten
-                .setPopEnterAnim(R.anim.slide_in_bottom) // Rückweg: Slide-In von unten
-                .setPopExitAnim(R.anim.slide_out_top)   // Rückweg: Slide-Out nach oben
+                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
+                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
+                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
+                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
                 .build()
 
             findNavController().navigate(
