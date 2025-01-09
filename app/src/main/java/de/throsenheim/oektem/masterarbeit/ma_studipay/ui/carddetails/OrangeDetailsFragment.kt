@@ -56,18 +56,19 @@ class OrangeDetailsFragment : Fragment() {
                 }
 
                 R.id.navigation_home -> {
-                    // Optional: Verhindere Navigation zum Dashboard, wenn du bereits dort bist
+                    // Prüfen, ob die aktuelle Seite nicht bereits das Dashboard ist
                     if (navController.currentDestination?.id != R.id.navigation_dashboard) {
                         val navOptions = NavOptions.Builder()
-                            .setEnterAnim(R.anim.slide_in_right)
-                            .setExitAnim(R.anim.slide_out_left)
-                            .setPopEnterAnim(R.anim.slide_in_left)
-                            .setPopExitAnim(R.anim.slide_out_right)
+                            .setEnterAnim(R.anim.slide_in_top)      // Dashboard kommt von oben herein
+                            .setExitAnim(R.anim.slide_out_bottom)  // Aktuelle Seite verschwindet nach unten
+                            .setPopEnterAnim(R.anim.slide_in_bottom) // Rückweg: Dashboard kommt von unten herein
+                            .setPopExitAnim(R.anim.slide_out_top)  // Rückweg: Aktuelle Seite verschwindet nach oben
                             .build()
-                        navController.navigate(R.id.navigation_dashboard, null,navOptions)
+                        navController.navigate(R.id.navigation_dashboard, null, navOptions)
                     }
                     true
                 }
+
 
                 else -> false
             }

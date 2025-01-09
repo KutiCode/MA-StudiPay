@@ -66,17 +66,20 @@ class DashboardFragment : Fragment() {
 
         val orangeCard = view.findViewById<View>(R.id.balance_card)
         orangeCard.setOnClickListener {
-            val navController = findNavController()
-            val extras = FragmentNavigatorExtras(
-                orangeCard to "expandCard" // Übergabe der Transition
-            )
-            navController.navigate(
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_top)       // Slide-In von oben
+                .setExitAnim(R.anim.slide_out_bottom)   // Slide-Out nach unten
+                .setPopEnterAnim(R.anim.slide_in_bottom) // Rückweg: Slide-In von unten
+                .setPopExitAnim(R.anim.slide_out_top)   // Rückweg: Slide-Out nach oben
+                .build()
+
+            findNavController().navigate(
                 R.id.action_dashboardFragment_to_orangeDetailsFragment,
                 null,
-                null,
-                extras
+                navOptions
             )
         }
+
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
