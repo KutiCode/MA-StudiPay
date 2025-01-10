@@ -17,7 +17,7 @@ class UserReceiveMoneyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_send_money, container, false)
+        return inflater.inflate(R.layout.fragment_recieve_money, container, false)
     }
 
 

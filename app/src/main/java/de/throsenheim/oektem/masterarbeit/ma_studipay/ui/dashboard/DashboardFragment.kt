@@ -94,6 +94,21 @@ class DashboardFragment : Fragment() {
                 navOptions
             )
         }
+        val receiveMoney = view.findViewById<View>(R.id.receive_button)
+        receiveMoney.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
+
+            findNavController().navigate(
+                R.id.action_dashboardFragment_to_userReceiveMoneyFragment,
+                null,
+                navOptions
+            )
+        }
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
