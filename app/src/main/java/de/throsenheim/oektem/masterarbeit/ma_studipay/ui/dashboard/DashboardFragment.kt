@@ -1,22 +1,19 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard
 
-import android.app.ActivityOptions
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
-import kotlinx.coroutines.launch
-import androidx.activity.OnBackPressedCallback
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
+import kotlinx.coroutines.launch
+
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
@@ -34,7 +31,7 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Benutzernamen aus SharedPreferences laden
+        // Benutzerdaten aus der Datenbank abrufen
         val sharedPref = requireActivity().getSharedPreferences(
             "user_prefs",
             android.content.Context.MODE_PRIVATE
@@ -47,28 +44,26 @@ class DashboardFragment : Fragment() {
                 val user = userDao.getUserByUsername(currentUsername)
 
                 if (user != null) {
-                    // Begrüßungstext mit Vorname aktualisieren
+                    // Begrüßung und Guthabenanzeige
                     binding.welcomeText.text = "Hallo, ${user.firstName}"
-
-                    // Guthaben und Matrikelnummer anzeigen
                     binding.cardDashboardBalance.text = "Dein Guthaben:"
                     binding.balanceText.text = "${user.balance} €"
                     binding.matrikelnummerText.text = "Matrikelnummer: ${user.matrikelnumber}"
                 }
             }
         } else {
-            // Fallback, falls kein Benutzer eingeloggt ist
             binding.welcomeText.text = "Hallo, Benutzer"
         }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Nichts passiert, wenn der Benutzer die Zurück-Taste drückt
-                }
-            })
 
+        // Senden-Button-Listener
+        binding.sendButton.setOnClickListener {
+            navigateToTransactionFragment("SEND")
+        }
 
+        // Empfangen-Button-Listener
+        binding.receiveButton.setOnClickListener {
+            navigateToTransactionFragment("RECEIVE")
+        }
         val orangeCard = view.findViewById<View>(R.id.balance_card)
         orangeCard.setOnClickListener {
             val navOptions = NavOptions.Builder()
@@ -84,44 +79,12 @@ class DashboardFragment : Fragment() {
                 navOptions
             )
         }
-        val sendingMoney = view.findViewById<View>(R.id.send_button)
-        sendingMoney.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
-
-            findNavController().navigate(
-                R.id.action_dashboardFragment_to_sendMoneyFragment,
-                null,
-                navOptions
-            )
-        }
-        val receiveMoney = view.findViewById<View>(R.id.receive_button)
-        receiveMoney.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
-
-            findNavController().navigate(
-                R.id.action_dashboardFragment_to_userReceiveMoneyFragment,
-                null,
-                navOptions
-            )
-        }
-
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
 
-        // Navigation für die BottomNavigationView
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_settings -> { // Menüpunkt für Einstellungen
+                R.id.navigation_settings -> {
                     val navOptions = NavOptions.Builder()
                         .setEnterAnim(R.anim.slide_in_right)
                         .setExitAnim(R.anim.slide_out_left)
@@ -134,7 +97,6 @@ class DashboardFragment : Fragment() {
                 }
 
                 R.id.navigation_dashboard -> {
-                    // Optional: Verhindere Navigation zum Dashboard, wenn du bereits dort bist
                     if (navController.currentDestination?.id != R.id.navigation_dashboard) {
                         navController.navigate(R.id.navigation_dashboard)
                     }
@@ -144,7 +106,21 @@ class DashboardFragment : Fragment() {
                 else -> false
             }
         }
+    }
 
+    private fun navigateToTransactionFragment(transactionType: String) {
+        val bundle = Bundle().apply {
+            putString("TRANSACTION_TYPE", transactionType)
+        }
+
+        val navOptions = NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_right)
+            .setExitAnim(R.anim.slide_out_left)
+            .setPopEnterAnim(R.anim.slide_in_left)
+            .setPopExitAnim(R.anim.slide_out_right)
+            .build()
+
+        findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
     }
 
     override fun onDestroyView() {

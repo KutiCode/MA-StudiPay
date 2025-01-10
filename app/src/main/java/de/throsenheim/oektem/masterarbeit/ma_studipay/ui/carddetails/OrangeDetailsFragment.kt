@@ -45,38 +45,20 @@ class OrangeDetailsFragment : Fragment() {
                     // Nichts passiert, wenn der Benutzer die Zurück-Taste drückt
                 }
             })
-
+        // Senden-Button-Listener
         val sendToBankButton = view.findViewById<View>(R.id.send_to_bank_button)
         sendToBankButton.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
-                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
-                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
-                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
-                .build()
-
-            findNavController().navigate(
-                R.id.action_orangeDetailsFragment_to_userSendBankMoneyFragment,
-                null,
-                navOptions
-            )
+            navigateToTransactionFragment("SEND")
         }
 
-        val receiveFromBankButton = view.findViewById<View>(R.id.get_from_bank_button)
-        receiveFromBankButton.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
-                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
-                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
-                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
-                .build()
-
-            findNavController().navigate(
-                R.id.action_orangeDetailsFragment_to_userReceiveBankMoneyFragment,
-                null,
-                navOptions
-            )
+        // Empfangen-Button-Listener
+        val getFromBankButton = view.findViewById<View>(R.id.get_from_bank_button)
+        getFromBankButton.setOnClickListener {
+            navigateToTransactionFragment("RECEIVE")
         }
+
+
+
         val binding = de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentOrangeDetailsBinding.bind(view)
         val currentUsername = sharedPref.getString("current_username", null)
         if (currentUsername != null) {
@@ -180,6 +162,20 @@ class OrangeDetailsFragment : Fragment() {
             }
         }
 
+    }
+    private fun navigateToTransactionFragment(transactionType: String) {
+        val bundle = Bundle().apply {
+            putString("TRANSACTION_TYPE", transactionType)
+        }
+
+        val navOptions = NavOptions.Builder()
+            .setEnterAnim(R.anim.slide_in_right)
+            .setExitAnim(R.anim.slide_out_left)
+            .setPopEnterAnim(R.anim.slide_in_left)
+            .setPopExitAnim(R.anim.slide_out_right)
+            .build()
+
+        findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
     }
 }
 
