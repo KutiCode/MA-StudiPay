@@ -1,22 +1,17 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import kotlinx.coroutines.*
+
 class UserSendingMoneyFragment : Fragment() {
     private lateinit var amountInput: EditText
     override fun onCreateView(
@@ -24,7 +19,7 @@ class UserSendingMoneyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_send_money, container, false)
+        return inflater.inflate(R.layout.fragment_user_transaction, container, false)
     }
 
 

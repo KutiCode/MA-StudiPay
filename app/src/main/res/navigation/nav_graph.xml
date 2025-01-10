@@ -86,25 +86,9 @@
         android:id="@+id/userSendMoneyFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.UserSendingMoneyFragment"
         android:label="User Send Money"
-        tools:layout="@layout/fragment_send_money" />
-    <fragment
-        android:id="@+id/userReceiveMoneyFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.UserReceiveMoneyFragment"
-        android:label="User Receive Money"
-        tools:layout="@layout/fragment_recieve_money" />
-    <fragment
-        android:id="@+id/sendBankMoneyFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.UserSendBankMoneyFragment"
-        android:label="Send Bank Money"
-        tools:layout="@layout/fragment_send_money" />
-    <fragment
-        android:id="@+id/recieveBankMoneyFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.UserReceiveBankMoneyFragment"
-        android:label="Receive Bank Money"
-        tools:layout="@layout/fragment_recieve_money" />
-    <action
-        android:id="@+id/action_dashboardFragment_to_userReceiveMoneyFragment"
-        app:destination="@id/userReceiveMoneyFragment" />
+        tools:layout="@layout/fragment_user_transaction" />
+
+
     <action
         android:id="@+id/action_dashboardFragment_to_sendMoneyFragment"
         app:destination="@id/userSendMoneyFragment" />
@@ -133,7 +117,4 @@
     <action
         android:id="@+id/action_orangeDetailsFragment_to_userSendBankMoneyFragment"
         app:destination="@id/userSendMoneyFragment" />
-    <action
-        android:id="@+id/action_orangeDetailsFragment_to_userReceiveBankMoneyFragment"
-        app:destination="@id/userReceiveMoneyFragment" />
 </navigation>
