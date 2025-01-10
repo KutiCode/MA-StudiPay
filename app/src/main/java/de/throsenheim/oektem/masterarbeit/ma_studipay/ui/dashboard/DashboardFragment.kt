@@ -49,6 +49,11 @@ class DashboardFragment : Fragment() {
                 if (user != null) {
                     // Begrüßungstext mit Vorname aktualisieren
                     binding.welcomeText.text = "Hallo, ${user.firstName}"
+
+                    // Guthaben und Matrikelnummer anzeigen
+                    binding.cardDashboardBalance.text = "Dein Guthaben:"
+                    binding.balanceText.text = "${user.balance} €"
+                    binding.matrikelnummerText.text = "Matrikelnummer: ${user.matrikelnumber}"
                 }
             }
         } else {

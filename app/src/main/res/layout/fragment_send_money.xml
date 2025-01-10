@@ -120,6 +120,7 @@
         <!-- Feste Betragsbuttons -->
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_5_euro"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_row="0"
@@ -131,6 +132,7 @@
             android:textColor="@color/white" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_15_euro"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -140,6 +142,7 @@
             android:textColor="@color/white" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_25_euro"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -148,6 +151,7 @@
             android:text="25€"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_50_euro"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -156,6 +160,7 @@
             android:text="50€"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_7"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -165,6 +170,7 @@
             android:textColor="@color/white" />
         <!-- Erste Zeile des Nummernfelds -->
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_8"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -173,6 +179,7 @@
             android:text="8"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_9"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -181,14 +188,16 @@
             android:text="9"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_clear"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
             android:backgroundTint="@color/orange"
             app:cornerRadius="30dp"
-            android:text="."
+            android:text="AC"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_4"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -197,6 +206,7 @@
             android:text="4"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_5"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -205,6 +215,7 @@
             android:text="5"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_6"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -213,6 +224,7 @@
             android:text="6"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_comma"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -221,6 +233,7 @@
             android:text=","
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_3"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -229,6 +242,7 @@
             android:text="3"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_2"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -237,6 +251,7 @@
             android:text="2"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_1"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
@@ -245,6 +260,7 @@
             android:text="1"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button_0"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
