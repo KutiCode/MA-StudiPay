@@ -27,5 +27,7 @@ data class User(
 
     @ColumnInfo(name = "balance")
     val balance: Double
-)
+) {
+
+}
 

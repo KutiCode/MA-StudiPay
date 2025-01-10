@@ -12,6 +12,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.lifecycleScope
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import kotlinx.coroutines.launch
 
 class OrangeDetailsFragment : Fragment() {
 
@@ -29,6 +32,11 @@ class OrangeDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = requireActivity().getSharedPreferences(
+            "user_prefs",
+            android.content.Context.MODE_PRIVATE
+        )
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -69,8 +77,23 @@ class OrangeDetailsFragment : Fragment() {
                 navOptions
             )
         }
+        val binding = de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentOrangeDetailsBinding.bind(view)
+        val currentUsername = sharedPref.getString("current_username", null)
+        if (currentUsername != null) {
+            lifecycleScope.launch {
+                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
+                val user = userDao.getUserByUsername(currentUsername)
 
-
+                if (user != null) {
+                    binding.cardBalanceValue.text = "${user.balance} €"
+                    binding.matrikelnummerValue.text = "${user.matrikelnumber}"
+                    binding.acountnumberValue.text = "${user.accountNumber}"
+                }
+            }
+        } else {
+            binding.cardBalanceValue.text = "Fehlende Werte"
+            binding.matrikelnummerValue.text = "Fehlende Werte"
+        }
 
 
 
