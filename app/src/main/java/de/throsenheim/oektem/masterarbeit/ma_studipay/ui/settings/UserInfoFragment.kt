@@ -43,6 +43,32 @@ class UserInfoFragment : Fragment() {
                 navOptions
             )
         }
+        val sharedPref = requireActivity().getSharedPreferences(
+            "user_prefs",
+            Context.MODE_PRIVATE
+        )
+
+        val currentUsername = sharedPref.getString("current_username", null)
+        val infoFullNameValue = view.findViewById<TextView>(R.id.infoFullNameValue)
+        val infoMatrikelnummerValue = view.findViewById<TextView>(R.id.infoMatrikelnummerValue)
+        val infoAccountNumberValue = view.findViewById<TextView>(R.id.infoAccountNumberValue)
+        if (currentUsername != null) {
+            lifecycleScope.launch {
+                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
+                val user = userDao.getUserByUsername(currentUsername)
+
+                if (user != null) {
+                infoFullNameValue.text = "${user.firstName} ${user.lastName}"
+                infoMatrikelnummerValue.text = "${user.matrikelnumber}"
+                infoAccountNumberValue.text = "${user.accountNumber}"
+
+                }
+            }
+        } else {
+            infoFullNameValue.text = "Fehlende Werte"
+            infoMatrikelnummerValue.text = "Fehlende Werte"
+            infoAccountNumberValue.text = "Fehlende Werte"
+        }
 
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
