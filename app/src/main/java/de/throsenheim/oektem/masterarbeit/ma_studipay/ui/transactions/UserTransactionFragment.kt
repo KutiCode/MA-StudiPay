@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import kotlinx.coroutines.launch
 
 class UserTransactionFragment : Fragment() {
 
@@ -35,6 +38,31 @@ class UserTransactionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = requireActivity().getSharedPreferences(
+            "user_prefs",
+            android.content.Context.MODE_PRIVATE
+        )
+        val currentUsername = sharedPref.getString("current_username", null)
+        val balanceAmount = view.findViewById<TextView>(R.id.user_transaction_balance_amount)
+        if (currentUsername != null) {
+            lifecycleScope.launch {
+                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
+                val user = userDao.getUserByUsername(currentUsername)
+
+                if (user != null) {
+                    balanceAmount.text = "${user.balance} €"
+
+                }
+            }
+        } else {
+            balanceAmount.text = "Fehlender Wert"
+        }
+
+
+
+
+
 
         // Titel dynamisch setzen basierend auf dem Typ
         val titleTextView = view.findViewById<TextView>(R.id.transaction_title)
