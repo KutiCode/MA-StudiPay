@@ -82,6 +82,14 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails.OrangeDetailsFragment"
         android:label="Orange Details"
         tools:layout="@layout/fragment_orange_details" />
+    <fragment
+        android:id="@+id/userSendMoneyFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.UserSendingMoneyFragment"
+        android:label="Orange Details"
+        tools:layout="@layout/fragment_send_money" />
+    <action
+        android:id="@+id/action_dashboardFragment_to_sendMoneyFragment"
+        app:destination="@id/userSendMoneyFragment" />
     <action
         android:id="@+id/action_dashboardFragment_to_orangeDetailsFragment"
         app:destination="@id/orangeDetailsFragment" />
@@ -89,10 +97,6 @@
     <action
         android:id="@+id/action_orangeDetailsFragment_to_dashboardFragment"
         app:destination="@id/navigation_dashboard" />
-    <action
-
-        android:id="@+id/action_orangeDetailsFragment_to_lastTransactionsFragment"
-        app:destination="@id/lastTransactionsFragment" />
     <action
         android:id="@+id/action_settingsFragment_to_UserInfoFragment"
         app:destination="@id/fragmentUserInfo" />
