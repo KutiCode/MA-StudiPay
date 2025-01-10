@@ -133,5 +133,7 @@
     <action
         android:id="@+id/action_orangeDetailsFragment_to_userSendBankMoneyFragment"
         app:destination="@id/userSendMoneyFragment" />
-
+    <action
+        android:id="@+id/action_orangeDetailsFragment_to_userReceiveBankMoneyFragment"
+        app:destination="@id/userReceiveMoneyFragment" />
 </navigation>

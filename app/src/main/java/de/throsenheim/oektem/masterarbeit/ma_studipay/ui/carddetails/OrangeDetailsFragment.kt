@@ -54,6 +54,21 @@ class OrangeDetailsFragment : Fragment() {
             )
         }
 
+        val receiveFromBankButton = view.findViewById<View>(R.id.get_from_bank_button)
+        receiveFromBankButton.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
+                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
+                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
+                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
+                .build()
+
+            findNavController().navigate(
+                R.id.action_orangeDetailsFragment_to_userReceiveBankMoneyFragment,
+                null,
+                navOptions
+            )
+        }
 
 
 
