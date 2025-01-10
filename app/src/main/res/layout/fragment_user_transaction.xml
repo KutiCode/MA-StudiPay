@@ -224,13 +224,13 @@
             android:text="6"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/send_button_comma"
+            android:id="@+id/send_button_delete"
             android:layout_width="66dp"
             android:layout_height="66dp"
             android:layout_margin="10dp"
             android:backgroundTint="@color/orange"
             app:cornerRadius="30dp"
-            android:text=","
+            android:text="DEL"
             android:textColor="@color/white" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/send_button_3"

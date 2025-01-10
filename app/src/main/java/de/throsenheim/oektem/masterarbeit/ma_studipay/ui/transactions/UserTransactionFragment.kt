@@ -94,13 +94,15 @@ class UserTransactionFragment : Fragment() {
             amountInput.setText("")
         }
 
-        val commaButton = view.findViewById<MaterialButton>(R.id.send_button_comma)
-        commaButton.setOnClickListener {
+        val deleteButton = view.findViewById<MaterialButton>(R.id.send_button_delete)
+        deleteButton.setOnClickListener {
             val currentText = amountInput.text.toString()
-            if (!currentText.contains(",")) {
-                amountInput.setText("$currentText,")
+            if (currentText.isNotEmpty()) {
+                // Entferne das letzte Zeichen
+                amountInput.setText(currentText.substring(0, currentText.length - 1))
             }
         }
+
 
         val fixedAmountButtons = mapOf(
             R.id.send_button_5_euro to "5",
