@@ -30,11 +30,6 @@ abstract class AppDatabase : RoomDatabase() {
                 instance
             }
         }
-
-
-        // Migration von Version 1 zu Version 2
-
-
     }
     }
 
