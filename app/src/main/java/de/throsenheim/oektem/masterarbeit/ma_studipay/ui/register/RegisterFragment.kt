@@ -12,15 +12,22 @@ import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentRegisterBinding
+import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import kotlinx.coroutines.launch
 
 class RegisterFragment : Fragment() {
 
     private var _binding: FragmentRegisterBinding? = null
+    private val apiService = RetrofitInstance.api
     private val binding get() = _binding!!
-    private val userDao by lazy {
-        AppDatabase.getDatabase(requireContext()).userDao()
+    private val userRepository by lazy {
+        UserRepository(
+            AppDatabase.getDatabase(requireContext()).userDao(),
+            AppDatabase.getDatabase(requireContext()).syncQueueDao(),
+            apiService
+        )
     }
 
     override fun onCreateView(
@@ -47,27 +54,40 @@ class RegisterFragment : Fragment() {
                 lifecycleScope.launch {
                     val kontonummer = generateUniqueKontonummer()
 
-                    userDao.insertUser(
-                        User(
-                            lastName = name,
-                            firstName = firstName,
-                            username = username,
-                            password = password,
-                            accountNumber = kontonummer,
-                            matrikelnumber = matrikelnumber,
-                            balance = 0.0
-                        )
+                    // Nutzer lokal registrieren
+                    val user = User(
+                        lastName = name,
+                        firstName = firstName,
+                        username = username,
+                        password = hashPassword(password), // Passwort hashen
+                        accountNumber = kontonummer,
+                        matrikelnumber = matrikelnumber,
+                        balance = 0.0
                     )
-                    Toast.makeText(requireContext(), "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show()
 
-                    // Zurück zur Login-Seite navigieren
-                    findNavController().navigate(
-                        R.id.action_registerFragment_to_loginFragment,
-                        null,
-                        NavOptions.Builder()
-                            .setPopUpTo(R.id.registerFragment, true) // Entfernt RegisterFragment aus dem Back-Stack
-                            .build()
-                    )
+                    try {
+                        userRepository.registerUserLocally(user)
+                        Toast.makeText(
+                            requireContext(),
+                            "Nutzer lokal registriert. Synchronisation ausstehend.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        // Zurück zur Login-Seite navigieren
+                        findNavController().navigate(
+                            R.id.action_registerFragment_to_loginFragment,
+                            null,
+                            NavOptions.Builder()
+                                .setPopUpTo(R.id.registerFragment, true)
+                                .build()
+                        )
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Fehler bei der Registrierung: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             } else {
                 Toast.makeText(requireContext(), "Bitte alle Felder ausfüllen", Toast.LENGTH_SHORT).show()
@@ -90,8 +110,14 @@ class RegisterFragment : Fragment() {
         var kontonummer: String
         do {
             kontonummer = (100000..999999).random().toString()
-        } while (userDao.countByKontonummer(kontonummer) > 0)
+        } while (userRepository.userDao.getAllUsers().any { it.accountNumber == kontonummer })
         return kontonummer
+    }
+
+    private fun hashPassword(password: String): String {
+        // Hash-Funktion für das Passwort (z. B. SHA-256 oder bcrypt)
+        return password.hashCode()
+            .toString() // Dummy-Hash (ersetze mit einer richtigen Hash-Funktion)
     }
 
     override fun onDestroyView() {

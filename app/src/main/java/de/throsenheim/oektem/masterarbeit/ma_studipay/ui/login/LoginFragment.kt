@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
@@ -32,7 +33,12 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userRepository = UserRepository(AppDatabase.getDatabase(requireContext()).userDao())
+        // Initialisiere UserRepository mit allen erforderlichen Parametern
+        userRepository = UserRepository(
+            userDao = AppDatabase.getDatabase(requireContext()).userDao(),
+            syncQueueDao = AppDatabase.getDatabase(requireContext()).syncQueueDao(),
+            apiService = RetrofitInstance.api // Übergib die API-Instanz
+        )
 
         val usernameEditText = view.findViewById<EditText>(R.id.username)
         val passwordEditText = view.findViewById<EditText>(R.id.password)
