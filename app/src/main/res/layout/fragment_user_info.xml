@@ -168,53 +168,6 @@
 
     <!-- Buttons -->
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/edit_data_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/blue"
-        android:text="Ändere deine Daten"
-        android:textColor="@color/white"
-        app:cornerRadius="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/info_card" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/edit_password_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/gray"
-        android:text="Ändere dein Passwort"
-        android:textColor="@color/white"
-        app:cornerRadius="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/info_card" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/delete_account_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="160dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/red"
-        android:text="Ich möchte mein Konto löschen"
-        android:textColor="@color/white"
-        app:cornerRadius="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/info_card" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
