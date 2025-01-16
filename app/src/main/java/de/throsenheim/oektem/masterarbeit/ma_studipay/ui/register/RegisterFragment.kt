@@ -46,22 +46,20 @@ class RegisterFragment : Fragment() {
         binding.registerButton.setOnClickListener {
             val name = binding.nameInput.text.toString()
             val firstName = binding.vornameInput.text.toString()
-            val username = binding.benutzernameInput.text.toString()
             val password = binding.passwortInput.text.toString()
             val matrikelnumber = binding.matrikelnummerInput.text.toString()
 
-            if (name.isNotEmpty() && firstName.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
+            if (name.isNotEmpty() && firstName.isNotEmpty() && matrikelnumber.isNotEmpty() && password.isNotEmpty()) {
                 lifecycleScope.launch {
                     val kontonummer = generateUniqueKontonummer()
 
                     // Nutzer lokal registrieren
                     val user = User(
+                        matrikelnumber = matrikelnumber,
                         lastName = name,
                         firstName = firstName,
-                        username = username,
-                        password = hashPassword(password), // Passwort hashen
+                        password = hashPassword(password),
                         accountNumber = kontonummer,
-                        matrikelnumber = matrikelnumber,
                         balance = 0.0
                     )
 

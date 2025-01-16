@@ -55,7 +55,7 @@ class UserInfoFragment : Fragment() {
         if (currentUsername != null) {
             lifecycleScope.launch {
                 val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByUsername(currentUsername)
+                val user = userDao.getUserByMatrikelnumber(currentUsername)
 
                 if (user != null) {
                 infoFullNameValue.text = "${user.firstName} ${user.lastName}"

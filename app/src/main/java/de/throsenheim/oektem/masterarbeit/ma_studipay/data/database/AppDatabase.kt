@@ -11,7 +11,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.UserDao
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.SyncQueueEntry
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 
-@Database(entities = [User::class, SyncQueueEntry::class], version = 3, exportSchema = false)
+@Database(entities = [User::class, SyncQueueEntry::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun syncQueueDao(): SyncQueueDao
