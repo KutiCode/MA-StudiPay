@@ -46,17 +46,17 @@ class LoginFragment : Fragment() {
         val registerButton = view.findViewById<Button>(R.id.register_button)
 
         loginButton.setOnClickListener {
-            val username = usernameEditText.text.toString()
+            val matrikelnummer = usernameEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            if (username.isNotEmpty() && password.isNotEmpty()) {
+            if (matrikelnummer.isNotEmpty() && password.isNotEmpty()) {
                 // Login-Logik in einer Coroutine
                 viewLifecycleOwner.lifecycleScope.launch {
-                    val user = userRepository.getUserByUserName(username)
+                    val user = userRepository.getUserByMatrikelnumber(matrikelnummer)
 
                     if (user != null && user.password == password) {
                         // Benutzer erfolgreich authentifiziert
-                        saveUserSession(username)
+                        saveUserSession(matrikelnummer)
                         Toast.makeText(requireContext(), "Login erfolgreich", Toast.LENGTH_SHORT).show()
 
                         // Navigiere zum Dashboard

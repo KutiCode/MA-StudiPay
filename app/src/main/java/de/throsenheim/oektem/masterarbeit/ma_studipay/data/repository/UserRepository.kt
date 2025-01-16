@@ -18,10 +18,6 @@ class UserRepository(
         userDao.insertUser(user)
     }
 
-    suspend fun getUserByUserName(username: String): User? {
-        return userDao.getUserByUsername(username)
-    }
-
     suspend fun getUserByMatrikelnumber(matrikelnumber: String): User? {
         return userDao.getUserByMatrikelnumber(matrikelnumber)
 
