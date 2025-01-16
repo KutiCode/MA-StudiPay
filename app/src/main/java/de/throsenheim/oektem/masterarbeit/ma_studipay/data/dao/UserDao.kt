@@ -13,9 +13,6 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: User)
 
-    // Benutzer anhand des Benutzernamens abrufen
-    @Query("SELECT * FROM user WHERE username = :username")
-    suspend fun getUserByUsername(username: String): User?
 
     // Benutzer anhand der Matrikelnummer abrufen (Primary Key)
     @Query("SELECT * FROM user WHERE matrikelnumber = :matrikelnumber")

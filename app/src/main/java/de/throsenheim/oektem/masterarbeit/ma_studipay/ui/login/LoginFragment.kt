@@ -47,7 +47,7 @@ class LoginFragment : Fragment() {
 
         loginButton.setOnClickListener {
             val matrikelnummer = usernameEditText.text.toString()
-            val password = passwordEditText.text.toString()
+            val password = hashPassword(passwordEditText.text.toString())
 
             if (matrikelnummer.isNotEmpty() && password.isNotEmpty()) {
                 // Login-Logik in einer Coroutine
@@ -90,5 +90,10 @@ class LoginFragment : Fragment() {
             putBoolean("is_logged_in", true)
             apply()
         }
+    }
+    private fun hashPassword(password: String): String {
+        // Hash-Funktion für das Passwort (z. B. SHA-256 oder bcrypt)
+        return password.hashCode()
+            .toString() // Dummy-Hash (ersetze mit einer richtigen Hash-Funktion)
     }
 }

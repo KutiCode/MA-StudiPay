@@ -72,7 +72,7 @@ class SettingsFragment : Fragment() {
         if (currentUsername != null) {
             lifecycleScope.launch {
                 val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByUsername(currentUsername)
+                val user = userDao.getUserByMatrikelnumber(currentUsername)
 
                 if (user != null) {
                     // Begrüßungstext mit Vorname aktualisieren
