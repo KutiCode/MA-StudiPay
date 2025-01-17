@@ -57,7 +57,18 @@ class DashboardFragment : Fragment() {
 
         // Senden-Button-Listener
         binding.sendButton.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
 
+            findNavController().navigate(
+                R.id.action_dashboardFragment_to_userPinEntryFragment,
+                null,
+                navOptions
+            )
         }
 
         // Empfangen-Button-Listener

@@ -88,12 +88,19 @@
         android:label="Orange Details"
         tools:layout="@layout/fragment_orange_details" />
 
-
+    <fragment
+        android:id="@+id/userPinEntryFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.UserPinEntryFragment"
+        android:label="Orange Details"
+        tools:layout="@layout/fragment_pin_entry" />
 
     <action
         android:id="@+id/action_dashboardFragment_to_orangeDetailsFragment"
         app:destination="@id/orangeDetailsFragment" />
 
+    <action
+        android:id="@+id/action_dashboardFragment_to_userPinEntryFragment"
+        app:destination="@id/userPinEntryFragment" />
     <action
         android:id="@+id/action_orangeDetailsFragment_to_dashboardFragment"
         app:destination="@id/navigation_dashboard" />
