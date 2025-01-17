@@ -23,19 +23,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Karte für Guthaben -->
+
     <androidx.cardview.widget.CardView
         android:id="@+id/transaction_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="20dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
         android:transitionName="expandCard"
         app:cardBackgroundColor="@color/blue"
-        app:layout_constraintTop_toBottomOf="@id/transaction_text"
-        app:layout_constraintStart_toStartOf="parent"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/transaction_text"
+        app:layout_constraintVertical_bias="0.6" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

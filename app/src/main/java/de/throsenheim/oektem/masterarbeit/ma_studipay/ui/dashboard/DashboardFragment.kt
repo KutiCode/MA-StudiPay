@@ -57,7 +57,7 @@ class DashboardFragment : Fragment() {
 
         // Senden-Button-Listener
         binding.sendButton.setOnClickListener {
-            navigateToTransactionFragment("SEND")
+
         }
 
         // Empfangen-Button-Listener
