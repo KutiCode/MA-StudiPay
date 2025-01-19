@@ -1,181 +1,172 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.lifecycleScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentOrangeDetailsBinding
 import kotlinx.coroutines.launch
 
 class OrangeDetailsFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private lateinit var binding: FragmentOrangeDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_orange_details, container, false)
+        binding = FragmentOrangeDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPref = requireActivity().getSharedPreferences(
-            "user_prefs",
-            android.content.Context.MODE_PRIVATE
-        )
+        setupBackPressHandler()
+        setupSharedPreferences()
+        setupButtons()
+        setupBottomNavigation()
+    }
 
+    private fun setupBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    // Nichts passiert, wenn der Benutzer die Zurück-Taste drückt
+                    // Ignoriere die Zurück-Taste
                 }
-            })
-        // Senden-Button-Listener
-        val sendToBankButton = view.findViewById<View>(R.id.send_to_bank_button)
-        sendToBankButton.setOnClickListener {
-            navigateToTransactionFragment("SEND")
-        }
+            }
+        )
+    }
 
-        // Empfangen-Button-Listener
-        val getFromBankButton = view.findViewById<View>(R.id.get_from_bank_button)
-        getFromBankButton.setOnClickListener {
-            navigateToTransactionFragment("RECEIVE")
-        }
+    private fun setupSharedPreferences() {
+        val sharedPref = requireActivity().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
+        val currentMatrikelnumber = sharedPref.getString("current_username", null)
 
-
-
-        val binding = de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentOrangeDetailsBinding.bind(view)
-        val currentUsername = sharedPref.getString("current_username", null)
-        if (currentUsername != null) {
+        if (currentMatrikelnumber != null) {
             lifecycleScope.launch {
                 val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByMatrikelnumber(currentUsername)
+                val user = userDao.getUserByMatrikelnumber(currentMatrikelnumber)
 
                 if (user != null) {
-                    binding.cardBalanceValue.text = "${user.balance} €"
-                    binding.matrikelnummerValue.text = "${user.matrikelnumber}"
-                    binding.acountnumberValue.text = "${user.accountNumber}"
+                    updateUserDetails(user.balance, user.matrikelnumber, user.accountNumber)
+                } else {
+                    showMissingValues()
                 }
             }
         } else {
-            binding.cardBalanceValue.text = "Fehlende Werte"
-            binding.matrikelnummerValue.text = "Fehlende Werte"
+            showMissingValues()
         }
-
-
-
-        val detailedCard = view.findViewById<View>(R.id.balance_card_detail)
-        detailedCard.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.fade_in)  // Animation beim Eintritt
-                .setExitAnim(R.anim.fade_out) // Animation beim Verlassen
-                .setPopEnterAnim(R.anim.fade_in) // Animation beim Zurückkehren
-                .setPopExitAnim(R.anim.fade_out) // Animation beim Zurücknavigieren
-                .build()
-
-            findNavController().navigate(
-                R.id.action_orangeDetailsFragment_to_dashboardFragment,
-                null,
-                navOptions
-            )
-        }
-        val transactionButton = view.findViewById<View>(R.id.transaction_button)
-        transactionButton.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
-            Log.d("OrangeDetailsFragment", "Transaction button clicked")
-
-            // Navigation sicherstellen
-            view.post {
-                try {
-                    findNavController().navigate(
-                        R.id.action_orangeDetailsFragment_to_lastTransactionsFragment,
-                        null,
-                        navOptions
-                    )
-                    Log.d("Navigation", "Navigated to LastTransactionsFragment.")
-                } catch (e: Exception) {
-                    Log.e("NavigationError", "Failed to navigate to LastTransactionsFragment.", e)
-                }
-            }
-        }
-
-
-        // Referenz zur BottomNavigationView
-        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-
-        // Verknüpfe die BottomNavigationView mit dem NavController
-        val navController = findNavController()
-        bottomNavigationView.setupWithNavController(navController)
-
-        // Optionale manuelle Navigation (falls nötig)
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_settings -> { // Menüpunkt für Einstellungen
-                    val navOptions = NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_right)
-                        .setExitAnim(R.anim.slide_out_left)
-                        .setPopEnterAnim(R.anim.slide_in_left)
-                        .setPopExitAnim(R.anim.slide_out_right)
-                        .build()
-
-                    navController.navigate(R.id.navigation_settings, null, navOptions)
-                    true
-                }
-
-                R.id.navigation_home -> {
-                    // Prüfen, ob die aktuelle Seite nicht bereits das Dashboard ist
-                    if (navController.currentDestination?.id != R.id.navigation_dashboard) {
-                        val navOptions = NavOptions.Builder()
-                            .setEnterAnim(R.anim.fade_in)
-                            .setExitAnim(R.anim.fade_out)
-                            .setPopEnterAnim(R.anim.fade_in)
-                            .setPopExitAnim(R.anim.fade_out)
-                            .build()
-
-                        navController.navigate(R.id.navigation_dashboard, null, navOptions)
-                    }
-                    true
-                }
-
-
-                else -> false
-            }
-        }
-
     }
+
+    private fun updateUserDetails(balance: Double, matrikelNumber: String, accountNumber: String) {
+        binding.cardBalanceValue.text = "$balance €"
+        binding.matrikelnummerValue.text = matrikelNumber
+        binding.acountnumberValue.text = accountNumber
+    }
+
+    private fun showMissingValues() {
+        binding.cardBalanceValue.text = "Fehlende Werte"
+        binding.matrikelnummerValue.text = "Fehlende Werte"
+    }
+
+    private fun setupButtons() {
+        binding.sendToBankButton.setOnClickListener {
+            navigateToTransactionFragment("SEND")
+        }
+
+        binding.getFromBankButton.setOnClickListener {
+            navigateToTransactionFragment("RECEIVE")
+        }
+
+        binding.balanceCardDetail.setOnClickListener {
+            navigateToDashboardFragment()
+        }
+
+        binding.transactionButton.setOnClickListener {
+            navigateToLastTransactionsFragment()
+        }
+    }
+
     private fun navigateToTransactionFragment(transactionType: String) {
         val bundle = Bundle().apply {
             putString("TRANSACTION_TYPE", transactionType)
         }
-
-        val navOptions = NavOptions.Builder()
-            .setEnterAnim(R.anim.slide_in_right)
-            .setExitAnim(R.anim.slide_out_left)
-            .setPopEnterAnim(R.anim.slide_in_left)
-            .setPopExitAnim(R.anim.slide_out_right)
-            .build()
-
+        val navOptions = createNavOptions(
+            enterAnim = R.anim.slide_in_right,
+            exitAnim = R.anim.slide_out_left,
+            popEnterAnim = R.anim.slide_in_left,
+            popExitAnim = R.anim.slide_out_right
+        )
         findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
     }
-}
 
+    private fun navigateToDashboardFragment() {
+        val navOptions = createNavOptions(R.anim.fade_in, R.anim.fade_out)
+        findNavController().navigate(R.id.action_orangeDetailsFragment_to_dashboardFragment, null, navOptions)
+    }
+
+    private fun navigateToLastTransactionsFragment() {
+        val navOptions = createNavOptions(
+            enterAnim = R.anim.slide_in_right,
+            exitAnim = R.anim.slide_out_left,
+            popEnterAnim = R.anim.slide_in_left,
+            popExitAnim = R.anim.slide_out_right
+        )
+        findNavController().navigate(R.id.action_orangeDetailsFragment_to_lastTransactionsFragment, null, navOptions)
+    }
+
+    private fun createNavOptions(
+        enterAnim: Int,
+        exitAnim: Int,
+        popEnterAnim: Int = enterAnim,
+        popExitAnim: Int = exitAnim
+    ): NavOptions {
+        return NavOptions.Builder()
+            .setEnterAnim(enterAnim)
+            .setExitAnim(exitAnim)
+            .setPopEnterAnim(popEnterAnim)
+            .setPopExitAnim(popExitAnim)
+            .build()
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigationView = binding.bottomNavigation
+        val navController = findNavController()
+        bottomNavigationView.setupWithNavController(navController)
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_settings -> {
+                    navigateWithNavOptions(R.id.navigation_settings)
+                    true
+                }
+                R.id.navigation_home -> {
+                    if (navController.currentDestination?.id != R.id.navigation_dashboard) {
+                        navigateWithNavOptions(R.id.navigation_dashboard)
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun navigateWithNavOptions(destinationId: Int) {
+        val navOptions = createNavOptions(
+            enterAnim = R.anim.slide_in_right,
+            exitAnim = R.anim.slide_out_left,
+            popEnterAnim = R.anim.slide_in_left,
+            popExitAnim = R.anim.slide_out_right
+        )
+        findNavController().navigate(destinationId, null, navOptions)
+    }
+}
