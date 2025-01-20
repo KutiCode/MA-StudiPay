@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.LoginFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.view.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
