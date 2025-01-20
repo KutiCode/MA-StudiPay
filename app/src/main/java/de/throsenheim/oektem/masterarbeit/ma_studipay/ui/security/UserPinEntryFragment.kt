@@ -32,11 +32,6 @@ class UserPinEntryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        // Titel dynamisch setzen basierend auf dem Typ
-        val titleTextView = view.findViewById<TextView>(R.id.transaction_title)
-
-
         // Referenz zum Betragsfeld
         pinInput = view.findViewById(R.id.pin_entry)
 

@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.view.DashboardFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_dashboard" />
     <fragment
