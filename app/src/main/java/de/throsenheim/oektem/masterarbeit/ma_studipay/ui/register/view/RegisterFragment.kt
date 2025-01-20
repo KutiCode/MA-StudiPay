@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.view
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,50 +12,47 @@ import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentLoginBinding
+import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentRegisterBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.viewmodel.LoginViewModel
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.viewmodel.LoginViewModelFactory
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.viewmodel.RegisterViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.viewmodel.RegisterViewModelFactory
 
-class LoginFragment : Fragment() {
+class RegisterFragment : Fragment() {
 
-    private var _binding: FragmentLoginBinding? = null
+    private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: LoginViewModel
+    private lateinit var viewModel: RegisterViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Stelle sicher, dass ViewModel hier initialisiert wird
         val userRepository = UserRepository(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
             AppDatabase.getDatabase(requireContext()).syncQueueDao(),
             apiService = RetrofitInstance.api
         )
+        val viewModelFactory = RegisterViewModelFactory(userRepository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[RegisterViewModel::class.java]
 
-        val viewModelFactory = LoginViewModelFactory(requireActivity().application, userRepository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[LoginViewModel::class.java]
-
-        // Setze Observer und Listener nach der Initialisierung des ViewModels
         setupObservers()
         setupListeners()
     }
 
     private fun setupObservers() {
-        viewModel.loginResult.observe(viewLifecycleOwner) { success ->
+        viewModel.registrationResult.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Toast.makeText(requireContext(), "Login erfolgreich", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_loginFragment_to_dashboardFragment)
+                Toast.makeText(requireContext(), "Registrierung erfolgreich", Toast.LENGTH_SHORT).show()
+                navigateWithSlideAnimation(R.id.loginFragment)
             }
         }
 
@@ -65,17 +62,19 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.loginButton.setOnClickListener {
-            val matrikelnummer = binding.username.text.toString().trim()
-            val password = binding.password.text.toString().trim()
-            viewModel.login(matrikelnummer, password)
-        }
-
         binding.registerButton.setOnClickListener {
-            navigateWithSlideAnimation(R.id.registerFragment)
+            val matrikelnummer = binding.matrikelnummerInput.text.toString().trim()
+            val firstName = binding.vornameInput.text.toString().trim()
+            val lastName = binding.nameInput.text.toString().trim()
+            val password = binding.passwortInput.text.toString().trim()
+
+            viewModel.registerUser(matrikelnummer, firstName, lastName, password)
+
+        }
+        binding.backToLoginButton.setOnClickListener{
+            navigateWithSlideAnimation(R.id.loginFragment)
         }
     }
-
     private fun navigateWithSlideAnimation(destinationId: Int) {
         val navOptions = NavOptions.Builder()
             .setEnterAnim(R.anim.slide_in_right)

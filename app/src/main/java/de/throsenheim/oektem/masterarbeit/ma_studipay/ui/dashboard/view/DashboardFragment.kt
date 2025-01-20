@@ -71,7 +71,7 @@ class DashboardFragment : Fragment() {
 
         // Navigation für Karten-Details
         binding.balanceCard.setOnClickListener {
-            navigateWithFadeAnimation(R.id.action_dashboardFragment_to_orangeDetailsFragment)
+            navigateWithFadeAnimation(R.id.orangeDetailsFragment)
         }
 
         // Bottom Navigation View

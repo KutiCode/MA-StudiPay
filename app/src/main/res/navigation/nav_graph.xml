@@ -28,7 +28,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.RegisterFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.view.RegisterFragment"
         android:label="Registrieren"
         tools:layout="@layout/fragment_register" />
     <action
