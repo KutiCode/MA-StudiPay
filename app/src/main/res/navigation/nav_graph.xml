@@ -90,7 +90,7 @@
 
     <fragment
         android:id="@+id/userPinEntryFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.UserPinEntryFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.view.UserPinEntryFragment"
         android:label="Orange Details"
         tools:layout="@layout/fragment_pin_entry" />
 

@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
