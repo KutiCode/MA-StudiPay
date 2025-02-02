@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view
 
 import android.os.Bundle
 import android.util.Log
@@ -7,23 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.viewmodel.LastTransactionsViewModel
 
 class LastTransactionsFragment : Fragment() {
+
+    private val viewModel: LastTransactionsViewModel by viewModels()
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_last_transaction, container, false)
     }
-
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,24 +38,28 @@ class LastTransactionsFragment : Fragment() {
                 }
             })
 
-
         val orangeDetailsFragment = view.findViewById<View>(R.id.transaction_card)
         orangeDetailsFragment.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
-
-            findNavController().navigate(
-                R.id.action_lastTransactionsFragment_to_orangeDetailsFragment,
-                null,
-                navOptions
-            )
+            viewModel.onOrangeDetailsClicked()
         }
 
+        viewModel.navigateToOrangeDetails.observe(viewLifecycleOwner, Observer { navigate ->
+            if (navigate) {
+                val navOptions = NavOptions.Builder()
+                    .setEnterAnim(R.anim.slide_in_right)
+                    .setExitAnim(R.anim.slide_out_left)
+                    .setPopEnterAnim(R.anim.slide_in_left)
+                    .setPopExitAnim(R.anim.slide_out_right)
+                    .build()
 
+                findNavController().navigate(
+                    R.id.action_lastTransactionsFragment_to_orangeDetailsFragment,
+                    null,
+                    navOptions
+                )
+                viewModel.onNavigatedToOrangeDetails()
+            }
+        })
 
         // Referenz zur BottomNavigationView
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
@@ -92,10 +98,8 @@ class LastTransactionsFragment : Fragment() {
                     true
                 }
 
-
                 else -> false
             }
         }
-
     }
 }
