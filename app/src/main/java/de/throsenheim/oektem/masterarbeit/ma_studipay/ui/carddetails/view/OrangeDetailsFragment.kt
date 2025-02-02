@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,18 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentOrangeDetailsBinding
-import kotlinx.coroutines.launch
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails.viewmodel.OrangeDetailsViewModel
 
 class OrangeDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentOrangeDetailsBinding
+    private val viewModel: OrangeDetailsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +42,7 @@ class OrangeDetailsFragment : Fragment() {
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    // Ignoriere die Zurück-Taste
+                    // Ignore the back button
                 }
             }
         )
@@ -52,19 +53,18 @@ class OrangeDetailsFragment : Fragment() {
         val currentMatrikelnumber = sharedPref.getString("current_username", null)
 
         if (currentMatrikelnumber != null) {
-            lifecycleScope.launch {
-                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByMatrikelnumber(currentMatrikelnumber)
-
-                if (user != null) {
-                    updateUserDetails(user.balance, user.matrikelnumber, user.accountNumber)
-                } else {
-                    showMissingValues()
-                }
-            }
+            viewModel.loadUserDetails(requireContext(), currentMatrikelnumber)
         } else {
             showMissingValues()
         }
+
+        viewModel.userDetails.observe(viewLifecycleOwner, Observer { user ->
+            if (user != null) {
+                updateUserDetails(user.balance, user.matrikelnumber, user.accountNumber)
+            } else {
+                showMissingValues()
+            }
+        })
     }
 
     private fun updateUserDetails(balance: Double, matrikelNumber: String, accountNumber: String) {

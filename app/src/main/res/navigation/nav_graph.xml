@@ -84,7 +84,7 @@
 
     <fragment
         android:id="@+id/orangeDetailsFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails.OrangeDetailsFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails.view.OrangeDetailsFragment"
         android:label="Orange Details"
         tools:layout="@layout/fragment_orange_details" />
 
