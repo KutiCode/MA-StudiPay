@@ -1,25 +1,24 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.viewmodel.UserPinEntryViewModel
 
 class UserPinEntryFragment : Fragment() {
 
     private lateinit var pinInput: EditText
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private val viewModel: UserPinEntryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,15 +31,8 @@ class UserPinEntryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        // Titel dynamisch setzen basierend auf dem Typ
-        val titleTextView = view.findViewById<TextView>(R.id.transaction_title)
-
-
-        // Referenz zum Betragsfeld
         pinInput = view.findViewById(R.id.pin_entry)
 
-        // Zahlen-Buttons referenzieren
         val buttons = listOf(
             R.id.pin_number_0,
             R.id.pin_number_1,
@@ -54,32 +46,27 @@ class UserPinEntryFragment : Fragment() {
             R.id.pin_number_9
         )
 
-        // Listener für jeden Button hinzufügen
         for (buttonId in buttons) {
             val button = view.findViewById<MaterialButton>(buttonId)
             button.setOnClickListener {
-                val currentText = pinInput.text.toString()
-                val newText = currentText + button.text.toString()
-                pinInput.setText(newText)
+                viewModel.appendDigit(button.text.toString())
             }
         }
 
-        // Sondertasten behandeln (z. B. Zurück-Taste oder Komma)
         val clearButton = view.findViewById<MaterialButton>(R.id.pin_number_ac)
         clearButton.setOnClickListener {
-            pinInput.setText("")
+            viewModel.clearPin()
         }
 
         val deleteButton = view.findViewById<MaterialButton>(R.id.pin_number_delete)
         deleteButton.setOnClickListener {
-            val currentText = pinInput.text.toString()
-            if (currentText.isNotEmpty()) {
-                // Entferne das letzte Zeichen
-                pinInput.setText(currentText.substring(0, currentText.length - 1))
-            }
+            viewModel.deleteLastDigit()
         }
 
-        // Navigationselemente behandeln
+        viewModel.pin.observe(viewLifecycleOwner, Observer { pin ->
+            pinInput.setText(pin)
+        })
+
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
 

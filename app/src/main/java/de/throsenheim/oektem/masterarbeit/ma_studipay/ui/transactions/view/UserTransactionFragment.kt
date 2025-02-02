@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,19 +7,20 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import kotlinx.coroutines.launch
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.viewmodel.UserTransactionViewModel
 
 class UserTransactionFragment : Fragment() {
 
+    private val viewModel: UserTransactionViewModel by viewModels()
     private lateinit var amountInput: EditText
-    private var transactionType: String = "SEND" // Standardtyp ist "Senden"
+    private var transactionType: String = "SEND"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +30,7 @@ class UserTransactionFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_user_transaction, container, false)
@@ -45,40 +45,28 @@ class UserTransactionFragment : Fragment() {
         )
         val currentUsername = sharedPref.getString("current_username", null)
         val balanceAmount = view.findViewById<TextView>(R.id.user_transaction_balance_amount)
-        if (currentUsername != null) {
-            lifecycleScope.launch {
-                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByMatrikelnumber(currentUsername)
 
-                if (user != null) {
-                    balanceAmount.text = "${user.balance} €"
-
-                }
-            }
-        } else {
+        currentUsername?.let {
+            viewModel.loadUserBalance(requireContext(), it)
+        } ?: run {
             balanceAmount.text = "Fehlender Wert"
         }
 
+        viewModel.balance.observe(viewLifecycleOwner, Observer { balance ->
+            balanceAmount.text = balance
+        })
 
-
-
-
-
-        // Titel dynamisch setzen basierend auf dem Typ
         val titleTextView = view.findViewById<TextView>(R.id.transaction_title)
         titleTextView.text = if (transactionType == "SEND") "Geld senden" else "Geld empfangen"
 
-        // Referenz zum Betragsfeld
         amountInput = view.findViewById(R.id.amount_input)
 
-        // Zahlen-Buttons referenzieren
         val buttons = listOf(
             R.id.send_button_0, R.id.send_button_1, R.id.send_button_2, R.id.send_button_3,
             R.id.send_button_4, R.id.send_button_5, R.id.send_button_6, R.id.send_button_7,
             R.id.send_button_8, R.id.send_button_9
         )
 
-        // Listener für jeden Button hinzufügen
         for (buttonId in buttons) {
             val button = view.findViewById<MaterialButton>(buttonId)
             button.setOnClickListener {
@@ -88,7 +76,6 @@ class UserTransactionFragment : Fragment() {
             }
         }
 
-        // Sondertasten behandeln (z. B. Zurück-Taste oder Komma)
         val clearButton = view.findViewById<MaterialButton>(R.id.send_button_clear)
         clearButton.setOnClickListener {
             amountInput.setText("")
@@ -98,11 +85,9 @@ class UserTransactionFragment : Fragment() {
         deleteButton.setOnClickListener {
             val currentText = amountInput.text.toString()
             if (currentText.isNotEmpty()) {
-                // Entferne das letzte Zeichen
                 amountInput.setText(currentText.substring(0, currentText.length - 1))
             }
         }
-
 
         val fixedAmountButtons = mapOf(
             R.id.send_button_5_euro to "5",
@@ -118,7 +103,6 @@ class UserTransactionFragment : Fragment() {
             }
         }
 
-        // Navigationselemente behandeln
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
 
@@ -131,11 +115,9 @@ class UserTransactionFragment : Fragment() {
                         .setPopEnterAnim(R.anim.slide_in_left)
                         .setPopExitAnim(R.anim.slide_out_right)
                         .build()
-
                     navController.navigate(R.id.navigation_dashboard, null, navOptions)
                     true
                 }
-
                 R.id.navigation_home -> {
                     if (navController.currentDestination?.id != R.id.navigation_dashboard) {
                         val navOptions = NavOptions.Builder()
@@ -148,7 +130,6 @@ class UserTransactionFragment : Fragment() {
                     }
                     true
                 }
-
                 else -> false
             }
         }

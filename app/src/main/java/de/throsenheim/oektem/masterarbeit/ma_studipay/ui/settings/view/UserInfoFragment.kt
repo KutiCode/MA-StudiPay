@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.view
 
 import android.content.Context
 import android.os.Bundle
@@ -8,23 +8,24 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import kotlinx.coroutines.*
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.viewmodel.UserInfoViewModel
+
 class UserInfoFragment : Fragment() {
 
+    private val viewModel: UserInfoViewModel by viewModels()
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.fragment_user_info, container, false)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,53 +44,49 @@ class UserInfoFragment : Fragment() {
                 navOptions
             )
         }
-        val sharedPref = requireActivity().getSharedPreferences(
-            "user_prefs",
-            Context.MODE_PRIVATE
-        )
 
+        val sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentUsername = sharedPref.getString("current_username", null)
         val infoFullNameValue = view.findViewById<TextView>(R.id.infoFullNameValue)
         val infoMatrikelnummerValue = view.findViewById<TextView>(R.id.infoMatrikelnummerValue)
         val infoAccountNumberValue = view.findViewById<TextView>(R.id.infoAccountNumberValue)
-        if (currentUsername != null) {
-            lifecycleScope.launch {
-                val userDao = AppDatabase.getDatabase(requireContext()).userDao()
-                val user = userDao.getUserByMatrikelnumber(currentUsername)
 
-                if (user != null) {
-                infoFullNameValue.text = "${user.firstName} ${user.lastName}"
-                infoMatrikelnummerValue.text = "${user.matrikelnumber}"
-                infoAccountNumberValue.text = "${user.accountNumber}"
-
-                }
-            }
-        } else {
+        currentUsername?.let {
+            viewModel.loadUser(requireContext(), it)
+        } ?: run {
             infoFullNameValue.text = "Fehlende Werte"
             infoMatrikelnummerValue.text = "Fehlende Werte"
             infoAccountNumberValue.text = "Fehlende Werte"
         }
 
+        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
+            if (user != null) {
+                infoFullNameValue.text = "${user.firstName} ${user.lastName}"
+                infoMatrikelnummerValue.text = user.matrikelnumber
+                infoAccountNumberValue.text = user.accountNumber
+            } else {
+                infoFullNameValue.text = "Fehlende Werte"
+                infoMatrikelnummerValue.text = "Fehlende Werte"
+                infoAccountNumberValue.text = "Fehlende Werte"
+            }
+        })
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_dashboard -> { // Menüpunkt für Einstellungen
+                R.id.navigation_dashboard -> {
                     val navOptions = NavOptions.Builder()
                         .setEnterAnim(R.anim.slide_in_right)
                         .setExitAnim(R.anim.slide_out_left)
                         .setPopEnterAnim(R.anim.slide_in_left)
                         .setPopExitAnim(R.anim.slide_out_right)
                         .build()
-
                     navController.navigate(R.id.navigation_dashboard, null, navOptions)
                     true
                 }
-
                 R.id.navigation_home -> {
-                    // Optional: Verhindere Navigation zum Dashboard, wenn du bereits dort bist
                     if (navController.currentDestination?.id != R.id.navigation_dashboard) {
                         val navOptions = NavOptions.Builder()
                             .setEnterAnim(R.anim.slide_in_right)
@@ -97,15 +94,12 @@ class UserInfoFragment : Fragment() {
                             .setPopEnterAnim(R.anim.slide_in_left)
                             .setPopExitAnim(R.anim.slide_out_right)
                             .build()
-                        navController.navigate(R.id.navigation_dashboard, null,navOptions)
+                        navController.navigate(R.id.navigation_dashboard, null, navOptions)
                     }
                     true
                 }
-
                 else -> false
             }
         }
     }
-
-
 }
