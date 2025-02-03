@@ -7,9 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class UserInfoViewModel : ViewModel() {
+class UserInfoViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> get() = _user

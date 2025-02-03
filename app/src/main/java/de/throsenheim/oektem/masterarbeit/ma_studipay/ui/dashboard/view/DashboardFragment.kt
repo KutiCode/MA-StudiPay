@@ -2,6 +2,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +62,24 @@ class DashboardFragment : Fragment() {
     private fun setupListeners() {
         // Navigation für Send-Button
         binding.sendButton.setOnClickListener {
-            navigateWithSlideAnimation(R.id.action_dashboardFragment_to_userPinEntryFragment)
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
+
+            findNavController().navigate(
+                R.id.action_UserInfoFragment_to_userPinEntryFragment,
+                Bundle().apply {
+                    putBoolean("isChangePin", false)
+                    Log.d(
+                        "DashboarFragment",
+                        "Navigating to UserPinEntryFragment with NOT Change Pin"
+                    )
+                },
+                navOptions
+            )
         }
 
         // Navigation für Receive-Button

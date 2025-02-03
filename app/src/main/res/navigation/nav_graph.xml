@@ -119,5 +119,7 @@
     <action
         android:id="@+id/action_lastTransactionsFragment_to_orangeDetailsFragment"
         app:destination="@id/orangeDetailsFragment" />
-
+    <action
+        android:id="@+id/action_UserInfoFragment_to_userPinEntryFragment"
+        app:destination="@id/userPinEntryFragment" />
 </navigation>

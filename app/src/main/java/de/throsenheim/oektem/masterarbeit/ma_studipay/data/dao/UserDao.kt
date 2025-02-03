@@ -41,4 +41,13 @@ interface UserDao {
     // Prüfen, ob eine Kontonummer bereits existiert
     @Query("SELECT COUNT(*) FROM user WHERE accountNumber = :accountNumber")
     suspend fun countByKontonummer(accountNumber: String): Int
+
+    // Secure Pin aktualisieren
+    @Query("UPDATE user SET securePin = :securePin WHERE matrikelnumber = :matrikelnumber")
+    suspend fun updateSecurePin(matrikelnumber: String, securePin: String)
+
+    // Secure Pin abrufen
+    @Query("SELECT securePin FROM user WHERE matrikelnumber = :matrikelnumber")
+    suspend fun getSecurePin(matrikelnumber: String): String?
+
 }
