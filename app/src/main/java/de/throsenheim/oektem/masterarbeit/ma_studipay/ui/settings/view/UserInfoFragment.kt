@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.viewmodel.UserInfoViewModel
 
@@ -70,9 +70,23 @@ class UserInfoFragment : Fragment() {
                 infoAccountNumberValue.text = "Fehlende Werte"
             }
         })
+        val navController = findNavController()
+        val changePinButton = view.findViewById<MaterialButton>(R.id.change_secure_pin_button)
+
+        changePinButton.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
+
+            findNavController().navigate(R.id.userPinEntryFragment, null, navOptions)
+        }
+
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val navController = findNavController()
+
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {

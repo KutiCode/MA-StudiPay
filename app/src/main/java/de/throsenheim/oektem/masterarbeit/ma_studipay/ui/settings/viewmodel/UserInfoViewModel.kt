@@ -21,4 +21,6 @@ class UserInfoViewModel : ViewModel() {
             _user.value = user
         }
     }
+
+
 }
