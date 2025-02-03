@@ -34,7 +34,8 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
                     lastName = lastName,
                     password = hashedPassword,
                     accountNumber = generateUniqueKontonummer(),
-                    balance = 0.0
+                    balance = 0.0,
+                    securePin = "0000"
                 )
                 userRepository.registerUserLocally(user)
                 _registrationResult.value = true
