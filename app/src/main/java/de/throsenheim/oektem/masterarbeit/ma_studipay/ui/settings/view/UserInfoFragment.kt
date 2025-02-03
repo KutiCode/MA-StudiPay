@@ -2,23 +2,29 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.viewmodel.UserInfoViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.viewmodel.UserInfoViewModelFactory
 
 class UserInfoFragment : Fragment() {
 
-    private val viewModel: UserInfoViewModel by viewModels()
+    private lateinit var viewModel: UserInfoViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +35,17 @@ class UserInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val userRepository = UserRepository(
+            userDao = AppDatabase.getDatabase(requireContext()).userDao(),
+            AppDatabase.getDatabase(requireContext()).syncQueueDao(),
+            apiService = RetrofitInstance.api
+        )
+
+
+        val viewModelFactory = UserInfoViewModelFactory(userRepository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[UserInfoViewModel::class.java]
+
 
         val settingsFragment = view.findViewById<View>(R.id.info_card)
         settingsFragment.setOnClickListener {
@@ -70,9 +87,30 @@ class UserInfoFragment : Fragment() {
                 infoAccountNumberValue.text = "Fehlende Werte"
             }
         })
+        val navController = findNavController()
+        val changePinButton = view.findViewById<MaterialButton>(R.id.change_secure_pin_button)
+
+        changePinButton.setOnClickListener {
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
+
+            navController.navigate(
+                R.id.action_UserInfoFragment_to_userPinEntryFragment,
+                Bundle().apply {
+                    putBoolean("isChangePin", true)
+                    Log.d("UserInfoFragment", "Navigating to UserPinEntryFragment with Change Pin")
+                },
+                navOptions
+            )
+        }
+
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        val navController = findNavController()
+
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {

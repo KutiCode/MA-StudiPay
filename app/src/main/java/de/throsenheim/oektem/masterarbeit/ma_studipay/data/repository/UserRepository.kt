@@ -53,6 +53,18 @@ class UserRepository(
         )
     }
 
+    //SecurePin aktualisieren
+    suspend fun updateSecurePin(matrikelnumber: String, newPin: String) {
+        userDao.updateSecurePin(matrikelnumber, newPin)
+    }
+
+    //SecurePin abrufen
+    suspend fun getSecurePin(matrikelnumber: String): String? {
+        return userDao.getSecurePin(matrikelnumber)
+    }
+
+
+
     // Synchronisation
     suspend fun syncWithBackend() {
         val unsyncedEntries = syncQueueDao.getAllEntries() // Hole ausstehende Änderungen
