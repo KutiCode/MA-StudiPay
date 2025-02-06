@@ -23,7 +23,7 @@ data class User(
     val accountNumber: String,
 
     @ColumnInfo(name = "balance")
-    val balance: Double,
+    var balance: Double,
 
     @ColumnInfo(name = "securePin")
     val securePin: String

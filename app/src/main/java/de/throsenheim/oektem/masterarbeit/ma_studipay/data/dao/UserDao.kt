@@ -50,4 +50,7 @@ interface UserDao {
     @Query("SELECT securePin FROM user WHERE matrikelnumber = :matrikelnumber")
     suspend fun getSecurePin(matrikelnumber: String): String?
 
+    @Query("UPDATE user SET balance = :balance WHERE matrikelnumber = :matrikelnumber")
+    suspend fun updateUserBalance(matrikelnumber: String, balance: Double)
+
 }
