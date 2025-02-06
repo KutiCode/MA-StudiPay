@@ -67,7 +67,6 @@ class RegisterFragment : Fragment() {
             val firstName = binding.vornameInput.text.toString().trim()
             val lastName = binding.nameInput.text.toString().trim()
             val password = binding.passwortInput.text.toString().trim()
-
             viewModel.registerUser(matrikelnummer, firstName, lastName, password)
 
         }

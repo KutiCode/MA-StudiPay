@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import de.mkammerer.argon2.Argon2
+import de.mkammerer.argon2.Argon2Factory
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 
 import kotlinx.coroutines.launch
@@ -14,7 +16,7 @@ class LoginViewModel(application: Application, private val userRepository: UserR
 
     private val _loginResult = MutableLiveData<Boolean>()
     val loginResult: LiveData<Boolean> get() = _loginResult
-
+    private val argon2: Argon2 = Argon2Factory.create()
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
@@ -26,7 +28,7 @@ class LoginViewModel(application: Application, private val userRepository: UserR
 
         viewModelScope.launch {
             val user = userRepository.getUserByMatrikelnumber(matrikelnummer)
-            if (user != null && user.password == hashPassword(password)) {
+            if (user != null && verifyPassword(user.password, password)) {
                saveUserToPreferences(matrikelnummer)
                 _loginResult.value = true // Login erfolgreich
             } else {
@@ -36,10 +38,8 @@ class LoginViewModel(application: Application, private val userRepository: UserR
     }
 
 
-
-    private fun hashPassword(password: String): String {
-        // Beispiel für eine Hashing-Methode, ersetzen durch eine echte Implementierung
-        return password.hashCode().toString()
+    private fun verifyPassword(password: String, hashedPassword: String): Boolean {
+        return argon2.verify(hashedPassword, password.toCharArray())
     }
     fun saveUserToPreferences( matrikelnummer: String) {
         val sharedPreferences = getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)

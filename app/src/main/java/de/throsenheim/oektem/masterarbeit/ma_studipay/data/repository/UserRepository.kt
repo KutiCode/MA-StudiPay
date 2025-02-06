@@ -63,43 +63,6 @@ class UserRepository(
         return userDao.getSecurePin(matrikelnumber)
     }
 
-
-
-    // Synchronisation
-    suspend fun syncWithBackend() {
-        val unsyncedEntries = syncQueueDao.getAllEntries() // Hole ausstehende Änderungen
-        for (entry in unsyncedEntries) {
-            when (entry.operation) {
-                "INSERT" -> {
-                    val user = userDao.getUserByMatrikelnumber(entry.userId)
-                    if (user != null) {
-                        try {
-                            val response = apiService.registerUser(user)
-                            if (response.isSuccessful) {
-                                syncQueueDao.delete(entry) // Erfolgreich synchronisiert
-                            }
-                        } catch (e: Exception) {
-                            Log.e("UserRepository", "Fehler bei der Synchronisation", e)
-                        }
-                    }
-                }
-            }
-            // Aktualisiere lokale Datenbank mit den neuesten Daten vom Backend
-            try {
-                val response = apiService.getAllUsers()
-                if (response.isSuccessful) {
-                    response.body()?.let { users ->
-                        for (user in users) {
-                            userDao.insertUser(user) // Lokale Datenbank aktualisieren
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("UserRepository", "Keine Verbindung - Synchronisation wird übersprungen", e)
-                // Keine Verbindung – Synchronisation wird übersprungen
-            }
-        }
-    }
 }
 
 

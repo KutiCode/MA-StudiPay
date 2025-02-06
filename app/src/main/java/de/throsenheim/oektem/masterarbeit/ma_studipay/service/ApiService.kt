@@ -11,8 +11,8 @@ interface ApiService {
     @GET("/users")
     suspend fun getAllUsers(): Response<List<User>>
 
-    @POST("/register")
-    suspend fun registerUser(@Body user: User): Response<Unit>
+    @POST("/api/register")
+    suspend fun registerUser(@Body userRegistrationRequest: UserRegistrationRequest): Response<Unit>
 
     @POST("/api/add_balance")
     suspend fun addBalance(@Body balanceUpdateRequest: BalanceUpdateRequest): Response<Unit>
