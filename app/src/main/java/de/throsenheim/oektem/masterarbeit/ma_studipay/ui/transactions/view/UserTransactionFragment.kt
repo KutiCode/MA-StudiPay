@@ -21,11 +21,12 @@ class UserTransactionFragment : Fragment() {
     private val viewModel: UserTransactionViewModel by viewModels()
     private lateinit var amountInput: EditText
     private var transactionType: String = "SEND"
-
+    private var source: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             transactionType = it.getString("TRANSACTION_TYPE") ?: "SEND"
+            source = it.getString("SOURCE")
         }
     }
 
@@ -102,6 +103,33 @@ class UserTransactionFragment : Fragment() {
                 amountInput.setText(amount)
             }
         }
+
+        val sendButton = view.findViewById<MaterialButton>(R.id.continue_button)
+
+        sendButton.setOnClickListener {
+            val amount = amountInput.text.toString()
+            if (amount.isNotEmpty()) {
+                if (transactionType == "SEND") {
+                    if (source == "orangeDetails") {
+                        viewModel.deductBalance(
+                            requireContext(),
+                            currentUsername!!,
+                            amount.toDouble()
+                        )
+                    } else {
+
+                    }
+                } else {
+                    if (source == "orangeDetails") {
+                        viewModel.addBalance(requireContext(), currentUsername!!, amount.toDouble())
+                    } else {
+
+                    }
+                }
+            }
+        }
+
+
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()

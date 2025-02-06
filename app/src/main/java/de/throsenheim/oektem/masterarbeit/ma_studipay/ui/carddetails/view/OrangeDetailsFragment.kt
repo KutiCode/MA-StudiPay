@@ -99,6 +99,7 @@ class OrangeDetailsFragment : Fragment() {
     private fun navigateToTransactionFragment(transactionType: String) {
         val bundle = Bundle().apply {
             putString("TRANSACTION_TYPE", transactionType)
+            putString("SOURCE", "orangeDetails")
         }
         val navOptions = createNavOptions(
             enterAnim = R.anim.slide_in_right,
