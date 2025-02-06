@@ -11,9 +11,14 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import java.util.concurrent.TimeUnit
 import androidx.work.*
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.worker.SyncWorker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var userRepository: UserRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,8 +46,9 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.welcomeFragment)
             }
         }
-
         setupWorkManager()
+        syncUserDatabase()
+
     }
 
     private fun setupWorkManager() {
@@ -61,5 +67,21 @@ class MainActivity : AppCompatActivity() {
             ExistingPeriodicWorkPolicy.KEEP, // Verhindert das erneute Planen, wenn bereits aktiv
             syncWorkRequest
         )
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        syncUserDatabase()
+    }
+
+    private fun syncUserDatabase() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                userRepository.syncDatabase()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

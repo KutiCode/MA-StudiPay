@@ -53,4 +53,7 @@ interface UserDao {
     @Query("UPDATE user SET balance = :balance WHERE matrikelnumber = :matrikelnumber")
     suspend fun updateUserBalance(matrikelnumber: String, balance: Double)
 
+    // Mehrere Benutzer hinzufügen oder aktualisieren
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUsers(users: List<User>)
 }

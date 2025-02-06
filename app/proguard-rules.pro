@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.sun.jna.** { *; }
+-keep class com.sun.jna.android.** { *; }
+-keep class com.sun.jna.platform.** { *; }

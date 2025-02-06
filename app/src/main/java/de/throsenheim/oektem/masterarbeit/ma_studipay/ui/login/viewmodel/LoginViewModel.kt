@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import at.favre.lib.crypto.bcrypt.BCrypt
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 
 import kotlinx.coroutines.launch
@@ -14,7 +15,6 @@ class LoginViewModel(application: Application, private val userRepository: UserR
 
     private val _loginResult = MutableLiveData<Boolean>()
     val loginResult: LiveData<Boolean> get() = _loginResult
-
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
@@ -26,20 +26,25 @@ class LoginViewModel(application: Application, private val userRepository: UserR
 
         viewModelScope.launch {
             val user = userRepository.getUserByMatrikelnumber(matrikelnummer)
-            if (user != null && user.password == hashPassword(password)) {
+
+            if (user != null && verifyPassword(password, user.password)) {
                saveUserToPreferences(matrikelnummer)
                 _loginResult.value = true // Login erfolgreich
             } else {
-                _errorMessage.value = "Ungültige Login-Daten"
+                userRepository.syncDatabase()
+                login(matrikelnummer, password)
+
             }
         }
     }
 
 
+    fun verifyPassword(password: String, hashedPassword: String): Boolean {
+        return BCrypt.verifyer().verify(password.toCharArray(), hashedPassword).verified
+    }
 
-    private fun hashPassword(password: String): String {
-        // Beispiel für eine Hashing-Methode, ersetzen durch eine echte Implementierung
-        return password.hashCode().toString()
+    fun hashPassword(password: String): String {
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray())
     }
     fun saveUserToPreferences( matrikelnummer: String) {
         val sharedPreferences = getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)

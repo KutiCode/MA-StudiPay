@@ -4,9 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import at.favre.lib.crypto.bcrypt.BCrypt
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.service.UserRegistrationRequest
 import kotlinx.coroutines.launch
+
 
 class RegisterViewModel(private val userRepository: UserRepository) : ViewModel() {
 
@@ -37,15 +41,36 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
                     balance = 0.0,
                     securePin = "0000"
                 )
-                userRepository.registerUserLocally(user)
-                _registrationResult.value = true
+
+
+                // Send the new user to the backend
+                val request = UserRegistrationRequest(
+                    matrikelnumber = matrikelnummer,
+                    firstName = firstName,
+                    lastName = lastName,
+                    password = hashedPassword,
+                    accountNumber = user.accountNumber,
+                    balance = user.balance,
+                    securePin = user.securePin
+                )
+                try {
+                    val response = RetrofitInstance.api.registerUser(request)
+                    if (response.isSuccessful) {
+                        userRepository.insertUser(user)
+                        userRepository.syncDatabase()
+                        _registrationResult.value = true
+                    } else {
+                        _errorMessage.value = "Registrierung beim Backend fehlgeschlagen"
+                    }
+                } catch (e: Exception) {
+                    _errorMessage.value = "Fehler: ${e.message}"
+                }
             }
         }
     }
 
-    private fun hashPassword(password: String): String {
-        // Beispiel für Hashing, nutze ggf. eine stärkere Methode
-        return password.hashCode().toString()
+    fun hashPassword(password: String): String {
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray())
     }
     private suspend fun generateUniqueKontonummer(): String {
         var kontonummer: String
