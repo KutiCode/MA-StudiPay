@@ -1,3 +1,4 @@
+// MainActivity.kt
 package de.throsenheim.oektem.masterarbeit.ma_studipay
 
 import android.content.Context
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupWorkManager() {
         // Erstelle eine PeriodicWorkRequest
-        val syncWorkRequest = PeriodicWorkRequestBuilder<SyncWorker>(1, TimeUnit.HOURS)
+        val syncWorkRequest = PeriodicWorkRequestBuilder<SyncWorker>(1, TimeUnit.MINUTES)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED) // Nur bei aktiver Verbindung
@@ -66,8 +67,8 @@ class MainActivity : AppCompatActivity() {
             ExistingPeriodicWorkPolicy.KEEP, // Verhindert das erneute Planen, wenn bereits aktiv
             syncWorkRequest
         )
+        Log.d("MainActivity", "WorkManager setup complete")
     }
-
 
     override fun onResume() {
         super.onResume()
