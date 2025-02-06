@@ -14,6 +14,7 @@ class DashboardViewModel(private val userRepository: UserRepository) : ViewModel
 
     fun loadUserData(matrikelnummer: String) {
         viewModelScope.launch {
+            userRepository.syncDatabase()
             val user = userRepository.getUserByMatrikelnumber(matrikelnummer)
             if (user != null) {
                 _userData.value = DashboardUiState(

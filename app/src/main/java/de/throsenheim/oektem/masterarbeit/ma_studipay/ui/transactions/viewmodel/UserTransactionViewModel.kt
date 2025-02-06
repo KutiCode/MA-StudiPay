@@ -31,7 +31,7 @@ class UserTransactionViewModel : ViewModel() {
                 val request = BalanceUpdateRequest(matrikelnumber, amount)
                 val response: Response<Unit> = RetrofitInstance.api.addBalance(request)
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "Balance updated successfully", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, "Du hast erfolgreich eingezahlt!", Toast.LENGTH_SHORT)
                         .show()
 
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
@@ -40,6 +40,7 @@ class UserTransactionViewModel : ViewModel() {
                     user?.let {
                         it.balance += amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)
+                        _balance.postValue("${it.balance} €") // Aktualisiere die LiveData-Variable
                     }
                 } else {
                     Toast.makeText(context, "Failed to update balance", Toast.LENGTH_SHORT).show()
@@ -56,8 +57,6 @@ class UserTransactionViewModel : ViewModel() {
                 val request = BalanceUpdateRequest(matrikelnumber, amount)
                 val response: Response<Unit> = RetrofitInstance.api.deductBalance(request)
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "Balance updated successfully", Toast.LENGTH_SHORT)
-                        .show()
 
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
@@ -65,6 +64,7 @@ class UserTransactionViewModel : ViewModel() {
                     user?.let {
                         it.balance -= amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)
+                        _balance.postValue("${it.balance} €") // Aktualisiere die LiveData-Variable
                     }
                 } else {
                     Toast.makeText(context, "Failed to update balance", Toast.LENGTH_SHORT).show()
