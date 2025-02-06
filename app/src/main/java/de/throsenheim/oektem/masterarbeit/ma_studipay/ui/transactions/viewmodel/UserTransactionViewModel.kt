@@ -29,7 +29,7 @@ class UserTransactionViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val request = BalanceUpdateRequest(matrikelnumber, amount)
-                val response: Response<Unit> = RetrofitInstance.api.deductBalance(request)
+                val response: Response<Unit> = RetrofitInstance.api.addBalance(request)
                 if (response.isSuccessful) {
                     Toast.makeText(context, "Balance updated successfully", Toast.LENGTH_SHORT)
                         .show()
@@ -54,7 +54,7 @@ class UserTransactionViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val request = BalanceUpdateRequest(matrikelnumber, amount)
-                val response: Response<Unit> = RetrofitInstance.api.addBalance(request)
+                val response: Response<Unit> = RetrofitInstance.api.deductBalance(request)
                 if (response.isSuccessful) {
                     Toast.makeText(context, "Balance updated successfully", Toast.LENGTH_SHORT)
                         .show()
