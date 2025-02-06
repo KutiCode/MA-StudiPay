@@ -6,25 +6,24 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import java.util.concurrent.TimeUnit
-import androidx.work.*
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.worker.SyncWorker
-import kotlinx.coroutines.CoroutineScope
+import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var userRepository: UserRepository
     override fun onCreate(savedInstanceState: Bundle?) {
+        userRepository = UserRepository(
+            userDao = AppDatabase.getDatabase(this).userDao(),
+            syncQueueDao = AppDatabase.getDatabase(this).syncQueueDao(),
+            apiService = RetrofitInstance.api
+        )
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setupWorkManager()
-        syncUserDatabase()
         // Deaktiviere die Zurück-Taste
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -49,39 +48,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    }
+        lifecycleScope.launch(Dispatchers.IO) {
+            userRepository.syncDatabase()
+            Log.d("MainActivity", "Datenbank synchronisiert")
 
-    private fun setupWorkManager() {
-        // Erstelle eine PeriodicWorkRequest
-        val syncWorkRequest = PeriodicWorkRequestBuilder<SyncWorker>(1, TimeUnit.MINUTES)
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED) // Nur bei aktiver Verbindung
-                    .build()
-            )
-            .build()
+        }
 
-        // WorkManager-Aufgabe einplanen
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
-            "SyncWorker",
-            ExistingPeriodicWorkPolicy.KEEP, // Verhindert das erneute Planen, wenn bereits aktiv
-            syncWorkRequest
-        )
-        Log.d("MainActivity", "WorkManager setup complete")
     }
 
     override fun onResume() {
         super.onResume()
-        syncUserDatabase()
-    }
+        lifecycleScope.launch(Dispatchers.IO) {
+            userRepository.syncDatabase()
+            Log.d("MainActivity", "Datenbank synchronisiert")
 
-    private fun syncUserDatabase() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                userRepository.syncDatabase()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
         }
     }
+
+
 }

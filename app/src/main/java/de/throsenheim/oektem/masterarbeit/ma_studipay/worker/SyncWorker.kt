@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
@@ -21,6 +22,7 @@ class SyncWorker(
     override suspend fun doWork(): Result {
         return try {
             userRepository.syncDatabase()
+            Log.d("MainActivity", "SyncWorker erfolgreich")
             Result.success()
         } catch (e: Exception) {
             Result.retry()
