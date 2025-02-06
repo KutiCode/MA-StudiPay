@@ -22,7 +22,4 @@ class OrangeDetailsViewModel : ViewModel() {
         }
     }
 
-    fun clearUserDetails() {
-        _userDetails.value = null
-    }
 }

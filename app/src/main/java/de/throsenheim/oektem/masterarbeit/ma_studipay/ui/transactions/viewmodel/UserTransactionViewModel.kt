@@ -1,11 +1,13 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.viewmodel
 
+import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.BalanceUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
@@ -31,8 +33,7 @@ class UserTransactionViewModel : ViewModel() {
                 val request = BalanceUpdateRequest(matrikelnumber, amount)
                 val response: Response<Unit> = RetrofitInstance.api.addBalance(request)
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "Balance updated successfully", Toast.LENGTH_SHORT)
-                        .show()
+
 
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
@@ -40,7 +41,13 @@ class UserTransactionViewModel : ViewModel() {
                     user?.let {
                         it.balance += amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)
+                        _balance.postValue("${it.balance} €") // Aktualisiere die LiveData-Variable
                     }
+                    Snackbar.make(
+                        (context as Activity).findViewById(android.R.id.content),
+                        "Du hast erfolgreich $amount € auf dein Konto eingezahlt.",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 } else {
                     Toast.makeText(context, "Failed to update balance", Toast.LENGTH_SHORT).show()
                 }
@@ -56,8 +63,6 @@ class UserTransactionViewModel : ViewModel() {
                 val request = BalanceUpdateRequest(matrikelnumber, amount)
                 val response: Response<Unit> = RetrofitInstance.api.deductBalance(request)
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "Balance updated successfully", Toast.LENGTH_SHORT)
-                        .show()
 
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
@@ -65,7 +70,13 @@ class UserTransactionViewModel : ViewModel() {
                     user?.let {
                         it.balance -= amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)
+                        _balance.postValue("${it.balance} €") // Aktualisiere die LiveData-Variable
                     }
+                    Snackbar.make(
+                        (context as Activity).findViewById(android.R.id.content),
+                        "Du hast erfolgreich $amount € von deinem Konto abgebucht.",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 } else {
                     Toast.makeText(context, "Failed to update balance", Toast.LENGTH_SHORT).show()
                 }
