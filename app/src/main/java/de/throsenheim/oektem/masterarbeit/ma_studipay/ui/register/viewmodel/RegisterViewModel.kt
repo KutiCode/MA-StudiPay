@@ -4,18 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import at.favre.lib.crypto.bcrypt.BCrypt
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.UserRegistrationRequest
 import kotlinx.coroutines.launch
-import de.mkammerer.argon2.Argon2
-import de.mkammerer.argon2.Argon2Factory
+
+
 class RegisterViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     private val _registrationResult = MutableLiveData<Boolean>()
     val registrationResult: LiveData<Boolean> get() = _registrationResult
-    private val argon2: Argon2 = Argon2Factory.create()
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
@@ -56,7 +56,8 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
                 try {
                     val response = RetrofitInstance.api.registerUser(request)
                     if (response.isSuccessful) {
-                        userRepository.registerUserLocally(user)
+                        userRepository.insertUser(user)
+                        userRepository.syncDatabase()
                         _registrationResult.value = true
                     } else {
                         _errorMessage.value = "Registrierung beim Backend fehlgeschlagen"
@@ -68,13 +69,8 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
         }
     }
 
-    private fun hashPassword(password: String): String {
-        return argon2.hash(
-            10,
-            65536,
-            1,
-            password.toCharArray()
-        ) // 10 Iterationen, 64MB RAM, 1 Thread
+    fun hashPassword(password: String): String {
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray())
     }
     private suspend fun generateUniqueKontonummer(): String {
         var kontonummer: String

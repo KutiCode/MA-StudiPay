@@ -37,6 +37,12 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    packagingOptions {
+        resources {
+            excludes += "META-INF/AL2.0"
+            excludes += "META-INF/LGPL2.1"
+        }
+    }
 }
 
 dependencies {
@@ -58,5 +64,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("de.mkammerer:argon2-jvm:2.11")
+    implementation("at.favre.lib:bcrypt:0.10.2")
+    implementation("net.java.dev.jna:jna:5.8.0")
+    implementation("net.java.dev.jna:jna-platform:5.8.0")
 }
