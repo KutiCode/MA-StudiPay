@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        setupWorkManager()
+        syncUserDatabase()
         // Deaktiviere die Zurück-Taste
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -46,8 +47,6 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.welcomeFragment)
             }
         }
-        setupWorkManager()
-        syncUserDatabase()
 
     }
 
