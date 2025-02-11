@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
@@ -16,11 +17,15 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var userRepository: UserRepository
+    private lateinit var bankRepository: BankRepository
     override fun onCreate(savedInstanceState: Bundle?) {
+        bankRepository = BankRepository(
+            bankDao = AppDatabase.getDatabase(this).bankDao()
+        )
         userRepository = UserRepository(
             userDao = AppDatabase.getDatabase(this).userDao(),
-            syncQueueDao = AppDatabase.getDatabase(this).syncQueueDao(),
-            apiService = RetrofitInstance.api
+            apiService = RetrofitInstance.api,
+            context = this
         )
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -49,8 +54,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
+            bankRepository.syncBanksFromBackend()
             userRepository.syncDatabase()
-            Log.d("MainActivity", "Datenbank synchronisiert")
+            Log.d("MainActivity", "Nutzer Datenkbank synchronisiert")
+            Log.d("MainActivity", "Bank Daten synchronisiert")
+
+
 
         }
 
@@ -59,8 +68,10 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch(Dispatchers.IO) {
+            bankRepository.syncBanksFromBackend()
             userRepository.syncDatabase()
             Log.d("MainActivity", "Datenbank synchronisiert")
+            Log.d("MainActivity", "Bank Daten synchronisiert")
 
         }
     }

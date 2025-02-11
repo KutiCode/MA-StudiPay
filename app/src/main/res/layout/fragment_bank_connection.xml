@@ -42,20 +42,10 @@
 
             <!-- Vollständiger Name -->
             <TextView
-                android:id="@+id/full_name_label"
+                android:id="@+id/bank_connection_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Deine Bank:"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/university_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Bankleitzahl:"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -68,28 +58,13 @@
 
     <!-- Bottom Navigation -->
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/disconnect_bank_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="168dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/red"
-        android:text="Hebe die Verknüpfung auf"
-        android:textColor="@color/white"
-        app:cornerRadius="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bank_info_card" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/change_bank_connection_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="232dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/gray"
         android:text="Ändere deine Verknüpfung"
@@ -99,8 +74,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bank_info_card" />
-
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

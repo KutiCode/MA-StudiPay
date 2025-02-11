@@ -12,6 +12,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
@@ -39,10 +40,11 @@ class DashboardFragment : Fragment() {
 
         val userRepository = UserRepository(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
-            AppDatabase.getDatabase(requireContext()).syncQueueDao(),
-            apiService = RetrofitInstance.api
+            apiService = RetrofitInstance.api,
+            context = requireContext()
         )
-        val viewModelFactory = DashboardViewModelFactory(userRepository)
+        val bankRepository = BankRepository(AppDatabase.getDatabase(requireContext()).bankDao())
+        val viewModelFactory = DashboardViewModelFactory(bankRepository, userRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[DashboardViewModel::class.java]
 
         setupObservers()

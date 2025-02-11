@@ -4,18 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.SyncQueueDao
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.UserDao
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.SyncQueueEntry
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.BankDao
 
-@Database(entities = [User::class, SyncQueueEntry::class], version = 5, exportSchema = false)
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.UserDao
+
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankSecrets
+
+@Database(
+    entities = [User::class, Bank::class, BankSecrets::class],
+    version = 8,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
-    abstract fun syncQueueDao(): SyncQueueDao
-
+    abstract fun bankDao(): BankDao
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null

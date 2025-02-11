@@ -6,22 +6,36 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class UserInfoViewModel(private val userRepository: UserRepository) : ViewModel() {
+class UserInfoViewModel(
+    private val userRepository: UserRepository,
+    private val bankRepository: BankRepository
+) : ViewModel() {
 
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> get() = _user
+    private val _bank = MutableLiveData<Bank?>()
+    val bank: LiveData<Bank?> get() = _bank
 
     fun loadUser(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
             val userDao = AppDatabase.getDatabase(context).userDao()
             val user = userDao.getUserByMatrikelnumber(matrikelnumber)
             _user.value = user
+            user?.bank_code?.let { loadBank(it) }
         }
     }
 
+    private fun loadBank(bankCode: String) {
+        viewModelScope.launch {
+            val bank = bankRepository.getBankByCode(bankCode)
+            _bank.value = bank
+        }
+    }
 
 }

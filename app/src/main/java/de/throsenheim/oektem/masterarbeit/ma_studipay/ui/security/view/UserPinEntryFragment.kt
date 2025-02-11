@@ -42,8 +42,8 @@ class UserPinEntryFragment : Fragment() {
 
         val userRepository = UserRepository(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
-            AppDatabase.getDatabase(requireContext()).syncQueueDao(),
-            apiService = RetrofitInstance.api
+            apiService = RetrofitInstance.api,
+            context = requireContext()
         )
 
         val viewModelFactory = UserPinEntryViewModelFactory(userRepository)

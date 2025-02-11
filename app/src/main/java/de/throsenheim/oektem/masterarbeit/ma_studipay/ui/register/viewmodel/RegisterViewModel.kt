@@ -39,7 +39,9 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
                     password = hashedPassword,
                     accountNumber = generateUniqueKontonummer(),
                     balance = 0.0,
-                    securePin = "0000"
+                    securePin = "0000",
+                    bank_code = null
+
                 )
 
 

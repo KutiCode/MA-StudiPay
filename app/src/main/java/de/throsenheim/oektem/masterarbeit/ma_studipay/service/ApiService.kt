@@ -1,12 +1,19 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.service
 
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dto.BankResponseDto
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 
 interface ApiService {
+    @GET("/api/all_secrets")
+    suspend fun getAllBankSecrets(): BankResponseDto
+
+
     @GET("/api/users")
     suspend fun getAllUsers(): Response<UserResponse>
 
@@ -19,6 +26,11 @@ interface ApiService {
     @POST("/api/deduct_balance")
     suspend fun deductBalance(@Body balanceUpdateRequest: BalanceUpdateRequest): Response<Unit>
 
+    @POST("/api/update_secure_pin")
+    suspend fun updateSecurePin(@Body securePinUpdateRequest: SecurePinUpdateRequest): Response<Unit>
+
+    @PUT("api/update_user")
+    suspend fun updateUser(@Body user: User): Response<UpdateUserResponse>
 
 }
 
