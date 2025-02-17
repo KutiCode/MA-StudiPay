@@ -131,7 +131,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/bank_connection_value"
+                    android:id="@+id/card_detail_bank_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""

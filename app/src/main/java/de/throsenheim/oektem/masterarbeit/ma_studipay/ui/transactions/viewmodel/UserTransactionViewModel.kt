@@ -33,11 +33,9 @@ class UserTransactionViewModel : ViewModel() {
                 val request = BalanceUpdateRequest(matrikelnumber, amount)
                 val response: Response<Unit> = RetrofitInstance.api.addBalance(request)
                 if (response.isSuccessful) {
-
-
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
-                    val user = userDao.getUserByMatrikelnumber(matrikelnumber)
+                    var user = userDao.getUserByMatrikelnumber(matrikelnumber)
                     user?.let {
                         it.balance += amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)
@@ -63,29 +61,28 @@ class UserTransactionViewModel : ViewModel() {
                 val request = BalanceUpdateRequest(matrikelnumber, amount)
                 val response: Response<Unit> = RetrofitInstance.api.deductBalance(request)
                 if (response.isSuccessful) {
-
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
-                    val user = userDao.getUserByMatrikelnumber(matrikelnumber)
+                    var user = userDao.getUserByMatrikelnumber(matrikelnumber)
                     user?.let {
                         it.balance -= amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)
                         _balance.postValue("${it.balance} €") // Aktualisiere die LiveData-Variable
                     }
+                } else {
                     Snackbar.make(
                         (context as Activity).findViewById(android.R.id.content),
-                        "Du hast erfolgreich $amount € von deinem Konto abgebucht.",
+                        "Failed to update balance",
                         Snackbar.LENGTH_SHORT
                     ).show()
-                } else {
-                    Toast.makeText(context, "Failed to update balance", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Snackbar.make(
+                    (context as Activity).findViewById(android.R.id.content),
+                    "Error: ${e.message}",
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
         }
     }
-
-
-
 }

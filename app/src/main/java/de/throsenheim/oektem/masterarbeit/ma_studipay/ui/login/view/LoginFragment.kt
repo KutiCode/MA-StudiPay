@@ -39,8 +39,8 @@ class LoginFragment : Fragment() {
         // Stelle sicher, dass ViewModel hier initialisiert wird
         val userRepository = UserRepository(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
-            AppDatabase.getDatabase(requireContext()).syncQueueDao(),
-            apiService = RetrofitInstance.api
+            apiService = RetrofitInstance.api,
+            context = requireContext()
         )
 
         val viewModelFactory = LoginViewModelFactory(requireActivity().application, userRepository)

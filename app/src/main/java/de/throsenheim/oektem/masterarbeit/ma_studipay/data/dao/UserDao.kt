@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 
 @Dao
@@ -56,4 +57,7 @@ interface UserDao {
     // Mehrere Benutzer hinzufügen oder aktualisieren
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUsers(users: List<User>)
+
+    @Update
+    suspend fun updateUser(user: User)
 }

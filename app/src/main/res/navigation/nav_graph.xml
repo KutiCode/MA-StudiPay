@@ -60,7 +60,7 @@
         tools:layout="@layout/fragment_user_info" />
     <fragment
         android:id="@+id/fragnentBankConnection"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.view.BankConnectionFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.view.BankConnectionFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_bank_connection" />
     <fragment
@@ -93,6 +93,12 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.view.UserPinEntryFragment"
         android:label="Orange Details"
         tools:layout="@layout/fragment_pin_entry" />
+    <!-- res/navigation/nav_graph.xml -->
+    <fragment
+        android:id="@+id/bankSelectFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.view.BankSelectFragment"
+        android:label="Bank Select"
+        tools:layout="@layout/fragment_bank_select" />
 
     <action
         android:id="@+id/action_dashboardFragment_to_orangeDetailsFragment"
@@ -122,4 +128,7 @@
     <action
         android:id="@+id/action_UserInfoFragment_to_userPinEntryFragment"
         app:destination="@id/userPinEntryFragment" />
+    <action
+        android:id="@+id/action_BankConnectionFragment_to_BankSelectionFragment"
+        app:destination="@id/bankSelectFragment" />
 </navigation>

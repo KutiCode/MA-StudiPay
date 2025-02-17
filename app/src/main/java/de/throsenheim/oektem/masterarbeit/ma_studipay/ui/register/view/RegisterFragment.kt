@@ -38,8 +38,8 @@ class RegisterFragment : Fragment() {
 
         val userRepository = UserRepository(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
-            AppDatabase.getDatabase(requireContext()).syncQueueDao(),
-            apiService = RetrofitInstance.api
+            apiService = RetrofitInstance.api,
+            context = requireContext()
         )
         val viewModelFactory = RegisterViewModelFactory(userRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[RegisterViewModel::class.java]

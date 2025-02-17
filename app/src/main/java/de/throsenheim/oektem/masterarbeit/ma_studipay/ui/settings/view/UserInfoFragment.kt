@@ -17,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.viewmodel.UserInfoViewModel
@@ -38,12 +39,15 @@ class UserInfoFragment : Fragment() {
 
         val userRepository = UserRepository(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
-            AppDatabase.getDatabase(requireContext()).syncQueueDao(),
-            apiService = RetrofitInstance.api
+            apiService = RetrofitInstance.api,
+            context = requireContext()
+        )
+        val bankRepository = BankRepository(
+            bankDao = AppDatabase.getDatabase(requireContext()).bankDao()
+
         )
 
-
-        val viewModelFactory = UserInfoViewModelFactory(userRepository)
+        val viewModelFactory = UserInfoViewModelFactory(userRepository, bankRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[UserInfoViewModel::class.java]
 
 
@@ -62,11 +66,16 @@ class UserInfoFragment : Fragment() {
             )
         }
 
+
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentUsername = sharedPref.getString("current_username", null)
         val infoFullNameValue = view.findViewById<TextView>(R.id.infoFullNameValue)
         val infoMatrikelnummerValue = view.findViewById<TextView>(R.id.infoMatrikelnummerValue)
         val infoAccountNumberValue = view.findViewById<TextView>(R.id.infoAccountNumberValue)
+        val infoBankConnection = view.findViewById<TextView>(R.id.conneected_bank_value)
+        viewModel.bank.observe(viewLifecycleOwner, Observer { bank ->
+            infoBankConnection.text = bank?.name ?: "Keine Bankverbindung"
+        })
 
         currentUsername?.let {
             viewModel.loadUser(requireContext(), it)
@@ -74,6 +83,8 @@ class UserInfoFragment : Fragment() {
             infoFullNameValue.text = "Fehlende Werte"
             infoMatrikelnummerValue.text = "Fehlende Werte"
             infoAccountNumberValue.text = "Fehlende Werte"
+            infoBankConnection.text = "Keine Bankverbindung"
+
         }
 
         viewModel.user.observe(viewLifecycleOwner, Observer { user ->
