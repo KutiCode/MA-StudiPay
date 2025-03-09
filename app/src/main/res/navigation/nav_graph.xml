@@ -68,7 +68,11 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningRecieveFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_beginning_recieve" />
-
+    <fragment
+        android:id="@+id/beginningSendingFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningSendingFragment"
+        android:label="dashboard"
+        tools:layout="@layout/fragment_beginning_sending" />
 
     <fragment
         android:id="@+id/userTransactionFragment"

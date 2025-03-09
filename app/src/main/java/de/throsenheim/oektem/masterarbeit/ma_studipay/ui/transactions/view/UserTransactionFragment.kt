@@ -62,48 +62,6 @@ class UserTransactionFragment : Fragment() {
 
         amountInput = view.findViewById(R.id.amount_input)
 
-        val buttons = listOf(
-            R.id.send_button_0, R.id.send_button_1, R.id.send_button_2, R.id.send_button_3,
-            R.id.send_button_4, R.id.send_button_5, R.id.send_button_6, R.id.send_button_7,
-            R.id.send_button_8, R.id.send_button_9
-        )
-
-        for (buttonId in buttons) {
-            val button = view.findViewById<MaterialButton>(buttonId)
-            button.setOnClickListener {
-                val currentText = amountInput.text.toString()
-                val newText = currentText + button.text.toString()
-                amountInput.setText(newText)
-            }
-        }
-
-        val clearButton = view.findViewById<MaterialButton>(R.id.send_button_clear)
-        clearButton.setOnClickListener {
-            amountInput.setText("")
-        }
-
-        val deleteButton = view.findViewById<MaterialButton>(R.id.send_button_delete)
-        deleteButton.setOnClickListener {
-            val currentText = amountInput.text.toString()
-            if (currentText.isNotEmpty()) {
-                amountInput.setText(currentText.substring(0, currentText.length - 1))
-            }
-        }
-
-        val fixedAmountButtons = mapOf(
-            R.id.send_button_5_euro to "5",
-            R.id.send_button_15_euro to "15",
-            R.id.send_button_25_euro to "25",
-            R.id.send_button_50_euro to "50"
-        )
-
-        for ((buttonId, amount) in fixedAmountButtons) {
-            val button = view.findViewById<MaterialButton>(buttonId)
-            button.setOnClickListener {
-                amountInput.setText(amount)
-            }
-        }
-
         val sendButton = view.findViewById<MaterialButton>(R.id.continue_button)
 
         sendButton.setOnClickListener {

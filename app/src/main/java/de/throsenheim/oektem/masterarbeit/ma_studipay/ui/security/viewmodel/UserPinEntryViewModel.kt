@@ -54,16 +54,16 @@ class UserPinEntryViewModel(private val userRepository: UserRepository) : ViewMo
         viewModelScope.launch {
             val storedPin = userRepository.getSecurePin(matrikelnummer)
             if (storedPin == pin) {
-                Toast.makeText(context, "PIN is correct", Toast.LENGTH_SHORT).show()
+
                 val navOptions = NavOptions.Builder()
-                    .setEnterAnim(R.anim.slide_in_right)
-                    .setExitAnim(R.anim.slide_out_left)
-                    .setPopEnterAnim(R.anim.slide_in_left)
-                    .setPopExitAnim(R.anim.slide_out_right)
+                    .setEnterAnim(R.anim.fade_in)
+                    .setExitAnim(R.anim.fade_out)
+                    .setPopEnterAnim(R.anim.fade_in)
+                    .setPopExitAnim(R.anim.fade_out)
                     .build()
-                navController.navigate(R.id.navigation_dashboard, null, navOptions)
+                navController.navigate(R.id.beginningSendingFragment, null, navOptions)
             } else {
-                Toast.makeText(context, "PIN is incorrect", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Falsche Pin Eingabe", Toast.LENGTH_SHORT).show()
             }
         }
     }

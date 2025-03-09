@@ -12,7 +12,7 @@
         android:id="@+id/sending_text_beginning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Du bist Bereit zum Senden"
+        android:text="Du bist bereit zum Senden"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -46,7 +46,7 @@
                 android:id="@+id/user_info_sender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="Kutay Öktem"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -82,7 +82,22 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
     <!-- Roter Button zum Abbrechen des Empfangs -->
+
+    <TextView
+        android:id="@+id/nfc_sending_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="356dp"
+        android:text="Handy an Empfänger halten"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cancelButton"
         android:layout_width="0dp"

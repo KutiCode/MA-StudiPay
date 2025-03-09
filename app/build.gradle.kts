@@ -67,4 +67,6 @@ dependencies {
     implementation("at.favre.lib:bcrypt:0.10.2")
     implementation("net.java.dev.jna:jna:5.8.0")
     implementation("net.java.dev.jna:jna-platform:5.8.0")
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
+
 }
