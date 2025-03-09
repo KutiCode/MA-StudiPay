@@ -117,7 +117,7 @@ class UserTransactionFragment : Fragment() {
                             amount.toDouble()
                         )
                     } else {
-
+                        findNavController().navigate(R.id.action_userPin_to_beginningRecieveFragment)
                     }
                 } else {
                     if (source == "orangeDetails") {

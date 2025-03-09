@@ -64,6 +64,13 @@
         android:label="dashboard"
         tools:layout="@layout/fragment_bank_connection" />
     <fragment
+        android:id="@+id/beginningRecieveFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningRecieveFragment"
+        android:label="dashboard"
+        tools:layout="@layout/fragment_beginning_recieve" />
+
+
+    <fragment
         android:id="@+id/userTransactionFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view.UserTransactionFragment"
         android:label="dashboard"
@@ -131,4 +138,7 @@
     <action
         android:id="@+id/action_BankConnectionFragment_to_BankSelectionFragment"
         app:destination="@id/bankSelectFragment" />
+    <action
+        android:id="@+id/action_userPin_to_beginningRecieveFragment"
+        app:destination="@id/beginningRecieveFragment" />
 </navigation>
