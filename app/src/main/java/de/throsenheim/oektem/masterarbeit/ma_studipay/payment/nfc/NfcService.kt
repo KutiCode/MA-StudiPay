@@ -1,30 +1,24 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.nfc
 
-
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
-import android.nfc.tech.NfcA
-import android.nfc.tech.NfcB
-import android.nfc.tech.NfcF
-import android.nfc.tech.NfcV
 import android.provider.Settings
 import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.security.RsaEncryptionHelper
-import java.io.IOException
 import java.util.Locale
 
 /**
  * Diese Klasse kapselt alle NFC-bezogenen Operationen.
- * Sie startet den Reader-Modus, verarbeitet Tags und sendet den SELECT-APDU-Befehl.
+ * Sie startet den Reader-Modus, verarbeitet Tags und sendet APDU-Befehle.
  */
 class NfcService(private val context: Context, private val activity: Activity) {
 
     private var nfcAdapter: NfcAdapter? = null
-    private var currentTag: Tag? = null
+
     // Callback, der beim Empfang der INIT-Antwort aufgerufen wird.
     var onInitResponseReceived: ((String) -> Unit)? = null
 
@@ -60,95 +54,70 @@ class NfcService(private val context: Context, private val activity: Activity) {
     /**
      * Verarbeitet ein erkanntes NFC-Tag.
      * Hier wird der SELECT-APDU-Befehl gesendet und die Antwort ausgewertet.
+     * Wenn INIT empfangen wird, sendet das Terminal anschließend seinen öffentlichen Schlüssel.
      */
     private fun processTag(tag: Tag) {
-        closeAllTechnologies(tag) // Schließe zuerst alle Technologien
-        currentTag = tag
-
-        try {
-            val isoDep = IsoDep.get(tag) ?: run {
-                onError?.invoke("Tag unterstützt keine IsoDep")
-                return
-            }
-
-            isoDep.connect() // Verbinde erst NACH dem Schließen
-            if (!isoDep.isConnected) {
-                onError?.invoke("Verbindung fehlgeschlagen")
-                return
-            }
-
-            // Sende SELECT-APDU
-            val selectApdu = hexStringToByteArray("00A4040006F0123456789A")
-            val response = isoDep.transceive(selectApdu)
-            Log.d("NFC", "SELECT-APDU-Antwort: ${response.toHexString()}")
-
-            // Verarbeite INIT-Antwort
-            if (response.toHexString().startsWith("494E4954")) { // "INIT"
-                val publicKey = RsaEncryptionHelper.getPublicKeyAsString()
-                sendPublicKeyToSender(publicKey)
-            }
-        } catch (e: Exception) {
-            onError?.invoke("Kritischer Fehler: ${e.message}")
-        }
-    }
-
-    private fun closeAllTechnologies(tag: Tag) {
-        val techList = tag.techList
-        techList.forEach { tech ->
+        val isoDep = IsoDep.get(tag)
+        isoDep?.let {
             try {
-                when (tech) {
-                    IsoDep::class.java.name -> {
-                        val isoDep = IsoDep.get(tag)
-                        isoDep?.close()
-                    }
+                it.connect()
+                // Sende den SELECT-APDU-Befehl
+                val selectApdu = hexStringToByteArray("00A4040007A0000002471001")
+                Log.e("NFC", "Sende SELECT-APDU: ${selectApdu.toHexString()}")
+                val response = it.transceive(selectApdu)
+                val responseHex = response.toHexString()
+                Log.e("NFC", "Antwort vom HCE-Sender: $responseHex")
 
-                    NfcA::class.java.name -> NfcA.get(tag)?.close()
-                    NfcB::class.java.name -> NfcB.get(tag)?.close()
-                    NfcF::class.java.name -> NfcF.get(tag)?.close()
-                    NfcV::class.java.name -> NfcV.get(tag)?.close()
-                    // Füge alle unterstützten Technologien hinzu
+                if (responseHex.startsWith("494E4954")) { // "INIT" in Hex: 49 4E 49 54
+                    // INIT empfangen; benachrichtige den Callback
+                    onInitResponseReceived?.invoke(responseHex)
+                    // Erstelle bzw. hole deinen Terminal-öffentlichen Schlüssel.
+                    RsaEncryptionHelper.generateKeyPairIfNeeded()
+                    val publicKey = RsaEncryptionHelper.getPublicKeyAsString()
+                    // Sende den öffentlichen Schlüssel an den HCE-Sender.
+                    sendTerminalPublicKey(tag, publicKey, isoDep)
+                } else {
+                    onError?.invoke("Unerwartete Antwort: $responseHex")
                 }
             } catch (e: Exception) {
-                Log.e("NFC", "Fehler beim Schließen von $tech: ${e.message}")
+                onError?.invoke("Fehler bei der NFC-Kommunikation: ${e.message}")
+            } finally {
+                try {
+                    it.close()
+                } catch (e: Exception) {
+                }
             }
         }
     }
 
-    fun sendPublicKeyToSender(publicKey: String) {
-        val tag = currentTag ?: run {
-            onError?.invoke("Kein aktives Tag")
-            return
-        }
-
-        closeAllTechnologies(tag) // Erneut schließen vor der Nutzung
-        val isoDep = IsoDep.get(tag) ?: run {
-            onError?.invoke("IsoDep nicht verfügbar")
-            return
-        }
-
+    /**
+     * Sendet den Terminal-öffentlichen Schlüssel an den HCE-Sender.
+     *
+     * @param tag Das NFC-Tag.
+     * @param terminalPublicKey Der öffentliche Schlüssel als String (z.B. Base64-kodiert).
+     * @param isoDep Die geöffnete IsoDep-Verbindung (wird hier weiterverwendet, bevor sie geschlossen wird).
+     */
+    private fun sendTerminalPublicKey(tag: Tag, terminalPublicKey: String, isoDep: IsoDep) {
         try {
-            isoDep.connect()
-            val publicKeyBytes = publicKey.toByteArray(Charsets.UTF_8)
-
-            // APDU-Konstruktion mit korrektem Lc-Feld (Länge als Hex)
-            val header = "00D00000${String.format("%02X", publicKeyBytes.size)}"
-            val command = hexStringToByteArray(header) + publicKeyBytes
-
-            // Sende APDU und prüfe Antwort
-            val response = isoDep.transceive(command)
-            Log.d("NFC", "Antwort auf Schlüsselübertragung: ${response.toHexString()}")
-
-            if (response.size < 2 || response[response.size - 2] != 0x90.toByte()) {
-                onError?.invoke("Fehlerhafte Antwort: ${response.toHexString()}")
-            }
-        } catch (e: IOException) {
-            onError?.invoke("I/O-Fehler: ${e.message}")
-        } finally {
-            isoDep.close()
+            // Konvertiere den öffentlichen Schlüssel in einen Hex-String.
+            // Füge die Länge des öffentlichen Schlüssels im APDU-Header hinzu (z.B. Lc-Feld).
+            val publicKeyHex = stringToHex(terminalPublicKey)
+            val lc = String.format("%02X", publicKeyHex.length / 2) // Länge in Bytes
+            val command = "00D00000${lc}$publicKeyHex" // Header + Lc + Daten
+            val apduCommand = hexStringToByteArray(command)
+            Log.e("NFC", "Sende Terminal Public Key APDU: ${apduCommand.toHexString()}")
+            // Sende den APDU-Befehl.
+            val response = isoDep.transceive(apduCommand)
+            Log.e(
+                "NFC",
+                "Antwort vom HCE-Sender auf Terminal Public Key: ${response.toHexString()}"
+            )
+        } catch (e: Exception) {
+            Log.e("NFC", "Fehler beim Senden des öffentlichen Schlüssels: ${e.message}")
         }
     }
 
-    // Wandelt einen Hex-String (z.B. SELECT-APDU) in ein ByteArray um.
+    // Hilfsfunktion: Wandelt einen Hex-String (z.B. SELECT-APDU) in ein ByteArray um.
     private fun hexStringToByteArray(s: String): ByteArray {
         val len = s.length
         val data = ByteArray(len / 2)
@@ -164,5 +133,10 @@ class NfcService(private val context: Context, private val activity: Activity) {
     // Erweiterungsfunktion: Wandelt ein ByteArray in einen Hex-String um.
     private fun ByteArray.toHexString(): String {
         return joinToString(separator = "") { String.format(Locale.US, "%02X", it) }
+    }
+
+    // Hilfsfunktion: Wandelt einen String in einen Hex-String um.
+    private fun stringToHex(input: String): String {
+        return input.toByteArray(Charsets.UTF_8).joinToString("") { String.format("%02X", it) }
     }
 }
