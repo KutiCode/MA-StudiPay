@@ -6,7 +6,6 @@ data class PaymentToken(
     val accountNumber: String,
     val bankCode: String,
     val bankSecret: String,
-    val amount: String,
     val date: String
 
 

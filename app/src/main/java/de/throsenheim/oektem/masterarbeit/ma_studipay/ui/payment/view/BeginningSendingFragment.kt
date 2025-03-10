@@ -69,8 +69,9 @@ class BeginningSendingFragment : Fragment() {
         PaymentHCEService.isActive = false
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    // Rufe diese Methode in der Activity/Fragment auf, wenn die App geschlossen wird
+    override fun onDestroy() {
+        super.onDestroy()
+        PaymentHCEService.isActive = false
     }
 }

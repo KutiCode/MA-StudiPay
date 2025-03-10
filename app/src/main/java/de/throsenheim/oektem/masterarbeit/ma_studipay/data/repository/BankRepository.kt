@@ -60,4 +60,8 @@ class BankRepository(private val bankDao: BankDao) {
         }
     }
 
+    suspend fun getBankWithSecrets(bankCode: String): BankWithSecrets? {
+        return bankDao.getBankWithSecrets(bankCode)
+    }
+
 }

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "de.throsenheim.oektem.masterarbeit.ma_studipay"
-        minSdk = 22
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
