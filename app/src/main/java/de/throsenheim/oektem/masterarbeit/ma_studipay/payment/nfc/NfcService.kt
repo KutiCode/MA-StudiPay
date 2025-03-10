@@ -7,8 +7,14 @@ import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
+import android.nfc.tech.NfcA
+import android.nfc.tech.NfcB
+import android.nfc.tech.NfcF
+import android.nfc.tech.NfcV
 import android.provider.Settings
 import android.util.Log
+import de.throsenheim.oektem.masterarbeit.ma_studipay.security.RsaEncryptionHelper
+import java.io.IOException
 import java.util.Locale
 
 /**
@@ -18,7 +24,7 @@ import java.util.Locale
 class NfcService(private val context: Context, private val activity: Activity) {
 
     private var nfcAdapter: NfcAdapter? = null
-
+    private var currentTag: Tag? = null
     // Callback, der beim Empfang der INIT-Antwort aufgerufen wird.
     var onInitResponseReceived: ((String) -> Unit)? = null
 
@@ -56,35 +62,91 @@ class NfcService(private val context: Context, private val activity: Activity) {
      * Hier wird der SELECT-APDU-Befehl gesendet und die Antwort ausgewertet.
      */
     private fun processTag(tag: Tag) {
-        val isoDep = IsoDep.get(tag)
-        isoDep?.let {
-            try {
-                it.connect()
-                val selectApdu = hexStringToByteArray("00A4040007A0000002471001")
-                Log.d(
-                    "NFC",
-                    "Sende SELECT-APDU: ${selectApdu.toHexString()}"
-                )  // ✅ Logging hinzugefügt
-                val response = it.transceive(selectApdu)
-                val responseHex = response.toHexString()
-                Log.d("NFC", "Antwort vom Sender: $responseHex")  // ✅ Logging der Antwort
+        closeAllTechnologies(tag) // Schließe zuerst alle Technologien
+        currentTag = tag
 
-                if (responseHex.startsWith("494E4954")) { // "INIT"
-                    onInitResponseReceived?.invoke(responseHex)
-                } else {
-                    onError?.invoke("Unerwartete Antwort: $responseHex")
+        try {
+            val isoDep = IsoDep.get(tag) ?: run {
+                onError?.invoke("Tag unterstützt keine IsoDep")
+                return
+            }
+
+            isoDep.connect() // Verbinde erst NACH dem Schließen
+            if (!isoDep.isConnected) {
+                onError?.invoke("Verbindung fehlgeschlagen")
+                return
+            }
+
+            // Sende SELECT-APDU
+            val selectApdu = hexStringToByteArray("00A4040006F0123456789A")
+            val response = isoDep.transceive(selectApdu)
+            Log.d("NFC", "SELECT-APDU-Antwort: ${response.toHexString()}")
+
+            // Verarbeite INIT-Antwort
+            if (response.toHexString().startsWith("494E4954")) { // "INIT"
+                val publicKey = RsaEncryptionHelper.getPublicKeyAsString()
+                sendPublicKeyToSender(publicKey)
+            }
+        } catch (e: Exception) {
+            onError?.invoke("Kritischer Fehler: ${e.message}")
+        }
+    }
+
+    private fun closeAllTechnologies(tag: Tag) {
+        val techList = tag.techList
+        techList.forEach { tech ->
+            try {
+                when (tech) {
+                    IsoDep::class.java.name -> {
+                        val isoDep = IsoDep.get(tag)
+                        isoDep?.close()
+                    }
+
+                    NfcA::class.java.name -> NfcA.get(tag)?.close()
+                    NfcB::class.java.name -> NfcB.get(tag)?.close()
+                    NfcF::class.java.name -> NfcF.get(tag)?.close()
+                    NfcV::class.java.name -> NfcV.get(tag)?.close()
+                    // Füge alle unterstützten Technologien hinzu
                 }
             } catch (e: Exception) {
-                onError?.invoke("Fehler bei der NFC-Kommunikation: ${e.message}")
-            } finally {
-                try {
-                    it.close()
-                } catch (e: Exception) {
-                }
+                Log.e("NFC", "Fehler beim Schließen von $tech: ${e.message}")
             }
         }
     }
 
+    fun sendPublicKeyToSender(publicKey: String) {
+        val tag = currentTag ?: run {
+            onError?.invoke("Kein aktives Tag")
+            return
+        }
+
+        closeAllTechnologies(tag) // Erneut schließen vor der Nutzung
+        val isoDep = IsoDep.get(tag) ?: run {
+            onError?.invoke("IsoDep nicht verfügbar")
+            return
+        }
+
+        try {
+            isoDep.connect()
+            val publicKeyBytes = publicKey.toByteArray(Charsets.UTF_8)
+
+            // APDU-Konstruktion mit korrektem Lc-Feld (Länge als Hex)
+            val header = "00D00000${String.format("%02X", publicKeyBytes.size)}"
+            val command = hexStringToByteArray(header) + publicKeyBytes
+
+            // Sende APDU und prüfe Antwort
+            val response = isoDep.transceive(command)
+            Log.d("NFC", "Antwort auf Schlüsselübertragung: ${response.toHexString()}")
+
+            if (response.size < 2 || response[response.size - 2] != 0x90.toByte()) {
+                onError?.invoke("Fehlerhafte Antwort: ${response.toHexString()}")
+            }
+        } catch (e: IOException) {
+            onError?.invoke("I/O-Fehler: ${e.message}")
+        } finally {
+            isoDep.close()
+        }
+    }
 
     // Wandelt einen Hex-String (z.B. SELECT-APDU) in ein ByteArray um.
     private fun hexStringToByteArray(s: String): ByteArray {

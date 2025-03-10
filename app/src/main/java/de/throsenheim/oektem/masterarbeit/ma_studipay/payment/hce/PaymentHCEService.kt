@@ -9,13 +9,16 @@ import android.util.Log
 class PaymentHCEService : HostApduService() {
 
     // Der SELECT-APDU-Befehl, der vom NFC-Leser gesendet wird.
-    private val SELECT_APDU = "00A4040007A0000002471001"
+    private val SELECT_APDU = "00A4040006F0123456789A"
     // Initialer Wert, den wir als Handshake senden – hier "INIT"
     private val INITIAL_RESPONSE = "INIT"
     // Variable zum Speichern des tatsächlichen PaymentTokens (als JSON-String)
     private var paymentToken: String = ""
     // Zustandsvariable, um zu wissen, ob der Initialwert schon gesendet wurde
     private var initialResponseSent = false
+
+
+    private val SEND_PUBLIC_KEY_APDU = "00D00000"
 
     override fun processCommandApdu(commandApdu: ByteArray?, extras: Bundle?): ByteArray {
         Log.d("HCE", "processCommandApdu wurde aufgerufen!")
@@ -43,6 +46,11 @@ class PaymentHCEService : HostApduService() {
                 Log.d("HCE", "Sende Payment-Token: ${tokenBytes.toHexString()}")
                 tokenBytes + byteArrayOf(0x90.toByte(), 0x00.toByte())
             }
+        }
+        if (commandStr.startsWith(SEND_PUBLIC_KEY_APDU)) {
+            Log.d("HCE", "SEND_PUBLIC_KEY_APDU erkannt, öffentlichen Schlüssel erhalten.")
+            // Hier müsste der öffentliche Schlüssel als Byte-Array gesendet werden
+            return byteArrayOf(0x90.toByte(), 0x00.toByte())
         }
         Log.d("HCE", "Unbekannter APDU-Befehl erhalten.")
         return byteArrayOf(0x6F.toByte(), 0x00.toByte())  // 6F00: Fehler

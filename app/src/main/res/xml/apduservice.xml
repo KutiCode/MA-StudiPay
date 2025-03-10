@@ -2,11 +2,10 @@
 <host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/hce_service"
     android:requireDeviceUnlock="false">
-
     <aid-group
-        android:description="@string/hce_service"
-        android:category="payment">
-        <aid-filter android:name="A0000002471001" />
+        android:category="other"
+        android:description="@string/aid_group_description">
+        <!-- AID Ihrer App (muss mit dem SELECT-APDU-Befehl übereinstimmen) -->
+        <aid-filter android:name="F0123456789A" /> <!-- Hex: A0000002471001 -->
     </aid-group>
-
 </host-apdu-service>
