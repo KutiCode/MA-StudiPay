@@ -20,16 +20,15 @@ class NfcPaymentReceiver(private val activity: Activity) {
             0x03.toByte(), 0x04.toByte(), 0x05.toByte(), 0x06.toByte()
         )
 
-        // SELECT APDU gemäß ISO 7816-4
         private val SELECT_APDU = byteArrayOf(
             0x00.toByte(),  // CLA
             0xA4.toByte(),  // INS
-            0x04.toByte(), // P1
+            0x04.toByte(),  // P1
             0x00.toByte(),  // P2
             0x07.toByte(),  // Lc (Länge der AID)
-            *PAYMENT_AID,
-            0x00.toByte()   // Le
+            *PAYMENT_AID
         )
+
     }
 
     fun enableNfcReader() {
