@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginningRecieveBinding
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.nfc.NfcPaymentReceiver
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.viewmodel.BeginningRecieveViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.viewmodel.BeginningRecieveViewModelFactory
 
@@ -17,8 +18,9 @@ class BeginningRecieveFragment : Fragment() {
 
     private var _binding: FragmentBeginningRecieveBinding? = null
     private val binding get() = _binding!!
+    private lateinit var nfcReader: NfcPaymentReceiver
 
-    private lateinit var viewModel: BeginningRecieveViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,37 +33,27 @@ class BeginningRecieveFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialisiere das ViewModel über die Factory
-        viewModel = ViewModelProvider(
-            this,
-            BeginningRecieveViewModelFactory(requireContext(), requireActivity())
-        ).get(BeginningRecieveViewModel::class.java)
+        nfcReader = NfcPaymentReceiver(requireActivity())
+
+
+
 
         binding.cancelButton.setOnClickListener {
+            nfcReader.disableNfcReader()
             findNavController().navigate(R.id.navigation_dashboard)
         }
 
-        // Beobachte Fehler aus dem NFC-Service
-        viewModel.error.observe(viewLifecycleOwner) { errorMsg ->
-            Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
-        }
 
-        // Beobachte die INIT-Antwort
-        viewModel.initResponse.observe(viewLifecycleOwner) { response ->
-            Toast.makeText(requireContext(), "INIT-Antwort empfangen: $response", Toast.LENGTH_LONG)
-                .show()
-            // Hier kannst du z.B. zum nächsten Screen navigieren
-        }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.startNfc()
+        nfcReader.enableNfcReader()
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.stopNfc()
+        nfcReader.disableNfcReader()
     }
 
     override fun onDestroyView() {

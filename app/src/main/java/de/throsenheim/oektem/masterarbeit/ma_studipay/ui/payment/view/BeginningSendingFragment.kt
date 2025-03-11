@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginningSendingBinding
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.hce.PaymentHCEService
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardUiState
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.viewmodel.BeginningSendingViewModel
 
@@ -31,8 +30,6 @@ class BeginningSendingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        PaymentHCEService.isActive = true
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentUsername = sharedPref.getString("current_username", null)
 
@@ -49,29 +46,25 @@ class BeginningSendingFragment : Fragment() {
             binding.userInfoSender.text = "Hallo, Benutzer"
         }
 
-        // Optional: Weitere UI-Anpassungen (z.B. Text anpassen, Bilder setzen etc.)
 
-        // Beim Klick auf den Abbrechen-Button wird zum Dashboard navigiert.
+
+
+
         binding.cancelButton.setOnClickListener {
-            PaymentHCEService.isActive = false
-            findNavController().navigate(R.id.navigation_dashboard)
+
+        findNavController().navigate(R.id.navigation_dashboard)
         }
     }
 
-    /**
-     * Diese Methode liefert den aktuellen Benutzernamen.
-     * Ersetze den Rückgabewert mit echter Logik (z.B. aus SharedPreferences oder einem Repository).
-     */
 
     override fun onPause() {
         super.onPause()
-        // Wenn das Fragment nicht mehr im Vordergrund ist, deaktiviere HCE.
-        PaymentHCEService.isActive = false
+
     }
 
     // Rufe diese Methode in der Activity/Fragment auf, wenn die App geschlossen wird
     override fun onDestroy() {
         super.onDestroy()
-        PaymentHCEService.isActive = false
+
     }
 }
