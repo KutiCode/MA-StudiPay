@@ -20,8 +20,24 @@ public class AppHostApduService : HostApduService() {
     private var encryptedFragments: List<ByteArray> = emptyList()
     private var currentFragmentIndex = 0
 
+
+    companion object {
+
+        @Volatile
+        var isTokenTransmissionAllowed: Boolean = false
+    }
+
+
+
     override fun processCommandApdu(apdu: ByteArray, extras: Bundle?): ByteArray {
         // 1. SELECT_APDU: Aktivierung des HCE-Dienstes
+        // Hier prüfen wir, ob das Senden erlaubt ist:
+        if (!isTokenTransmissionAllowed) {
+            Log.i(TAG, "Tokenübertragung nicht erlaubt, Sender nicht im Sende-Modus")
+            return conflictMessage
+        }
+
+
         if (selectAidApdu(apdu)) {
             Log.i(TAG, "Application selected")
             return okayMessage

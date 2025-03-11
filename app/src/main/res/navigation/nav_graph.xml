@@ -13,6 +13,7 @@
             app:destination="@id/loginFragment" />
     </fragment>
 
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.view.LoginFragment"
@@ -73,6 +74,11 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningSendingFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_beginning_sending" />
+    <fragment
+        android:id="@+id/fragment_receiving_hold"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.ReceivingHoldFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_receiving_hold" />
 
     <fragment
         android:id="@+id/userTransactionFragment"

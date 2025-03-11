@@ -51,9 +51,9 @@ object TokenGenerator {
             ?: throw Exception("Kein BankSecret für Bank-Code ${user.bank_code} gefunden")
 
         // 4. Aktuellen Zeitstempel erstellen (Datum und Uhrzeit)
-//        val currentDate = Date()
-//        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//        val dateString = formatter.format(currentDate)
+        val currentDate = Date()
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val dateString = formatter.format(currentDate)
 
         // 5. Erstelle den PaymentToken mit den gesammelten Daten
         return PaymentToken(
@@ -61,8 +61,8 @@ object TokenGenerator {
             lastName = user.lastName,
             accountNumber = user.accountNumber,
             bankCode = user.bank_code ?: "",
-            bankSecret = bankSecret
-//            date = dateString
+            bankSecret = bankSecret,
+            date = dateString
         )
     }
 }

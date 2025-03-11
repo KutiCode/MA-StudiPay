@@ -5,8 +5,8 @@ data class PaymentToken(
     val lastName: String,
     val accountNumber: String,
     val bankCode: String,
-    val bankSecret: String
-//    val date: String
+    val bankSecret: String,
+    val date: String
 
 
 )

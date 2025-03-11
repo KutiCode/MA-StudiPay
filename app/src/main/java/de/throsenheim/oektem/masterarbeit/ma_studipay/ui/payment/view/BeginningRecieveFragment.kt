@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginningRecieveBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.nfc.NfcPaymentReceiver
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.viewmodel.BeginningRecieveViewModel
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.viewmodel.BeginningRecieveViewModelFactory
 
 class BeginningRecieveFragment : Fragment() {
 
@@ -35,7 +31,11 @@ class BeginningRecieveFragment : Fragment() {
 
         nfcReader = NfcPaymentReceiver(requireActivity())
 
-
+        nfcReader.tokenReceivedLiveData.observe(viewLifecycleOwner) { tokenReceived ->
+            if (tokenReceived) {
+                findNavController().navigate(R.id.fragment_receiving_hold)
+            }
+        }
 
 
         binding.cancelButton.setOnClickListener {
@@ -60,4 +60,6 @@ class BeginningRecieveFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

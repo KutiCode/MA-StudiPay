@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginningSendingBinding
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.hce.AppHostApduService
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardUiState
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.viewmodel.BeginningSendingViewModel
 
@@ -32,7 +33,7 @@ class BeginningSendingFragment : Fragment() {
 
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentUsername = sharedPref.getString("current_username", null)
-
+        AppHostApduService.isTokenTransmissionAllowed = true
         // Observer für den Benutzernamen einrichten
         viewModel.userName.observe(viewLifecycleOwner) { name ->
             binding.userInfoSender.text = name
@@ -46,12 +47,8 @@ class BeginningSendingFragment : Fragment() {
             binding.userInfoSender.text = "Hallo, Benutzer"
         }
 
-
-
-
-
         binding.cancelButton.setOnClickListener {
-
+            AppHostApduService.isTokenTransmissionAllowed = false
         findNavController().navigate(R.id.navigation_dashboard)
         }
     }
@@ -59,12 +56,20 @@ class BeginningSendingFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        AppHostApduService.isTokenTransmissionAllowed = false
+
 
     }
 
     // Rufe diese Methode in der Activity/Fragment auf, wenn die App geschlossen wird
     override fun onDestroy() {
         super.onDestroy()
+        AppHostApduService.isTokenTransmissionAllowed = false
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppHostApduService.isTokenTransmissionAllowed = true
     }
 }

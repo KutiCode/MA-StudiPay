@@ -5,12 +5,13 @@ import android.nfc.Tag
 import android.nfc.tech.IsoDep
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper
 import java.io.IOException
 
 class NfcPaymentReceiver(private val activity: Activity) {
     private val nfcAdapter = android.nfc.NfcAdapter.getDefaultAdapter(activity)
-
+    val tokenReceivedLiveData = MutableLiveData<Boolean>()
     companion object {
         private const val TAG = "NfcPaymentReceiver"
         private val PAYMENT_AID = byteArrayOf(
@@ -90,6 +91,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
                 // Optional: Entschlüsseln
                 val decryptedToken = EccHybridEncryptionHelper.decryptFromSender(fullEncryptedToken)
                 Log.d(TAG, "Entschlüsselter Token: $decryptedToken")
+                tokenReceivedLiveData.postValue(true)
             } catch (e: IOException) {
                 Log.e(TAG, "Kommunikationsfehler: ${e.message}")
             }
