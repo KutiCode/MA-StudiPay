@@ -16,6 +16,15 @@ public class AppHostApduService : HostApduService() {
             return okayMessage
         }
 
+        val publicKeyBytes = receivePublicKeyApdu(apdu)
+        if (publicKeyBytes != null) {
+            val publicKeyString = String(publicKeyBytes, Charsets.UTF_8)
+            Log.i("HCEDEMO", "Received public key: $publicKeyString")
+            // Hier kannst du den Schlüssel speichern oder weiterverarbeiten
+            return okayMessage
+        }
+
+
         if (conflictApdu(apdu)) {
             Log.i("HCEDEMO", "Conflict")
             return conflictMessage
@@ -27,9 +36,23 @@ public class AppHostApduService : HostApduService() {
 
     }
 
+    // Hilfsmethode zum Extrahieren des öffentlichen Schlüssels
+    private fun receivePublicKeyApdu(apdu: ByteArray): ByteArray? {
+        // Mindestens 5 Bytes für den Header (CLA, INS, P1, P2, Lc)
+        if (apdu.size < 5) return null
+        val cla = apdu[0]
+        val ins = apdu[1]
+        // Definieren: CLA = 0x80, INS = 0x10 signalisiert Public-Key-Übertragung
+        if (cla != 0x80.toByte() || ins != 0x10.toByte()) return null
 
-    private val nextMessage: ByteArray
-        get() = ("Message from android: " + messageCounter++).toByteArray()
+        // Das Lc-Feld steht an Position 4 und gibt die Länge der Daten an
+        val lc = apdu[4].toInt() and 0xFF
+        if (apdu.size < 5 + lc) return null
+
+        // Extrahiere den Datenbereich, der den öffentlichen Schlüssel enthält
+        return apdu.copyOfRange(5, 5 + lc)
+    }
+
 
     private fun selectAidApdu(apdu: ByteArray): Boolean {
         return apdu.size >= 2 && apdu[0] == 0.toByte() && apdu[1] == 0xa4.toByte()

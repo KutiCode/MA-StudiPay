@@ -5,6 +5,7 @@ import android.nfc.*
 import android.nfc.tech.IsoDep
 import android.os.Bundle
 import android.util.Log
+import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper
 import de.throsenheim.oektem.masterarbeit.ma_studipay.security.RsaEncryptionHelper
 import java.io.IOException
 
@@ -66,8 +67,8 @@ class NfcPaymentReceiver(private val activity: Activity) {
 
                 if (response.contentEquals(byteArrayOf(0x90.toByte(), 0x00.toByte()))) {
                     Log.d(TAG, "Verbindung erfolgreich mit Sender")
-                    RsaEncryptionHelper.generateKeyPairIfNeeded()
-                    val publicKeyString = RsaEncryptionHelper.getPublicKeyAsString()
+                    EccHybridEncryptionHelper.generateReceiverKeyPairIfNeeded()
+                    val publicKeyString = EccHybridEncryptionHelper.getReceiverPublicKeyAsString()
                     Log.d(TAG, "Öffentlicher Schlüssel generiert: $publicKeyString")
                     val publicKeyBytes = publicKeyString.toByteArray(Charsets.UTF_8)
                     val CLA: Byte = 0x80.toByte()
