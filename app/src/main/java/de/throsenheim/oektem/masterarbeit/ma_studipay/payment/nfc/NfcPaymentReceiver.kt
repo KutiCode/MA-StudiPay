@@ -63,7 +63,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
             try {
                 isoDep.connect()
                 val response = isoDep.transceive(SELECT_APDU)
-                Log.d(TAG, "APDU Response: ${response}")
+                Log.d(TAG, "APDU Response: ${response.toHexString()}")
 
                 if (response.contentEquals(byteArrayOf(0x90.toByte(), 0x00.toByte()))) {
                     Log.d(TAG, "Verbindung erfolgreich mit Sender")

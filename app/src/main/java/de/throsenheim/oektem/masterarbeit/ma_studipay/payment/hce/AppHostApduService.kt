@@ -3,12 +3,19 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.hce
 import android.nfc.cardemulation.HostApduService
 import android.os.Bundle
 import android.util.Log
+import com.google.gson.Gson
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TokenGenerator
+import kotlinx.coroutines.runBlocking
 
 public class AppHostApduService : HostApduService() {
     private var messageCounter = 0
     private val okayMessage: ByteArray = byteArrayOf(0x90.toByte(), 0x00.toByte())
     private val conflictMessage: ByteArray = byteArrayOf(0x6A.toByte(), 0x82.toByte())
     private val neutrumMessage: ByteArray = byteArrayOf(0x00.toByte(), 0x00.toByte())
+
+    private val gson = Gson()
+    private var paymentTokenString: String = ""
+
 
     override fun processCommandApdu(apdu: ByteArray, extras: Bundle?): ByteArray {
         if (selectAidApdu(apdu)) {
@@ -20,6 +27,16 @@ public class AppHostApduService : HostApduService() {
         if (publicKeyBytes != null) {
             val publicKeyString = String(publicKeyBytes, Charsets.UTF_8)
             Log.i("HCEDEMO", "Received public key: $publicKeyString")
+            runBlocking {
+                try {
+                    val paymentToken = TokenGenerator.generateToken(applicationContext)
+                    paymentTokenString = gson.toJson(paymentToken)
+                    Log.i("HCEDEMO", "Generated token: $paymentTokenString")
+                    // Hier kannst du den Token weiter verarbeiten oder verschicken
+                } catch (e: Exception) {
+                    Log.e("HCEDEMO", "Fehler beim Generieren des Tokens: ${e.message}")
+                }
+            }
             // Hier kannst du den Schlüssel speichern oder weiterverarbeiten
             return okayMessage
         }
