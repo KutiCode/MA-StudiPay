@@ -5,6 +5,7 @@ import android.nfc.*
 import android.nfc.tech.IsoDep
 import android.os.Bundle
 import android.util.Log
+import de.throsenheim.oektem.masterarbeit.ma_studipay.security.RsaEncryptionHelper
 import java.io.IOException
 
 
@@ -27,6 +28,10 @@ class NfcPaymentReceiver(private val activity: Activity) {
             0x00.toByte(),  // P2
             0x07.toByte(),  // Lc (Länge der AID)
             *PAYMENT_AID
+        )
+
+        private val CONFLICT_APDU = byteArrayOf(
+            0x6A.toByte(), 0x82.toByte()
         )
 
     }
@@ -57,12 +62,24 @@ class NfcPaymentReceiver(private val activity: Activity) {
             try {
                 isoDep.connect()
                 val response = isoDep.transceive(SELECT_APDU)
-                Log.d(TAG, "APDU Response: ${response.toHexString()}")
+                Log.d(TAG, "APDU Response: ${response}")
 
                 if (response.contentEquals(byteArrayOf(0x90.toByte(), 0x00.toByte()))) {
-                    handleValidPaymentTag()
+                    Log.d(TAG, "Verbindung erfolgreich mit Sender")
+                    RsaEncryptionHelper.generateKeyPairIfNeeded()
+                    val publicKeyString = RsaEncryptionHelper.getPublicKeyAsString()
+                    Log.d(TAG, "Öffentlicher Schlüssel generiert: $publicKeyString")
+                    val publicKeyBytes = publicKeyString.toByteArray(Charsets.UTF_8)
+                    val CLA: Byte = 0x80.toByte()
+                    val INS: Byte = 0x10.toByte()
+                    val P1: Byte = 0x00
+                    val P2: Byte = 0x00
+                    val Lc: Byte = publicKeyBytes.size.toByte()
+                    val sendPublicKeyApdu = byteArrayOf(CLA, INS, P1, P2, Lc) + publicKeyBytes
+                    isoDep.transceive(sendPublicKeyApdu)
+
                 } else {
-                    handleInvalidResponse()
+                    isoDep.transceive(CONFLICT_APDU)
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "Kommunikationsfehler: ${e.message}")

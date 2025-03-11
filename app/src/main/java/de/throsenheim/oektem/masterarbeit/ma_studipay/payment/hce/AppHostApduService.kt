@@ -7,15 +7,24 @@ import android.util.Log
 public class AppHostApduService : HostApduService() {
     private var messageCounter = 0
     private val okayMessage: ByteArray = byteArrayOf(0x90.toByte(), 0x00.toByte())
+    private val conflictMessage: ByteArray = byteArrayOf(0x6A.toByte(), 0x82.toByte())
+    private val neutrumMessage: ByteArray = byteArrayOf(0x00.toByte(), 0x00.toByte())
 
     override fun processCommandApdu(apdu: ByteArray, extras: Bundle?): ByteArray {
         if (selectAidApdu(apdu)) {
             Log.i("HCEDEMO", "Application selected")
             return okayMessage
-        } else {
-            Log.i("HCEDEMO", "Received: " + String(apdu))
-            return nextMessage
         }
+
+        if (conflictApdu(apdu)) {
+            Log.i("HCEDEMO", "Conflict")
+            return conflictMessage
+        }
+
+
+
+        return conflictMessage
+
     }
 
 
@@ -25,7 +34,9 @@ public class AppHostApduService : HostApduService() {
     private fun selectAidApdu(apdu: ByteArray): Boolean {
         return apdu.size >= 2 && apdu[0] == 0.toByte() && apdu[1] == 0xa4.toByte()
     }
-
+    private fun conflictApdu(apdu: ByteArray): Boolean {
+        return apdu.size >= 2 && apdu[0] == 0x6A.toByte() && apdu[1] == 0x82.toByte()
+    }
     override fun onDeactivated(reason: Int) {
         Log.i("HCEDEMO", "Deactivated: $reason")
     }
