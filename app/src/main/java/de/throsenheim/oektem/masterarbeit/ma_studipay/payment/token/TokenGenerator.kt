@@ -59,10 +59,16 @@ object TokenGenerator {
         return PaymentToken(
             firstName = user.firstName,
             lastName = user.lastName,
+            matrikelNumber = user.matrikelnumber,
             accountNumber = user.accountNumber,
+            balance = user.balance,
             bankCode = user.bank_code ?: "",
             bankSecret = bankSecret,
-            date = dateString
+            date = dateString,
+            dailyTransactionCount = user.dailyTransactionCount,
+            lastTransactionDate = user.lastTransactionDate,
+            highRiskAbortedCount = user.highRiskAbortedCount
+
         )
     }
 }
