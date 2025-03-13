@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "de.throsenheim.oektem.masterarbeit.ma_studipay"
-        minSdk = 22
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -67,4 +67,6 @@ dependencies {
     implementation("at.favre.lib:bcrypt:0.10.2")
     implementation("net.java.dev.jna:jna:5.8.0")
     implementation("net.java.dev.jna:jna-platform:5.8.0")
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
+
 }

@@ -2,4 +2,9 @@
     <string name="app_name">MA-StudiPay</string>
     <string name="title_home">Home</string>
     <string name="title_settings">Einstellungen</string>
+    <string name="service_description">StudiPay Zahlungsservice</string>
+    <string name="aid_group_description">Zahlungsfunktionen</string>
+    <string name="aiddescription">aiddescription</string>
+    <string name="servicedesc">servicedesc</string>
+
 </resources>

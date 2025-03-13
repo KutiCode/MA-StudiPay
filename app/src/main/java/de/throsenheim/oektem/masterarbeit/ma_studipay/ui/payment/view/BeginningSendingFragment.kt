@@ -1,0 +1,75 @@
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view
+
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginningSendingBinding
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.hce.AppHostApduService
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardUiState
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.viewmodel.BeginningSendingViewModel
+
+class BeginningSendingFragment : Fragment() {
+
+    private var _binding: FragmentBeginningSendingBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: BeginningSendingViewModel by viewModels()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentBeginningSendingBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val currentUsername = sharedPref.getString("current_username", null)
+        AppHostApduService.isTokenTransmissionAllowed = true
+        // Observer für den Benutzernamen einrichten
+        viewModel.userName.observe(viewLifecycleOwner) { name ->
+            binding.userInfoSender.text = name
+        }
+
+        // Wenn ein Username vorhanden ist, lade den Namen über das ViewModel,
+        // andernfalls setze einen Standardtext.
+        currentUsername?.let {
+            viewModel.loadUserName(requireContext(), it)
+        } ?: run {
+            binding.userInfoSender.text = "Hallo, Benutzer"
+        }
+
+        binding.cancelButton.setOnClickListener {
+            AppHostApduService.isTokenTransmissionAllowed = false
+        findNavController().navigate(R.id.navigation_dashboard)
+        }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        AppHostApduService.isTokenTransmissionAllowed = false
+
+
+    }
+
+    // Rufe diese Methode in der Activity/Fragment auf, wenn die App geschlossen wird
+    override fun onDestroy() {
+        super.onDestroy()
+        AppHostApduService.isTokenTransmissionAllowed = false
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppHostApduService.isTokenTransmissionAllowed = true
+    }
+}

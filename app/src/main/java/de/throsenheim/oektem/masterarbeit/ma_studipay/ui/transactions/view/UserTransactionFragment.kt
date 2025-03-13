@@ -1,6 +1,11 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +19,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.nfc.NfcPaymentReceiver
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningRecieveFragment
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.viewmodel.UserTransactionViewModel
 
 class UserTransactionFragment : Fragment() {
@@ -58,56 +65,16 @@ class UserTransactionFragment : Fragment() {
         })
 
         val titleTextView = view.findViewById<TextView>(R.id.transaction_title)
-        titleTextView.text = if (transactionType == "SEND") "Geld senden" else "Geld empfangen"
+        titleTextView.text =
+            if (transactionType == "SEND") "Wie viel möchtest du senden?" else "Wie viel möchtest du empfangen?"
 
         amountInput = view.findViewById(R.id.amount_input)
-
-        val buttons = listOf(
-            R.id.send_button_0, R.id.send_button_1, R.id.send_button_2, R.id.send_button_3,
-            R.id.send_button_4, R.id.send_button_5, R.id.send_button_6, R.id.send_button_7,
-            R.id.send_button_8, R.id.send_button_9
-        )
-
-        for (buttonId in buttons) {
-            val button = view.findViewById<MaterialButton>(buttonId)
-            button.setOnClickListener {
-                val currentText = amountInput.text.toString()
-                val newText = currentText + button.text.toString()
-                amountInput.setText(newText)
-            }
-        }
-
-        val clearButton = view.findViewById<MaterialButton>(R.id.send_button_clear)
-        clearButton.setOnClickListener {
-            amountInput.setText("")
-        }
-
-        val deleteButton = view.findViewById<MaterialButton>(R.id.send_button_delete)
-        deleteButton.setOnClickListener {
-            val currentText = amountInput.text.toString()
-            if (currentText.isNotEmpty()) {
-                amountInput.setText(currentText.substring(0, currentText.length - 1))
-            }
-        }
-
-        val fixedAmountButtons = mapOf(
-            R.id.send_button_5_euro to "5",
-            R.id.send_button_15_euro to "15",
-            R.id.send_button_25_euro to "25",
-            R.id.send_button_50_euro to "50"
-        )
-
-        for ((buttonId, amount) in fixedAmountButtons) {
-            val button = view.findViewById<MaterialButton>(buttonId)
-            button.setOnClickListener {
-                amountInput.setText(amount)
-            }
-        }
 
         val sendButton = view.findViewById<MaterialButton>(R.id.continue_button)
 
         sendButton.setOnClickListener {
             val amount = amountInput.text.toString()
+            Log.d("UserTransactionFragment", "Amount: $amount")
             if (amount.isNotEmpty()) {
                 if (transactionType == "SEND") {
                     if (source == "orangeDetails") {
@@ -117,21 +84,26 @@ class UserTransactionFragment : Fragment() {
                             amount.toDouble()
                         )
                     } else {
-
                     }
                 } else {
                     if (source == "orangeDetails") {
                         viewModel.addBalance(requireContext(), currentUsername!!, amount.toDouble())
                     } else {
+                        if (isWifiEnabled(requireContext()) && isWifiConnected(requireContext())) {
+                            BeginningRecieveFragment.amount = amount.toDouble()
+                            findNavController().navigate(R.id.action_userPin_to_beginningRecieveFragment)
 
+                        } else {
+                            findNavController().navigate(R.id.fragment_no_wifi)
+                        }
                     }
                 }
             }
         }
 
 
-
-        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNavigationView =
+            view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
 
         bottomNavigationView.setOnItemSelectedListener { item ->
@@ -146,6 +118,7 @@ class UserTransactionFragment : Fragment() {
                     navController.navigate(R.id.navigation_dashboard, null, navOptions)
                     true
                 }
+
                 R.id.navigation_home -> {
                     if (navController.currentDestination?.id != R.id.navigation_dashboard) {
                         val navOptions = NavOptions.Builder()
@@ -158,8 +131,25 @@ class UserTransactionFragment : Fragment() {
                     }
                     true
                 }
+
                 else -> false
             }
         }
     }
+
+    fun isWifiEnabled(context: Context): Boolean {
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        return wifiManager.isWifiEnabled
+    }
+
+
+    fun isWifiConnected(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+    }
+
 }

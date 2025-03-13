@@ -13,6 +13,7 @@
             app:destination="@id/loginFragment" />
     </fragment>
 
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.view.LoginFragment"
@@ -63,6 +64,36 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.view.BankConnectionFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_bank_connection" />
+    <fragment
+        android:id="@+id/beginningRecieveFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningRecieveFragment"
+        android:label="dashboard"
+        tools:layout="@layout/fragment_beginning_recieve" />
+    <fragment
+        android:id="@+id/beginningSendingFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningSendingFragment"
+        android:label="dashboard"
+        tools:layout="@layout/fragment_beginning_sending" />
+    <fragment
+        android:id="@+id/fragment_receiving_hold"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.ReceivingHoldFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_receiving_hold" />
+    <fragment
+        android:id="@+id/fragment_payment_success"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.SuccessPaymentFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_success_payment" />
+    <fragment
+        android:id="@+id/fragment_payment_failed"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.FailedPaymentFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_failed_payment" />
+    <fragment
+        android:id="@+id/fragment_no_wifi"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.NoWifiFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_no_wifi" />
     <fragment
         android:id="@+id/userTransactionFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view.UserTransactionFragment"
@@ -131,4 +162,7 @@
     <action
         android:id="@+id/action_BankConnectionFragment_to_BankSelectionFragment"
         app:destination="@id/bankSelectFragment" />
+    <action
+        android:id="@+id/action_userPin_to_beginningRecieveFragment"
+        app:destination="@id/beginningRecieveFragment" />
 </navigation>
