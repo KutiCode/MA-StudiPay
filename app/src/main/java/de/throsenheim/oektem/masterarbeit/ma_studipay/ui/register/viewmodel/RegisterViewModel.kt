@@ -26,6 +26,20 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
             return
         }
 
+        // Mindestanforderung: Passwort muss mindestens 8 Zeichen lang sein
+        if (password.length < 8) {
+            _errorMessage.value = "Das Passwort muss mindestens 8 Zeichen lang sein"
+            return
+        }
+
+        // Optional: Weitere Prüfungen, z.B. ob das Passwort mindestens eine Zahl und einen Großbuchstaben enthält
+        val regex = Regex("^(?=.*[A-Z])(?=.*\\d).{8,}\$")
+        if (!regex.containsMatchIn(password)) {
+            _errorMessage.value =
+                "Das Passwort muss mindestens einen Großbuchstaben und eine Zahl enthalten"
+            return
+        }
+
         viewModelScope.launch {
             val userExists = userRepository.getUserByMatrikelnumber(matrikelnummer) != null
             if (userExists) {
@@ -41,11 +55,9 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
                     balance = 0.0,
                     securePin = "0000",
                     bank_code = null
-
                 )
 
-
-                // Send the new user to the backend
+                // Sende den neuen User an das Backend
                 val request = UserRegistrationRequest(
                     matrikelnumber = matrikelnummer,
                     firstName = firstName,
@@ -70,6 +82,7 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
             }
         }
     }
+
 
     fun hashPassword(password: String): String {
         return BCrypt.withDefaults().hashToString(12, password.toCharArray())
