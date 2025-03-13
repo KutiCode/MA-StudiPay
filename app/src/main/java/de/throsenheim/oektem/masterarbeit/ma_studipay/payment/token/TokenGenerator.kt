@@ -67,7 +67,8 @@ object TokenGenerator {
             date = dateString,
             dailyTransactionCount = user.dailyTransactionCount,
             lastTransactionDate = user.lastTransactionDate,
-            highRiskAbortedCount = user.highRiskAbortedCount
+            highRiskAbortedCount = user.highRiskAbortedCount,
+            lastTransactionRiskValue = user.lastTransaktionRiskValue
 
         )
     }

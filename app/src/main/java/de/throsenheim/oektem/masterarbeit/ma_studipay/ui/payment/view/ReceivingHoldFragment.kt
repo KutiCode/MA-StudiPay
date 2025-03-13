@@ -20,4 +20,5 @@ class ReceivingHoldFragment : Fragment() {
         return binding.root
     }
 
+
 }

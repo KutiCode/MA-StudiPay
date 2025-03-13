@@ -86,7 +86,18 @@ class DashboardFragment : Fragment() {
 
         // Navigation für Receive-Button
         binding.receiveButton.setOnClickListener {
-            navigateWithSlideAnimation(R.id.userTransactionFragment)
+            val bundle = Bundle().apply {
+                putString("TRANSACTION_TYPE", "RECEIVE")
+                putString("SOURCE", "dashboard")
+            }
+            val navOptions = NavOptions.Builder()
+                .setEnterAnim(R.anim.slide_in_right)
+                .setExitAnim(R.anim.slide_out_left)
+                .setPopEnterAnim(R.anim.slide_in_left)
+                .setPopExitAnim(R.anim.slide_out_right)
+                .build()
+            findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
+
         }
 
         // Navigation für Karten-Details

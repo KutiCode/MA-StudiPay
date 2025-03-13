@@ -79,7 +79,21 @@
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.ReceivingHoldFragment"
         android:label="Einstellungen"
         tools:layout="@layout/fragment_receiving_hold" />
-
+    <fragment
+        android:id="@+id/fragment_payment_success"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.SuccessPaymentFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_success_payment" />
+    <fragment
+        android:id="@+id/fragment_payment_failed"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.FailedPaymentFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_failed_payment" />
+    <fragment
+        android:id="@+id/fragment_no_wifi"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.NoWifiFragment"
+        android:label="Einstellungen"
+        tools:layout="@layout/fragment_no_wifi" />
     <fragment
         android:id="@+id/userTransactionFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view.UserTransactionFragment"

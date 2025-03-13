@@ -1,22 +1,35 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.nfc
 
 import android.app.Activity
+import android.content.Context
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.Navigation
 import com.google.gson.Gson
+import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TokenExtractor
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionOutcome
 import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 
 class NfcPaymentReceiver(private val activity: Activity) {
+    var amount: Double = 0.0
     private val nfcAdapter = android.nfc.NfcAdapter.getDefaultAdapter(activity)
     val tokenReceivedLiveData = MutableLiveData<Boolean>()
     val gson = Gson()
+    private val scope = CoroutineScope(Dispatchers.IO)
     companion object {
+
+
         private const val TAG = "NfcPaymentReceiver"
         private val PAYMENT_AID = byteArrayOf(
             0xF0.toByte(), 0x01.toByte(), 0x02.toByte(),
@@ -94,10 +107,64 @@ class NfcPaymentReceiver(private val activity: Activity) {
                 Log.d(TAG, "Vollständiger verschlüsselter Token: $fullEncryptedToken")
                 // Optional: Entschlüsseln
                 val decryptedToken = EccHybridEncryptionHelper.decryptFromSender(fullEncryptedToken)
+
                 Log.d(TAG, "Entschlüsselter Token: $decryptedToken")
                 tokenReceivedLiveData.postValue(true)
                 val paymentToken: PaymentToken =
                     gson.fromJson(decryptedToken, PaymentToken::class.java)
+                val sharedPreferences =
+                    activity.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                val matrikelnummer = sharedPreferences.getString("current_username", null)
+                Log.d(TAG, "Amount:" + amount.toString())
+                scope.launch {
+                    if (matrikelnummer != paymentToken.matrikelNumber) {
+                        var outcome =
+                            TokenExtractor.extractTokenFromResponse(activity, amount, paymentToken)
+                        if (outcome == TransactionOutcome.Success) {
+                            withContext(Dispatchers.Main) {
+                                (activity as? FragmentActivity)?.let { fragmentActivity ->
+                                    // Hole den NavController anhand des NavHostFragment in deiner Activity
+                                    val navController = Navigation.findNavController(
+                                        fragmentActivity,
+                                        R.id.nav_host_fragment
+                                    )
+                                    // Beispiel: Wenn die Transaktion erfolgreich war, navigiere zum SuccessFragment
+                                    navController.navigate(
+                                        R.id.fragment_payment_success,
+                                        Bundle().apply {
+                                            putDouble("amount", amount)
+                                            putString("sender", paymentToken.firstName)
+                                        })
+                                }
+                            }
+                        } else {
+                            withContext(Dispatchers.Main) {
+                                (activity as? FragmentActivity)?.let { fragmentActivity ->
+                                    // Hole den NavController anhand des NavHostFragment in deiner Activity
+                                    val navController = Navigation.findNavController(
+                                        fragmentActivity,
+                                        R.id.nav_host_fragment
+                                    )
+                                    // Beispiel: Wenn die Transaktion erfolgreich war, navigiere zum SuccessFragment
+                                    navController.navigate(R.id.fragment_payment_failed)
+                                }
+                            }
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            (activity as? FragmentActivity)?.let { fragmentActivity ->
+                                // Hole den NavController anhand des NavHostFragment in deiner Activity
+                                val navController = Navigation.findNavController(
+                                    fragmentActivity,
+                                    R.id.nav_host_fragment
+                                )
+                                // Beispiel: Wenn die Transaktion erfolgreich war, navigiere zum SuccessFragment
+                                navController.navigate(R.id.fragment_payment_failed)
+                            }
+                        }
+                    }
+                }
+
 
             } catch (e: IOException) {
                 Log.e(TAG, "Kommunikationsfehler: ${e.message}")

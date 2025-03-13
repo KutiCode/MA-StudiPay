@@ -11,6 +11,7 @@ data class PaymentToken(
     val date: String,
     val dailyTransactionCount: Int,
     val lastTransactionDate: String?,
-    val highRiskAbortedCount: Int
+    val highRiskAbortedCount: Int,
+    var lastTransactionRiskValue: Int
 
 )

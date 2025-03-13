@@ -28,5 +28,7 @@ data class User(
     // Datum im Format "yyyy-MM-dd" (nur Datum, ohne Uhrzeit)
     @ColumnInfo(name = "lastTransactionDate") var lastTransactionDate: String? = null,
     // Zähler, wie oft eine Transaktion aufgrund hohen Risikos abgebrochen wurde
-    @ColumnInfo(name = "highRiskAbortedCount") var highRiskAbortedCount: Int = 0
+    @ColumnInfo(name = "highRiskAbortedCount") var highRiskAbortedCount: Int = 0,
+
+    @ColumnInfo(name = "lastTransaktionRiskValue") var lastTransaktionRiskValue: Int = 0
 )

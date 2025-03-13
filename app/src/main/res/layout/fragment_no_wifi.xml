@@ -14,7 +14,7 @@
         android:layout_width="379dp"
         android:layout_height="446dp"
         android:layout_margin="16dp"
-        app:cardBackgroundColor="#83BC86"
+        app:cardBackgroundColor="#C7A555"
         app:cardCornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,17 +25,13 @@
             android:layout_height="513dp">
 
             <!-- Überschrift oben -->
-
-            <!-- Drehender Ladebalken -->
-
-            <!-- Anweisungstext unten -->
             <TextView
                 android:id="@+id/headerTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:text="Hurra, du hast Geld erhalten!"
+                android:text="Ups du hast keine \nInternetverbindung!"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -44,30 +40,32 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/instructionTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="328dp"
-                android:gravity="center"
-                android:text="5000€"
-                android:textColor="@color/black"
-                android:textSize="50sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <!-- Gefahren-/Warnsymbol zwischen den TextViews -->
+
+            <!-- Anweisungstext unten -->
+
+            <ImageView
+                android:id="@+id/dangerIcon"
+                android:layout_width="241dp"
+                android:layout_height="187dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/baseline_wifi_off_24"
+                app:layout_constraintBottom_toTopOf="@id/instructionTextView2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/headerTextView"
+                app:layout_constraintVertical_bias="0.588" />
 
             <TextView
                 android:id="@+id/instructionTextView2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="224dp"
+                android:layout_marginBottom="128dp"
                 android:gravity="center"
-                android:text="Christian, hat dir \n Geld gesendet"
+                android:text="Bitte verbinde dich mit dem Wlan \n oder schalte deine Mobilfunk \n Daten ein."
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -79,7 +77,7 @@
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/topGiroBankButton"
+        android:id="@+id/failed_dashboard_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -93,6 +91,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/blueContainer" />
-    <!-- Roter Button zum Abbrechen des Empfangs -->
+    <!-- Hier kannst du noch den roten Abbrechen-Button hinzufügen -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

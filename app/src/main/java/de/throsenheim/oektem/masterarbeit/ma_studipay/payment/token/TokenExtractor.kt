@@ -1,38 +1,53 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token
 
 import android.content.Context
-import androidx.core.content.ContentProviderCompat.requireContext
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.BankDao
+import android.util.Log
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.Navigation
+import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.BalanceUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RiskValueUpdateRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.service.TransactionVerificationRequest
 import java.text.SimpleDateFormat
 import java.util.*
 
 object TokenExtractor {
 
-
+    private val today: String
+        get() {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            return sdf.format(Date())
+        }
     suspend fun extractTokenFromResponse(
         context: Context,
-        amount: Int,
+        amount: Double,
         paymentToken: PaymentToken
-    ) {
-        var riskValue = calculateRiskValue(context, amount, paymentToken)
+    ): TransactionOutcome {
+        val riskValue = calculateRiskValue(context, amount, paymentToken)
 
-        if (riskValue < 40) {
-            // Transaktion hat kein Risiko. Sofortige Ausführung
-            transactionCertificate(context, paymentToken, amount)
-        } else if (riskValue < 90) {
-            // Transkation hat mittleres Risiko. Bestätigung ist nötig.
-            authorizationRequestCheck(context, paymentToken, amount)
-        } else {
-            // Transaktion hat hohes Risiko. Transaktion wird abgebrochen.
-            transactionRejectionCertificate(context, paymentToken, amount)
+        return when {
+            riskValue < 35 -> {
+                transactionCertificate(context, paymentToken, amount)
+                TransactionOutcome.Success
+            }
 
+            riskValue < 90 -> {
+                // Hier könnte ein zusätzlicher Autorisierungsschritt erfolgen.
+                authorizationRequestCheck(context, paymentToken, amount)
+
+            }
+
+            else -> {
+                transactionRejectionCertificate(context, paymentToken, amount)
+                TransactionOutcome.Rejection
+            }
         }
     }
+
 
     private fun isTokenRecent(tokenDateString: String): Boolean {
         // Angenommener Datumsformat, wie es im Token vorliegt:
@@ -47,28 +62,71 @@ object TokenExtractor {
 
     private suspend fun calculateRiskValue(
         context: Context,
-        amount: Int,
+        amount: Double,
         paymentToken: PaymentToken
     ): Int {
 
         var riskValue = 100
 
         if (isTokenRecent(paymentToken.date)) {
+            Log.d("RiskValue", "Date: " + riskValue.toString())
             riskValue -= 10
         }
 
-        if (amount < 10) {
+        if (amount < 10.0) {
             riskValue -= 30
-        } else if (amount < 30) {
+            Log.d("RiskValue", "Amount: " + riskValue.toString())
+        } else if (amount < 30.0) {
             riskValue -= 20
+            Log.d("RiskValue", "Amount: " + riskValue.toString())
         } else {
             riskValue -= 5
+            Log.d("RiskValue", "Amount: " + riskValue.toString())
+        }
+
+        if (paymentToken.dailyTransactionCount < 3) {
+            riskValue -= 10
+            Log.d("RiskValue", "DTC: " + riskValue.toString())
+        } else {
+            riskValue += 5
+            Log.d("RiskValue", "DTC: " + riskValue.toString())
+        }
+
+        if (paymentToken.lastTransactionDate != null) {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val today: String = sdf.format(Date())
+            if (paymentToken.lastTransactionDate == today) {
+                riskValue -= 10
+                Log.d("RiskValue", "LTD: " + riskValue.toString())
+            } else {
+                riskValue += 5
+                Log.d("RiskValue", "LTD: " + riskValue.toString())
+            }
+        }
+
+        if (paymentToken.highRiskAbortedCount > 0) {
+            riskValue += 10
+            Log.d("RiskValue", "HRAC: " + riskValue.toString())
+        }
+
+        if (paymentToken.lastTransactionRiskValue < 50) {
+            riskValue -= 10
+            Log.d("RiskValue", "LTR: " + riskValue.toString())
+        } else if (paymentToken.lastTransactionRiskValue < 80) {
+            riskValue -= 5
+            Log.d("RiskValue", "LTR: " + riskValue.toString())
+        } else {
+            riskValue += 10
+            Log.d("RiskValue", "LTR: " + riskValue.toString())
         }
 
         if (verifyBankSecret(context, paymentToken)) {
             riskValue -= 25
+            Log.d("RiskValue", "VBS: " + riskValue.toString())
         }
-
+        paymentToken.lastTransactionRiskValue = riskValue
+        Log.d("RiskValue", riskValue.toString())
+        Log.d("LastRiskValue", paymentToken.lastTransactionRiskValue.toString())
         return riskValue
 
     }
@@ -91,7 +149,7 @@ object TokenExtractor {
     private suspend fun transactionCertificate(
         context: Context,
         paymentToken: PaymentToken,
-        amount: Int
+        amount: Double
     ) {
         if (paymentToken.balance < amount) {
             transactionRejectionCertificate(context, paymentToken, amount)
@@ -100,8 +158,8 @@ object TokenExtractor {
             val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
             val matrikelNumber = sharedPref.getString("current_username", null)
             val userDao = AppDatabase.getDatabase(context).userDao()
-            val requestAdd = BalanceUpdateRequest(matrikelNumber!!, amount.toDouble())
-            val requestDeduct = BalanceUpdateRequest(paymentToken.matrikelNumber, amount.toDouble())
+            val requestAdd = BalanceUpdateRequest(matrikelNumber!!, amount)
+            val requestDeduct = BalanceUpdateRequest(paymentToken.matrikelNumber, amount)
 
             val responseAdd = RetrofitInstance.api.addBalance(requestAdd)
             if (responseAdd.isSuccessful) {
@@ -125,6 +183,15 @@ object TokenExtractor {
             } else {
                 transactionRejectionCertificate(context, paymentToken, amount)
             }
+
+            updateRiskParams(
+                context,
+                paymentToken.matrikelNumber,
+                paymentToken.dailyTransactionCount + 1,
+                today,
+                0,
+                paymentToken.lastTransactionRiskValue
+            )
         }
 
     }
@@ -133,16 +200,75 @@ object TokenExtractor {
     private suspend fun authorizationRequestCheck(
         context: Context,
         paymentToken: PaymentToken,
-        amount: Int
-    ) {
+        amount: Double
+    ): TransactionOutcome {
+        val requestAuth = TransactionVerificationRequest(paymentToken.matrikelNumber, amount)
+        val responseAuth = RetrofitInstance.api.verifyTransaction(requestAuth)
 
+        if (responseAuth.isSuccessful) {
+            val riskParamsUpdated = updateRiskParams(
+                context,
+                paymentToken.matrikelNumber,
+                paymentToken.dailyTransactionCount + 1,
+                today,
+                paymentToken.highRiskAbortedCount,
+                paymentToken.lastTransactionRiskValue
+            )
+            if (riskParamsUpdated) {
+                transactionCertificate(context, paymentToken, amount)
+                return TransactionOutcome.Success
+            } else {
+                transactionRejectionCertificate(context, paymentToken, amount)
+                return TransactionOutcome.Rejection
+            }
+
+
+        } else {
+            transactionRejectionCertificate(context, paymentToken, amount)
+            return TransactionOutcome.Rejection
+        }
     }
 
     private suspend fun transactionRejectionCertificate(
         context: Context,
         paymentToken: PaymentToken,
-        amount: Int
-    ) {
-        // In dieser Funktion wird die Transaktion abgebrochen.
+        amount: Double
+    ): TransactionOutcome {
+        val requestRiskValueUpdate = RiskValueUpdateRequest(
+            paymentToken.matrikelNumber,
+            paymentToken.dailyTransactionCount + 1,
+            today,
+            paymentToken.highRiskAbortedCount + 1,
+            paymentToken.lastTransactionRiskValue
+        )
+        RetrofitInstance.api.updateRiskParams(requestRiskValueUpdate)
+        return TransactionOutcome.Rejection
+    }
+
+    private suspend fun updateRiskParams(
+        context: Context,
+        matrikelNumber: String,
+        dailyTransactionCount: Int,
+        lastTransactionDate: String,
+        highRiskAbortedCount: Int,
+        lastTransactionRiskValue: Int
+    ): Boolean {
+        // In dieser Funktion werden die Risikoparameter des Nutzers aktualisiert.
+
+        val requestParamUpdate = RiskValueUpdateRequest(
+            matrikelNumber,
+            dailyTransactionCount,
+            lastTransactionDate,
+            highRiskAbortedCount,
+            lastTransactionRiskValue
+        )
+
+        val response = RetrofitInstance.api.updateRiskParams(requestParamUpdate)
+
+        if (response.isSuccessful) {
+            return true
+        }
+        return false
+
     }
 }

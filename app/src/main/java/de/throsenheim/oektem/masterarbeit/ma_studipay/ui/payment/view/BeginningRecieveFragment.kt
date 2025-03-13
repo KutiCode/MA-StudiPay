@@ -30,7 +30,7 @@ class BeginningRecieveFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         nfcReader = NfcPaymentReceiver(requireActivity())
-
+        nfcReader.amount = amount
         nfcReader.tokenReceivedLiveData.observe(viewLifecycleOwner) { tokenReceived ->
             if (tokenReceived) {
                 findNavController().navigate(R.id.fragment_receiving_hold)
@@ -59,6 +59,10 @@ class BeginningRecieveFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        var amount: Double = 0.0
     }
 
 

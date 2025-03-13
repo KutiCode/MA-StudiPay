@@ -32,6 +32,10 @@ interface ApiService {
     @PUT("api/update_user")
     suspend fun updateUser(@Body user: User): Response<UpdateUserResponse>
 
+    @POST("/api/verify_transaction")
+    suspend fun verifyTransaction(@Body transactionVerificationRequest: TransactionVerificationRequest): Response<Unit>
 
+    @POST("/api/update_risk_params")
+    suspend fun updateRiskParams(@Body riskValueUpdateRequest: RiskValueUpdateRequest): Response<Unit>
 }
 
