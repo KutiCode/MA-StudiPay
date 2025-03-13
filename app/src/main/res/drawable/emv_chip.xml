@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="40dp"
+    android:viewportWidth="96"
+    android:viewportHeight="80">
+
+    <!--
+      Äußere Form: abgerundetes Rechteck (Chip-Kontur).
+      Fill: Helles Grau (#D0D0D0).
+      Stroke: Dunkleres Grau (#777777).
+    -->
+    <path
+        android:name="outer_chip"
+        android:fillColor="#D0D0D0"
+        android:strokeColor="#777777"
+        android:strokeWidth="1.5"
+        android:pathData="
+            M 4,4
+            H 92
+            A 4,4 0 0 1 96,8
+            V 72
+            A 4,4 0 0 1 92,76
+            H 4
+            A 4,4 0 0 1 0,72
+            V 8
+            A 4,4 0 0 1 4,4
+            Z" />
+
+    <!--
+      Innerer Rand: etwas kleineres Rechteck mit abgerundeten Ecken,
+      damit der Rand wie eine Metallumrandung wirkt.
+    -->
+    <path
+        android:name="inner_border"
+        android:fillColor="#E0E0E0"
+        android:strokeColor="#999999"
+        android:strokeWidth="1"
+        android:pathData="
+            M 10,10
+            H 86
+            A 2,2 0 0 1 88,12
+            V 68
+            A 2,2 0 0 1 86,70
+            H 10
+            A 2,2 0 0 1 8,68
+            V 12
+            A 2,2 0 0 1 10,10
+            Z" />
+
+    <!--
+      Trennlinien (mit Stroke, kein Fill).
+      Diese ahmen die geschwungenen Linien des Chips nach.
+      Wir verwenden mehrere Pfade, um die Innenstruktur darzustellen.
+    -->
+
+    <!-- Oberer Bogen -->
+    <path
+        android:name="top_arc"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="
+            M 12,20
+            C 16,16 32,16 48,16
+            C 64,16 80,16 84,20" />
+
+    <!-- Unterer Bogen -->
+    <path
+        android:name="bottom_arc"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="
+            M 12,60
+            C 16,64 32,64 48,64
+            C 64,64 80,64 84,60" />
+
+    <!-- Linker Bogen -->
+    <path
+        android:name="left_arc"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="
+            M 20,12
+            C 16,16 16,32 16,40
+            C 16,48 16,64 20,68" />
+
+    <!-- Rechter Bogen -->
+    <path
+        android:name="right_arc"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="
+            M 76,12
+            C 80,16 80,32 80,40
+            C 80,48 80,64 76,68" />
+
+    <!-- Vertikale Mittelkurve (oben) -->
+    <path
+        android:name="vertical_mid_top"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="
+            M 44,16
+            C 48,20 48,28 48,34" />
+
+    <!-- Vertikale Mittelkurve (unten) -->
+    <path
+        android:name="vertical_mid_bottom"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="
+            M 48,46
+            C 48,52 48,60 44,64" />
+
+    <!-- Horizontale Mittelkurve (links) -->
+    <path
+        android:name="horizontal_mid_left"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="
+            M 16,40
+            C 24,40 36,40 44,40" />
+
+    <!-- Horizontale Mittelkurve (rechts) -->
+    <path
+        android:name="horizontal_mid_right"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#777777"
+        android:strokeWidth="1"
+        android:pathData="
+            M 48,40
+            C 56,40 68,40 76,40" />
+
+</vector>

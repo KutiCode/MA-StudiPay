@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Hellblauer Kasten als Container -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/blueContainer"
+        android:layout_width="379dp"
+        android:layout_height="446dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="#ADD8E6"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cancelButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="513dp">
+
+            <!-- Überschrift oben -->
+            <TextView
+                android:id="@+id/headerTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="Jetzt geht's los"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- NFC-Symbol in der Mitte -->
+
+            <!-- Anweisungstext unten -->
+
+            <ImageView
+                android:id="@+id/nfcIconImageView"
+                android:layout_width="175dp"
+                android:layout_height="155dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/baseline_contactless_24"
+                app:layout_constraintBottom_toTopOf="@id/instructionTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/headerTextView"
+                app:layout_constraintVertical_bias="0.562" />
+
+            <TextView
+                android:id="@+id/instructionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="216dp"
+                android:gravity="center"
+                android:text="Handy an Sender halten"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Roter Button zum Abbrechen des Empfangs -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancelButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Empfangen abbrechen"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@android:color/holo_red_dark"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blueContainer" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

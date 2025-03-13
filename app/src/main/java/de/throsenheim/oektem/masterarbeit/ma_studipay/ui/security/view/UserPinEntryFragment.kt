@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
@@ -49,35 +50,6 @@ class UserPinEntryFragment : Fragment() {
         val viewModelFactory = UserPinEntryViewModelFactory(userRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[UserPinEntryViewModel::class.java]
 
-        val buttons = listOf(
-            R.id.pin_number_0,
-            R.id.pin_number_1,
-            R.id.pin_number_2,
-            R.id.pin_number_3,
-            R.id.pin_number_4,
-            R.id.pin_number_5,
-            R.id.pin_number_6,
-            R.id.pin_number_7,
-            R.id.pin_number_8,
-            R.id.pin_number_9
-        )
-
-        for (buttonId in buttons) {
-            val button = view.findViewById<MaterialButton>(buttonId)
-            button.setOnClickListener {
-                viewModel.appendDigit(button.text.toString())
-            }
-        }
-
-        val clearButton = view.findViewById<MaterialButton>(R.id.pin_number_ac)
-        clearButton.setOnClickListener {
-            viewModel.clearPin()
-        }
-
-        val deleteButton = view.findViewById<MaterialButton>(R.id.pin_number_delete)
-        deleteButton.setOnClickListener {
-            viewModel.deleteLastDigit()
-        }
 
         viewModel.pin.observe(viewLifecycleOwner, { pin ->
             pinInput.setText(pin)
@@ -85,6 +57,7 @@ class UserPinEntryFragment : Fragment() {
 
 
         // Setting up Secure Pin
+        val changeText = view.findViewById<TextView>(R.id.pin_label)
         val continueButton = view.findViewById<MaterialButton>(R.id.pin_continue_button)
         continueButton.setOnClickListener {
             val securePin = pinInput.text.toString()
@@ -95,6 +68,7 @@ class UserPinEntryFragment : Fragment() {
             val storedPin = sharedPref.getString("secure_pin", null)
             if (matrikelnummer != null) {
                 if (isChangePin) {
+                    changeText.text = "Neue Secure Pin eingeben"
                     viewModel.updateSecurePin(requireContext(), matrikelnummer, securePin)
                     Log.d(
                         "UserPinEntryFragment",
