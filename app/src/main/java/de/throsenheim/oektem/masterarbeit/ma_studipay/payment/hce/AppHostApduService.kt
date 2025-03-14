@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import com.google.gson.Gson
 import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TokenGenerator
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatus
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper
 import kotlinx.coroutines.runBlocking
 
@@ -30,12 +32,14 @@ public class AppHostApduService : HostApduService() {
 
 
     override fun processCommandApdu(apdu: ByteArray, extras: Bundle?): ByteArray {
+
         // 1. SELECT_APDU: Aktivierung des HCE-Dienstes
         // Hier prüfen wir, ob das Senden erlaubt ist:
         if (!isTokenTransmissionAllowed) {
             Log.i(TAG, "Tokenübertragung nicht erlaubt, Sender nicht im Sende-Modus")
             return conflictMessage
         }
+
 
         if (selectAidApdu(apdu)) {
             Log.i(TAG, "Application selected")
@@ -69,15 +73,20 @@ public class AppHostApduService : HostApduService() {
                         currentFragmentIndex = 0
                         Log.i(TAG, "Token fragmented into ${encryptedFragments.size} fragments")
                         // Sende das erste Fragment als Antwort
+
                         return@runBlocking encryptedFragments[currentFragmentIndex++]
+
                     } else {
+
                         // Token passt in eine APDU, also direkt zurücksenden
                         return@runBlocking tokenBytes
                     }
+
                 } catch (e: Exception) {
                     Log.e(TAG, "Error generating token: ${e.message}")
                     return@runBlocking conflictMessage
                 }
+
             }
         }
 
@@ -97,16 +106,6 @@ public class AppHostApduService : HostApduService() {
 
         if (conflictApdu(apdu)) {
             Log.i(TAG, "Conflict")
-            return conflictMessage
-        }
-
-        if (isTransactionSuccessApdu(apdu)) {
-            Log.i(TAG, "Transaction success")
-            return okayMessage
-        }
-
-        if (isTransactionFailureApdu(apdu)) {
-            Log.i(TAG, "Transaction failure")
             return conflictMessage
         }
 
@@ -171,18 +170,11 @@ public class AppHostApduService : HostApduService() {
         return apdu.copyOfRange(5, 5 + lc)
     }
 
-    private fun isTransactionSuccessApdu(apdu: ByteArray): Boolean {
-        // Wir definieren INS 0x12 als Erfolgssignal
-        return apdu.size >= 2 && apdu[0] == 0x80.toByte() && apdu[1] == 0x12.toByte()
-    }
 
-    private fun isTransactionFailureApdu(apdu: ByteArray): Boolean {
-        // Wir definieren INS 0x13 als Fehlersignal
-        return apdu.size >= 2 && apdu[0] == 0x80.toByte() && apdu[1] == 0x13.toByte()
-    }
 
 
     override fun onDeactivated(reason: Int) {
         Log.i(TAG, "Deactivated: $reason")
+        TransactionStatusHolder.setTransactionStatus()
     }
 }

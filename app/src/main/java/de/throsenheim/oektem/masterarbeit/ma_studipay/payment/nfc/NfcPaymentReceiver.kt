@@ -65,7 +65,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
     fun enableNfcReader() {
         nfcAdapter?.let {
             val options = Bundle()
-            options.putInt(android.nfc.NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 250)
+            options.putInt(android.nfc.NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 50000)
             it.enableReaderMode(
                 activity,
                 { tag -> handleTagDiscovered(tag) },
@@ -127,7 +127,6 @@ class NfcPaymentReceiver(private val activity: Activity) {
                         var outcome =
                             TokenExtractor.extractTokenFromResponse(activity, amount, paymentToken)
                         if (outcome == TransactionOutcome.Success) {
-                            val response = isoDep.transceive(TRANSACTION_SUCCESS_APDU)
                             withContext(Dispatchers.Main) {
                                 (activity as? FragmentActivity)?.let { fragmentActivity ->
                                     // Hole den NavController anhand des NavHostFragment in deiner Activity
@@ -145,7 +144,6 @@ class NfcPaymentReceiver(private val activity: Activity) {
                                 }
                             }
                         } else {
-                            val response = isoDep.transceive(TRANSACTION_FAILURE_APDU)
                             withContext(Dispatchers.Main) {
                                 (activity as? FragmentActivity)?.let { fragmentActivity ->
                                     // Hole den NavController anhand des NavHostFragment in deiner Activity
@@ -159,7 +157,6 @@ class NfcPaymentReceiver(private val activity: Activity) {
                             }
                         }
                     } else {
-                        val response = isoDep.transceive(TRANSACTION_FAILURE_APDU)
                         withContext(Dispatchers.Main) {
                             (activity as? FragmentActivity)?.let { fragmentActivity ->
                                 // Hole den NavController anhand des NavHostFragment in deiner Activity
