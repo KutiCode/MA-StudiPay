@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
@@ -60,7 +61,7 @@ class LoginFragment : Fragment() {
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+            showCustomMessage(error)
         }
     }
 
@@ -90,4 +91,41 @@ class LoginFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    private fun showCustomMessage(message: String) {
+        // Inflatiere das benutzerdefinierte Layout
+        val inflater = LayoutInflater.from(requireContext())
+        val customView = inflater.inflate(R.layout.custom_message, binding.root, false)
+        val messageText = customView.findViewById<TextView>(R.id.custom_message_text)
+        messageText.text = message
+
+        // Füge die View dem Root-Layout hinzu
+        binding.root.addView(customView)
+
+        // Sicherstellen, dass die View gemessen wurde, bevor die Animation startet
+        customView.post {
+            // Setze die Startposition (über dem sichtbaren Bereich)
+            customView.translationY = -customView.height.toFloat()
+            customView.visibility = View.VISIBLE
+
+            // Blende die View mit einer Slide-in-Animation ein
+            customView.animate()
+                .translationY(0f)
+                .setDuration(300)
+                .withEndAction {
+                    // Nach 2 Sekunden automatisch wieder ausblenden
+                    customView.postDelayed({
+                        customView.animate()
+                            .translationY(-customView.height.toFloat())
+                            .setDuration(300)
+                            .withEndAction {
+                                // Entferne die View aus dem Layout
+                                binding.root.removeView(customView)
+                            }
+                            .start()
+                    }, 2000)
+                }
+                .start()
+        }
+    }
+
 }
