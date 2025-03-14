@@ -37,7 +37,6 @@ public class AppHostApduService : HostApduService() {
             return conflictMessage
         }
 
-
         if (selectAidApdu(apdu)) {
             Log.i(TAG, "Application selected")
             return okayMessage
@@ -101,6 +100,16 @@ public class AppHostApduService : HostApduService() {
             return conflictMessage
         }
 
+        if (isTransactionSuccessApdu(apdu)) {
+            Log.i(TAG, "Transaction success")
+            return okayMessage
+        }
+
+        if (isTransactionFailureApdu(apdu)) {
+            Log.i(TAG, "Transaction failure")
+            return conflictMessage
+        }
+
         return conflictMessage
     }
 
@@ -161,6 +170,17 @@ public class AppHostApduService : HostApduService() {
         if (apdu.size < 5 + lc) return null
         return apdu.copyOfRange(5, 5 + lc)
     }
+
+    private fun isTransactionSuccessApdu(apdu: ByteArray): Boolean {
+        // Wir definieren INS 0x12 als Erfolgssignal
+        return apdu.size >= 2 && apdu[0] == 0x80.toByte() && apdu[1] == 0x12.toByte()
+    }
+
+    private fun isTransactionFailureApdu(apdu: ByteArray): Boolean {
+        // Wir definieren INS 0x13 als Fehlersignal
+        return apdu.size >= 2 && apdu[0] == 0x80.toByte() && apdu[1] == 0x13.toByte()
+    }
+
 
     override fun onDeactivated(reason: Int) {
         Log.i(TAG, "Deactivated: $reason")
