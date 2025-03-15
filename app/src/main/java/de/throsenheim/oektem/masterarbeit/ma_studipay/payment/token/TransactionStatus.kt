@@ -1,0 +1,21 @@
+package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token
+
+import androidx.lifecycle.MutableLiveData
+
+enum class TransactionStatus {
+    FINISHED,
+    RESET
+}
+
+object TransactionStatusHolder {
+    // Diese LiveData wird vom Service aktualisiert und im Fragment beobachtet.
+    val transactionStatus = MutableLiveData<TransactionStatus>()
+
+
+    fun setTransactionStatus() {
+        transactionStatus.postValue(TransactionStatus.FINISHED)
+    }
+    fun reset() {
+        transactionStatus.postValue(TransactionStatus.RESET)
+    }
+}

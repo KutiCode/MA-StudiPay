@@ -45,6 +45,12 @@ class NfcPaymentReceiver(private val activity: Activity) {
         // APDU, um das nächste Fragment anzufordern: CLA = 0x80, INS = 0x11
         private val NEXT_FRAGMENT_APDU = byteArrayOf(0x80.toByte(), 0x11.toByte())
 
+
+        private val TRANSACTION_SUCCESS_APDU = byteArrayOf(0x80.toByte(), 0x12.toByte())
+        private val TRANSACTION_FAILURE_APDU = byteArrayOf(0x80.toByte(), 0x13.toByte())
+
+
+
         // Konflikt-APDU
         private val CONFLICT_APDU = byteArrayOf(0x6A.toByte(), 0x82.toByte())
 
@@ -59,7 +65,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
     fun enableNfcReader() {
         nfcAdapter?.let {
             val options = Bundle()
-            options.putInt(android.nfc.NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 250)
+            options.putInt(android.nfc.NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 50000)
             it.enableReaderMode(
                 activity,
                 { tag -> handleTagDiscovered(tag) },

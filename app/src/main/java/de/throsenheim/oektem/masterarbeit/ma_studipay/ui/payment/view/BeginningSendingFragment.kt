@@ -12,6 +12,8 @@ import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginningSendingBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.hce.AppHostApduService
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatus
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardUiState
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.viewmodel.BeginningSendingViewModel
 
@@ -46,6 +48,20 @@ class BeginningSendingFragment : Fragment() {
         } ?: run {
             binding.userInfoSender.text = "Hallo, Benutzer"
         }
+
+        TransactionStatusHolder.transactionStatus.observe(viewLifecycleOwner) { status ->
+            when (status) {
+                TransactionStatus.FINISHED -> {
+                    // Navigiere zum MotionLayout-Success-Screen
+                    findNavController().navigate(R.id.fragment_sender_success)
+                }
+
+                TransactionStatus.RESET -> {
+
+                }
+            }
+        }
+
 
         binding.cancelButton.setOnClickListener {
             AppHostApduService.isTokenTransmissionAllowed = false

@@ -12,7 +12,11 @@
             android:id="@+id/action_welcomeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
-
+    <fragment
+        android:id="@+id/fragment_sender_success"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.SenderSuccessFragment"
+        android:label="Transaktion erfolgreich"
+        tools:layout="@layout/fragment_sender_success" />
 
     <fragment
         android:id="@+id/loginFragment"

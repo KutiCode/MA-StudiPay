@@ -15,6 +15,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
+import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel.DashboardViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel.DashboardViewModelFactory
@@ -37,7 +38,7 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        TransactionStatusHolder.reset()
         val userRepository = UserRepository(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
             apiService = RetrofitInstance.api,
@@ -156,4 +157,10 @@ class DashboardFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onResume() {
+        super.onResume()
+        TransactionStatusHolder.reset()
+    }
+
 }
