@@ -1,5 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel
 
+import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,17 +21,15 @@ class DashboardViewModel(
     private val _userData = MutableLiveData<DashboardUiState>()
     val userData: LiveData<DashboardUiState> get() = _userData
 
-
     fun loadUserData(matrikelnummer: String) {
         viewModelScope.launch {
-            bankRepository.syncBanksFromBackend()
-            userRepository.syncDatabase()
-            val user = userRepository.getUserByMatrikelnumber(matrikelnummer)
-            if (user != null) {
+            // Lade zunächst die lokalen Daten und zeige sie an.
+            val localUser = userRepository.getUserByMatrikelnumber(matrikelnummer)
+            if (localUser != null) {
                 _userData.value = DashboardUiState(
-                    firstName = user.firstName,
-                    balance = "${user.balance} €",
-                    matrikelNumber = user.matrikelnumber
+                    firstName = localUser.firstName,
+                    balance = "${localUser.balance} €",
+                    matrikelNumber = localUser.matrikelnumber
                 )
             } else {
                 _userData.value = DashboardUiState(
@@ -39,8 +38,27 @@ class DashboardViewModel(
                     matrikelNumber = "Nicht verfügbar"
                 )
             }
+
+            // Versuche nun, im Hintergrund die Backend-Synchronisation durchzuführen.
+            try {
+                bankRepository.syncBanksFromBackend()
+                userRepository.syncDatabase()
+            } catch (e: Exception) {
+                Log.e("DashboardViewModel", "Backend sync failed: ${e.message}")
+            }
+
+            // Nachdem die Synchronisation abgeschlossen ist, aktualisiere die UI ggf.
+            val updatedUser = userRepository.getUserByMatrikelnumber(matrikelnummer)
+            if (updatedUser != null) {
+                _userData.value = DashboardUiState(
+                    firstName = updatedUser.firstName,
+                    balance = "${updatedUser.balance} €",
+                    matrikelNumber = updatedUser.matrikelnumber
+                )
+            }
         }
     }
 }
+
 
 

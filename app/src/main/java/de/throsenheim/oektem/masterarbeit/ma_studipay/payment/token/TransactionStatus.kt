@@ -3,7 +3,8 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token
 import androidx.lifecycle.MutableLiveData
 
 enum class TransactionStatus {
-    FINISHED
+    FINISHED,
+    RESET
 }
 
 object TransactionStatusHolder {
@@ -13,5 +14,8 @@ object TransactionStatusHolder {
 
     fun setTransactionStatus() {
         transactionStatus.postValue(TransactionStatus.FINISHED)
+    }
+    fun reset() {
+        transactionStatus.postValue(TransactionStatus.RESET)
     }
 }

@@ -2,62 +2,102 @@
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
-    <!-- Transition zwischen Start- und End-Zustand -->
+    <!-- Transition: Dauer 8000ms (passe die Dauer nach Bedarf an) -->
     <Transition
         motion:constraintSetStart="@id/start"
         motion:constraintSetEnd="@id/end"
-        motion:duration="8000" />
+        motion:duration="800" />
 
     <!-- Start-Zustand -->
     <ConstraintSet android:id="@+id/start">
+        <!-- Karte -->
         <Constraint android:id="@+id/sending_card">
             <Layout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                motion:layout_constraintTop_toBottomOf="@id/sending_text_beginning"
+                motion:layout_constraintTop_toTopOf="parent"
                 motion:layout_constraintStart_toStartOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent" />
+            <PropertySet elevation="4dp" />
         </Constraint>
-        <Constraint android:id="@+id/sending_details">
-            <PropertySet android:visibility="invisible" />
+        <!-- Abschluss-Text unsichtbar -->
+        <Constraint android:id="@+id/completion_text">
+            <PropertySet visibility="invisible" />
         </Constraint>
+        <!-- Haken-Icon unsichtbar -->
+        <Constraint android:id="@+id/check_icon">
+            <PropertySet visibility="invisible" />
+        </Constraint>
+        <!-- Info-Text unsichtbar -->
+        <Constraint android:id="@+id/info_text">
+            <PropertySet visibility="invisible" />
+        </Constraint>
+        <!-- Dashboard-Button unsichtbar -->
         <Constraint android:id="@+id/dashboardButton">
-            <PropertySet android:visibility="invisible" />
+            <PropertySet visibility="invisible" />
         </Constraint>
     </ConstraintSet>
 
     <!-- End-Zustand -->
     <ConstraintSet android:id="@+id/end">
+        <!-- Karte: Füllt den Raum von der oberen Kante bis zur Oberkante des Buttons -->
         <Constraint android:id="@+id/sending_card">
             <Layout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="32dp"
+                android:layout_height="0dp"
+                android:layout_margin="0dp"
                 motion:layout_constraintTop_toTopOf="parent"
                 motion:layout_constraintBottom_toTopOf="@id/dashboardButton"
                 motion:layout_constraintStart_toStartOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent" />
+            <PropertySet elevation="0dp" />
         </Constraint>
-        <Constraint android:id="@+id/sending_details">
+        <!-- Abschluss-Text: Zentriert innerhalb der Karte, vertical_bias auf 0.4 -->
+        <Constraint android:id="@+id/completion_text">
             <Layout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                motion:layout_constraintTop_toBottomOf="@id/sending_card"
-                motion:layout_constraintStart_toStartOf="parent"
-                motion:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="16dp" />
-            <PropertySet android:visibility="visible" />
+                motion:layout_constraintTop_toTopOf="@id/sending_card"
+                motion:layout_constraintBottom_toBottomOf="@id/sending_card"
+                motion:layout_constraintStart_toStartOf="@id/sending_card"
+                motion:layout_constraintEnd_toEndOf="@id/sending_card"
+                motion:layout_constraintVertical_bias="0.25" />
+            <PropertySet visibility="visible" />
         </Constraint>
+        <!-- Haken-Icon direkt unter dem Text -->
+        <Constraint android:id="@+id/check_icon">
+            <Layout
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                motion:layout_constraintTop_toBottomOf="@id/completion_text"
+                motion:layout_constraintStart_toStartOf="@id/sending_card"
+                motion:layout_constraintEnd_toEndOf="@id/sending_card" />
+            <PropertySet visibility="visible" />
+        </Constraint>
+        <!-- Info-Text direkt unter dem Haken -->
+        <Constraint android:id="@+id/info_text">
+            <Layout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                motion:layout_constraintTop_toBottomOf="@id/check_icon"
+                motion:layout_constraintStart_toStartOf="@id/sending_card"
+                motion:layout_constraintEnd_toEndOf="@id/sending_card" />
+            <PropertySet visibility="visible" />
+        </Constraint>
+        <!-- Dashboard-Button am unteren Rand des Parents -->
         <Constraint android:id="@+id/dashboardButton">
             <Layout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
                 motion:layout_constraintBottom_toBottomOf="parent"
                 motion:layout_constraintStart_toStartOf="parent"
-                motion:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginBottom="32dp" />
-            <PropertySet android:visibility="visible" />
+                motion:layout_constraintEnd_toEndOf="parent" />
+            <PropertySet
+                visibility="visible"
+                elevation="20dp"
+                translationZ="20dp" />
         </Constraint>
     </ConstraintSet>
 

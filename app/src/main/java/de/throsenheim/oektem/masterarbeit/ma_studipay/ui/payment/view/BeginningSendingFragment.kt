@@ -56,6 +56,9 @@ class BeginningSendingFragment : Fragment() {
                     findNavController().navigate(R.id.fragment_sender_success)
                 }
 
+                TransactionStatus.RESET -> {
+
+                }
             }
         }
 

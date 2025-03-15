@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -73,33 +74,39 @@ class UserTransactionFragment : Fragment() {
         val sendButton = view.findViewById<MaterialButton>(R.id.continue_button)
 
         sendButton.setOnClickListener {
-            val amount = amountInput.text.toString()
-            Log.d("UserTransactionFragment", "Amount: $amount")
-            if (amount.isNotEmpty()) {
+            val amountString = amountInput.text.toString()
+            Log.d("UserTransactionFragment", "Amount: $amountString")
+            if (amountString.isNotEmpty()) {
+                val inputAmount = amountString.toDoubleOrNull() ?: 0.0
                 if (transactionType == "SEND") {
                     if (source == "orangeDetails") {
-                        viewModel.deductBalance(
-                            requireContext(),
-                            currentUsername!!,
-                            amount.toDouble()
-                        )
-                    } else {
+                        viewModel.deductBalance(requireContext(), currentUsername!!, inputAmount)
                     }
-                } else {
+                } else { // RECEIVE
                     if (source == "orangeDetails") {
-                        viewModel.addBalance(requireContext(), currentUsername!!, amount.toDouble())
+                        viewModel.addBalance(requireContext(), currentUsername!!, inputAmount)
                     } else {
-                        if (isWifiEnabled(requireContext()) && isWifiConnected(requireContext())) {
-                            BeginningRecieveFragment.amount = amount.toDouble()
-                            findNavController().navigate(R.id.action_userPin_to_beginningRecieveFragment)
 
+                        if (inputAmount != 0.0) {
+                            if (isWifiEnabled(requireContext()) && isWifiConnected(requireContext())) {
+
+                                BeginningRecieveFragment.amount = inputAmount
+                                findNavController().navigate(R.id.action_userPin_to_beginningRecieveFragment)
+                            } else {
+                                findNavController().navigate(R.id.fragment_no_wifi)
+                            }
                         } else {
-                            findNavController().navigate(R.id.fragment_no_wifi)
+                            Toast.makeText(
+                                requireContext(),
+                                "Ungültige Eingabe",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
             }
         }
+
 
 
         val bottomNavigationView =
