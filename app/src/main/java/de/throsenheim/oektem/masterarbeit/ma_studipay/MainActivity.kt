@@ -1,5 +1,8 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay
 
+/**
+ * Benötigte Imports
+ */
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
