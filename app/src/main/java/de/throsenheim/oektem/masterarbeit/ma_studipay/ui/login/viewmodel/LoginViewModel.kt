@@ -34,7 +34,7 @@ class LoginViewModel(application: Application, private val userRepository: UserR
      */
     fun login(matrikelnummer: String, password: String) {
         if (matrikelnummer.isBlank() || password.isBlank()) {
-            _errorMessage.value = "Please fill in all fields"
+            _errorMessage.value = "Bitte fülle alle Felder aus"
             return
         }
 
@@ -57,7 +57,7 @@ class LoginViewModel(application: Application, private val userRepository: UserR
                     }
                     3 -> {
                         _errorMessage.value =
-                            "Login failed – please check your inputs."
+                            "Login fehlgeschlagen - Bitte überprüfe deine Eingabe."
                     }
                     4 -> {
                         // On the fourth attempt (optional):
@@ -68,11 +68,11 @@ class LoginViewModel(application: Application, private val userRepository: UserR
                     5 -> {
                         userRepository.syncDatabase()
                         _errorMessage.value =
-                            "Login failed – an internet connection is required to log in."
+                            "Login fehlgeschlagen - Eine Internetverbindung ist erforderlich."
                     }
                     else -> {
                         // After more than 5 failed attempts:
-                        _errorMessage.value = "Login failed."
+                        _errorMessage.value = "Login fehlgeschlagen."
                     }
                 }
             }

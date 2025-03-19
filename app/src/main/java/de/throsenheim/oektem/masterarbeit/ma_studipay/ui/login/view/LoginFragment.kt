@@ -73,7 +73,7 @@ class LoginFragment : Fragment() {
     private fun setupObservers() {
         viewModel.loginResult.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Toast.makeText(requireContext(), "Login successful", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Login erfolgreich", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_loginFragment_to_dashboardFragment)
             }
         }
