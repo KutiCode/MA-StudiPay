@@ -14,26 +14,26 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentWelcomeBinding
 
 /**
- * Fragment, das als Willkommen-Bildschirm dient.
+ * Fragment that serves as the welcome screen.
  *
- * Hier wird eine Kreis-Animation gestartet. Nach Abschluss der Animation werden
- * Begrüßungstexte und ein Start-Button eingeblendet, mit dem zur Login-Seite navigiert wird.
+ * This fragment starts a circle animation. Once the animation finishes,
+ * welcome texts and a start button are displayed, which navigates to the login screen when clicked.
  */
 class WelcomeFragment : Fragment() {
 
     private var _binding: FragmentWelcomeBinding? = null
     private val binding get() = _binding!!
 
-    // Referenz auf den Animator, um ihn bei Bedarf abbrechen zu können.
+    // Reference to the animator, to allow cancelling it if necessary.
     private var circleAnimator: ValueAnimator? = null
 
     /**
-     * Erzeugt und gibt die View-Hierarchie des Fragments zurück.
+     * Creates and returns the view hierarchy of the fragment.
      *
-     * @param inflater Der LayoutInflater, der zum Aufblasen des Layouts verwendet wird.
-     * @param container Die übergeordnete ViewGroup, falls vorhanden.
-     * @param savedInstanceState Ein Bundle mit vorherigen Zustandsinformationen, falls vorhanden.
-     * @return Die erstellte View des Fragments.
+     * @param inflater The LayoutInflater used to inflate the layout.
+     * @param container The parent ViewGroup, if available.
+     * @param savedInstanceState A Bundle with previous state information, if available.
+     * @return The created view of the fragment.
      */
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,12 +45,12 @@ class WelcomeFragment : Fragment() {
     }
 
     /**
-     * Wird aufgerufen, nachdem die View-Hierarchie erstellt wurde.
+     * Called after the view hierarchy has been created.
      *
-     * Hier wird die Kreis-Animation gestartet.
+     * Starts the circle animation.
      *
-     * @param view Die erstellte View des Fragments.
-     * @param savedInstanceState Ein Bundle mit vorherigen Zustandsinformationen, falls vorhanden.
+     * @param view The created view of the fragment.
+     * @param savedInstanceState A Bundle with previous state information, if available.
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,9 +58,9 @@ class WelcomeFragment : Fragment() {
     }
 
     /**
-     * Startet eine Kreis-Animation, die die Größe des Kreises von 100 Pixel bis zur maximalen
-     * Bildschirmgröße animiert. Am Ende der Animation werden die Begrüßungstexte und der Start-Button
-     * eingeblendet. Beim Klick auf den Button wird zur Login-Seite navigiert.
+     * Starts a circle animation that animates the size of the circle from 100 pixels
+     * to the maximum screen size. Once the animation ends, the welcome texts and the start button
+     * are made visible. When the button is clicked, the app navigates to the login screen.
      */
     private fun animateCircle() {
         val circle = binding.animatedCircle
@@ -72,7 +72,7 @@ class WelcomeFragment : Fragment() {
             duration = 800
             addUpdateListener { animation ->
                 val value = animation.animatedValue as Float
-                Log.d("WelcomeFragment", "Kreisgröße: $value")
+                Log.d("WelcomeFragment", "Circle size: $value")
                 circle.layoutParams.width = value.toInt()
                 circle.layoutParams.height = value.toInt()
                 circle.requestLayout()
@@ -81,15 +81,15 @@ class WelcomeFragment : Fragment() {
                 override fun onAnimationEnd(animation: Animator) {
                     Log.d(
                         "WelcomeFragment",
-                        "Animation beendet, Fragment aktiv: ${isAdded && view != null}"
+                        "Animation ended, fragment active: ${isAdded && view != null}"
                     )
                     if (isAdded && view != null) {
-                        // Sichtbarkeit der Elemente einstellen
+                        // Set visibility of the elements
                         binding.welcomeText.visibility = View.VISIBLE
                         binding.welcomeSubtitle.visibility = View.VISIBLE
                         binding.startButton.visibility = View.VISIBLE
 
-                        // Klick-Listener für den Button setzen
+                        // Set click listener for the button
                         binding.startButton.setOnClickListener {
                             findNavController().navigate(R.id.action_welcomeFragment_to_loginFragment)
                         }
@@ -101,13 +101,13 @@ class WelcomeFragment : Fragment() {
     }
 
     /**
-     * Wird aufgerufen, wenn die View des Fragments zerstört wird.
+     * Called when the fragment's view is destroyed.
      *
-     * Hier werden laufende Animationen abgebrochen und das Binding freigegeben.
+     * Cancels any running animations and releases the binding.
      */
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("WelcomeFragment", "onDestroyView aufgerufen, Animation abbrechen")
+        Log.d("WelcomeFragment", "onDestroyView called, cancelling animation")
         circleAnimator?.cancel()
         _binding = null
     }
