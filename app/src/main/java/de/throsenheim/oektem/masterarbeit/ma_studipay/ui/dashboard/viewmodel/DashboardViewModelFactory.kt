@@ -6,7 +6,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 
 /**
- * Factory class for creating instances of DashboardViewModel.
+ * Factory class for creating instances of [DashboardViewModel].
  *
  * This factory provides the required dependencies (bankRepository and userRepository)
  * to the DashboardViewModel.
@@ -24,7 +24,7 @@ class DashboardViewModelFactory(
      *
      * @param modelClass The class of the ViewModel to create.
      * @return A new instance of DashboardViewModel.
-     * @throws IllegalArgumentException if the ViewModel class is not DashboardViewModel.
+     * @throws IllegalArgumentException if the ViewModel class is not [DashboardViewModel].
      */
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
