@@ -1,18 +1,22 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel
 
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardUiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-
+/**
+ * DashboardViewModel connects the UI with the underlying data.
+ *
+ * It loads and synchronizes user data, then updates the UI state.
+ */
 class DashboardViewModel(
     private val bankRepository: BankRepository,
     private val userRepository: UserRepository
@@ -21,44 +25,54 @@ class DashboardViewModel(
     private val _userData = MutableLiveData<DashboardUiState>()
     val userData: LiveData<DashboardUiState> get() = _userData
 
+    /**
+     * Helper function to map a user object to DashboardUiState.
+     */
+    private fun mapUserToDashboardUiState(user: de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User?): DashboardUiState {
+        return if (user != null) {
+            DashboardUiState(
+                firstName = user.firstName,
+                balance = "${user.balance} €",
+                matrikelNumber = user.matrikelnumber
+            )
+        } else {
+            DashboardUiState(
+                firstName = "Unbekannt",
+                balance = "0 €",
+                matrikelNumber = "Nicht verfügbar"
+            )
+        }
+    }
+
+    /**
+     * Loads user data by matriculation number, first displaying local data and then
+     * updating the state after attempting backend synchronization.
+     *
+     * @param matrikelnummer The matriculation number of the user.
+     */
     fun loadUserData(matrikelnummer: String) {
         viewModelScope.launch {
-            // Lade zunächst die lokalen Daten und zeige sie an.
-            val localUser = userRepository.getUserByMatrikelnumber(matrikelnummer)
-            if (localUser != null) {
-                _userData.value = DashboardUiState(
-                    firstName = localUser.firstName,
-                    balance = "${localUser.balance} €",
-                    matrikelNumber = localUser.matrikelnumber
-                )
-            } else {
-                _userData.value = DashboardUiState(
-                    firstName = "Unbekannt",
-                    balance = "0 €",
-                    matrikelNumber = "Nicht verfügbar"
-                )
+            // Fetch local user data on the IO dispatcher
+            val localUser = withContext(Dispatchers.IO) {
+                userRepository.getUserByMatrikelnumber(matrikelnummer)
             }
+            _userData.value = mapUserToDashboardUiState(localUser)
 
-            // Versuche nun, im Hintergrund die Backend-Synchronisation durchzuführen.
+            // Attempt backend synchronization on the IO dispatcher
             try {
-                bankRepository.syncBanksFromBackend()
-                userRepository.syncDatabase()
+                withContext(Dispatchers.IO) {
+                    bankRepository.syncBanksFromBackend()
+                    userRepository.syncDatabase()
+                }
             } catch (e: Exception) {
                 Log.e("DashboardViewModel", "Backend sync failed: ${e.message}")
             }
 
-            // Nachdem die Synchronisation abgeschlossen ist, aktualisiere die UI ggf.
-            val updatedUser = userRepository.getUserByMatrikelnumber(matrikelnummer)
-            if (updatedUser != null) {
-                _userData.value = DashboardUiState(
-                    firstName = updatedUser.firstName,
-                    balance = "${updatedUser.balance} €",
-                    matrikelNumber = updatedUser.matrikelnumber
-                )
+            // Fetch updated user data after synchronization
+            val updatedUser = withContext(Dispatchers.IO) {
+                userRepository.getUserByMatrikelnumber(matrikelnummer)
             }
+            _userData.value = mapUserToDashboardUiState(updatedUser)
         }
     }
 }
-
-
-
