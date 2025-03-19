@@ -19,6 +19,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionS
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel.DashboardViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel.DashboardViewModelFactory
+import java.util.Calendar
 
 /**
  * DashboardFragment serves as the main screen for the dashboard.
@@ -57,7 +58,6 @@ class DashboardFragment : Fragment() {
 
     /**
      * Initializes the ViewModel by creating repository instances and a ViewModelFactory.
-     *
      */
     private fun initViewModel() {
         val database = AppDatabase.getDatabase(requireContext())
@@ -76,10 +76,28 @@ class DashboardFragment : Fragment() {
      */
     private fun setupObservers() {
         viewModel.userData.observe(viewLifecycleOwner) { uiState ->
-            binding.welcomeText.text = "Hello, ${uiState.firstName}"
-            binding.cardDashboardBalance.text = "Your Balance:"
+            // Set a dynamic greeting based on the time of day.
+            val greeting = getGreetingPrefix()
+            binding.welcomeText.text = "$greeting, ${uiState.firstName}"
+            binding.cardDashboardBalance.text = "Dein Guthaben:"
             binding.balanceText.text = uiState.balance
-            binding.matrikelnummerText.text = "Matriculation Number: ${uiState.matrikelNumber}"
+            binding.matrikelnummerText.text = "Matrikelnummer: ${uiState.matrikelNumber}"
+        }
+    }
+
+    /**
+     * Returns a greeting prefix based on the current time.
+     *
+     * @return The greeting prefix.
+     */
+    private fun getGreetingPrefix(): String {
+        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        return when {
+            hour < 5 -> "Nachteule"
+            hour < 12 -> "Guten Morgen"
+            hour < 17 -> "Guten Tag"
+            hour < 21 -> "Guten Abend"
+            else -> "Schönen Spätabend"
         }
     }
 
@@ -154,7 +172,7 @@ class DashboardFragment : Fragment() {
         if (matriculationNumber != null) {
             viewModel.loadUserData(matriculationNumber)
         } else {
-            binding.welcomeText.text = "Hello, Guest"
+            binding.welcomeText.text = "Hallo, Gast"
         }
     }
 
