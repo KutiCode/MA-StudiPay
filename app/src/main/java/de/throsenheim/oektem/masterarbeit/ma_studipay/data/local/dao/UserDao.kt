@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao
+package de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

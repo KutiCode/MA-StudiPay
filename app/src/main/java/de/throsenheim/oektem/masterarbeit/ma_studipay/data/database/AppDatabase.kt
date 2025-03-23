@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.BankDao
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.BankDao
 
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.UserDao
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.UserDao
 
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankSecrets

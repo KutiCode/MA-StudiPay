@@ -2,7 +2,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository
 
 import android.content.Context
 import android.util.Log
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.UserDao
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.UserDao
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.ApiService
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance

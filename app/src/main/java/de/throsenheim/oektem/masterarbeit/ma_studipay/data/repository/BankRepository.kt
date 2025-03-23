@@ -1,7 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository
 
 import android.util.Log
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.BankDao
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.BankDao
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dto.BankResponseDto
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankSecrets
