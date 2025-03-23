@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.data.model
+package de.throsenheim.oektem.masterarbeit.ma_studipay.model
 
 data class PaymentToken(
     val firstName: String,

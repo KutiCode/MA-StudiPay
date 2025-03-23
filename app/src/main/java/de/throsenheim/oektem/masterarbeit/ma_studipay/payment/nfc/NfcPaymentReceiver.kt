@@ -11,7 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import com.google.gson.Gson
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.PaymentToken
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TokenExtractor
 import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionOutcome
 import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper

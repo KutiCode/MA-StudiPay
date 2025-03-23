@@ -9,7 +9,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.BankDao
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.UserDao
 
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.Bank
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankSecrets
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.BankSecrets
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
 
 @Database(

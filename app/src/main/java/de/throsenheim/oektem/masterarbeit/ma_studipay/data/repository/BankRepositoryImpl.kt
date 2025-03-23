@@ -4,8 +4,8 @@ import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.BankDao
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dto.BankResponseDto
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.Bank
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankSecrets
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankWithSecrets
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.BankSecrets
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.BankWithSecrets
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

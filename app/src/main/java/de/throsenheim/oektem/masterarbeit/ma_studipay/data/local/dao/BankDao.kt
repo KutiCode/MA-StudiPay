@@ -2,8 +2,8 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao
 
 import androidx.room.*
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.Bank
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankSecrets
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankWithSecrets
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.BankSecrets
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.BankWithSecrets
 
 @Dao
 interface BankDao {
