@@ -1,7 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.service
 
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dto.BankResponseDto
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

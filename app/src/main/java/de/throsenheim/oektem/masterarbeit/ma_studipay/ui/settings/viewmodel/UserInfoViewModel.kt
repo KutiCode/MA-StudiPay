@@ -7,13 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
 import kotlinx.coroutines.launch
 
 class UserInfoViewModel(
-    private val userRepository: UserRepository,
+    private val userRepositoryImpl: UserRepositoryImpl,
     private val bankRepository: BankRepository
 ) : ViewModel() {
 

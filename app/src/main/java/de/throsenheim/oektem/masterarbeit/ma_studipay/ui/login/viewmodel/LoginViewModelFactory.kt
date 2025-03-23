@@ -3,7 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.viewmodel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 
 /**
  * Factory for creating instances of [LoginViewModel].
@@ -12,11 +12,11 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserReposi
  * to the LoginViewModel.
  *
  * @property application The application instance.
- * @property userRepository The repository that handles user-related operations.
+ * @property userRepositoryImpl The repository that handles user-related operations.
  */
 class LoginViewModelFactory(
     private val application: Application,
-    private val userRepository: UserRepository
+    private val userRepositoryImpl: UserRepositoryImpl
 ) : ViewModelProvider.Factory {
 
     /**
@@ -29,7 +29,7 @@ class LoginViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return LoginViewModel(application, userRepository) as T
+            return LoginViewModel(application, userRepositoryImpl) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

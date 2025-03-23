@@ -5,10 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 
 class BankConnectionViewModel(private val context: Context) : ViewModel() {
@@ -18,7 +16,7 @@ class BankConnectionViewModel(private val context: Context) : ViewModel() {
     val navigateToSettings: LiveData<Boolean> get() = _navigateToSettings
     private var bankRepository: BankRepository =
         BankRepository(AppDatabase.getDatabase(context).bankDao())
-    private var userRepository = UserRepository(
+    private var userRepositoryImpl = UserRepositoryImpl(
         userDao = AppDatabase.getDatabase(context).userDao(),
         apiService = RetrofitInstance.api,
         context = context
@@ -38,7 +36,7 @@ class BankConnectionViewModel(private val context: Context) : ViewModel() {
 
     suspend fun loadCurrentUserBank() {
         // Hole den aktuellen Nutzer aus der DB
-        val bankCode = userRepository.getCurrentUser()?.bank_code
+        val bankCode = userRepositoryImpl.getCurrentUser()?.bank_code
         // Hole den Banknamen anhand des bankCode
         val bankName = bankCode?.let { bankRepository.getBankByCode(it)?.name }
         _currentUserBank.value = bankName

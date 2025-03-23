@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import at.favre.lib.crypto.bcrypt.BCrypt
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import kotlinx.coroutines.launch
 
 /**
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  *
  * It validates input, checks user credentials, and manages login retries.
  */
-class LoginViewModel(application: Application, private val userRepository: UserRepository) : AndroidViewModel(application) {
+class LoginViewModel(application: Application, private val userRepositoryImpl: UserRepositoryImpl) : AndroidViewModel(application) {
 
     private val _loginResult = MutableLiveData<Boolean>()
     val loginResult: LiveData<Boolean> get() = _loginResult
@@ -39,7 +39,7 @@ class LoginViewModel(application: Application, private val userRepository: UserR
         }
 
         viewModelScope.launch {
-            val user = userRepository.getUserByMatrikelnumber(matrikelnummer)
+            val user = userRepositoryImpl.getUserByImmatriculationNumber(matrikelnummer)
 
             if (user != null && verifyPassword(password, user.password)) {
                 // Login successful
@@ -52,7 +52,7 @@ class LoginViewModel(application: Application, private val userRepository: UserR
                     in 1..2 -> {
                         // On the first two failed attempts:
                         // Try to update the data with syncDatabase() and then call login() again.
-                        userRepository.syncDatabase()
+                        userRepositoryImpl.syncDatabase()
                         login(matrikelnummer, password)
                     }
                     3 -> {
@@ -62,11 +62,11 @@ class LoginViewModel(application: Application, private val userRepository: UserR
                     4 -> {
                         // On the fourth attempt (optional):
                         // Try again after synchronizing the data.
-                        userRepository.syncDatabase()
+                        userRepositoryImpl.syncDatabase()
                         login(matrikelnummer, password)
                     }
                     5 -> {
-                        userRepository.syncDatabase()
+                        userRepositoryImpl.syncDatabase()
                         _errorMessage.value =
                             "Login fehlgeschlagen - Eine Internetverbindung ist erforderlich."
                     }

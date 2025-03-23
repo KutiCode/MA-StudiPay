@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
@@ -18,7 +17,7 @@ import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.viewmodel.UserInfoViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.viewmodel.UserInfoViewModelFactory
@@ -37,7 +36,7 @@ class UserInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userRepository = UserRepository(
+        val userRepositoryImpl = UserRepositoryImpl(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
             apiService = RetrofitInstance.api,
             context = requireContext()
@@ -47,7 +46,7 @@ class UserInfoFragment : Fragment() {
 
         )
 
-        val viewModelFactory = UserInfoViewModelFactory(userRepository, bankRepository)
+        val viewModelFactory = UserInfoViewModelFactory(userRepositoryImpl, bankRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[UserInfoViewModel::class.java]
 
 

@@ -10,10 +10,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import kotlinx.coroutines.launch
 
-class UserPinEntryViewModel(private val userRepository: UserRepository) : ViewModel() {
+class UserPinEntryViewModel(private val userRepositoryImpl: UserRepositoryImpl) : ViewModel() {
 
     private val _pin = MutableLiveData<String>()
     val pin: LiveData<String> get() = _pin
@@ -36,7 +36,7 @@ class UserPinEntryViewModel(private val userRepository: UserRepository) : ViewMo
 
     fun updateSecurePin(context: Context, matrikelnumber: String, newPin: String) {
         viewModelScope.launch {
-            userRepository.updateSecurePin(matrikelnumber, newPin)
+            userRepositoryImpl.updateSecurePin(matrikelnumber, newPin)
             val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
             with(sharedPref.edit()) {
                 putString("secure_pin", newPin)
@@ -52,7 +52,7 @@ class UserPinEntryViewModel(private val userRepository: UserRepository) : ViewMo
         pin: String
     ) {
         viewModelScope.launch {
-            val storedPin = userRepository.getSecurePin(matrikelnummer)
+            val storedPin = userRepositoryImpl.getSecurePin(matrikelnummer)
             if (storedPin == pin) {
 
                 val navOptions = NavOptions.Builder()

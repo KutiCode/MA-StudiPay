@@ -2,15 +2,15 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 
 class RegisterViewModelFactory(
-    private val userRepository: UserRepository
+    private val userRepositoryImpl: UserRepositoryImpl
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
-            return RegisterViewModel(userRepository) as T
+            return RegisterViewModel(userRepositoryImpl) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

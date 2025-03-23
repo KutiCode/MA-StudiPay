@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     /** Repository for user-related operations. */
-    private lateinit var userRepository: UserRepository
+    private lateinit var userRepositoryImpl: UserRepositoryImpl
 
     /** Repository for bank-related operations. */
     private lateinit var bankRepository: BankRepository
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         // Central initialization of the database and repositories
         val database = AppDatabase.getDatabase(this)
         bankRepository = BankRepository(bankDao = database.bankDao())
-        userRepository = UserRepository(
+        userRepositoryImpl = UserRepositoryImpl(
             userDao = database.userDao(),
             apiService = RetrofitInstance.api,
             context = this
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     private fun syncData() {
         lifecycleScope.launch(Dispatchers.IO) {
             bankRepository.syncBanksFromBackend()
-            userRepository.syncDatabase()
+            userRepositoryImpl.syncDatabase()
             Log.d("MainActivity", "Database synchronized")
             Log.d("MainActivity", "Bank data synchronized")
         }

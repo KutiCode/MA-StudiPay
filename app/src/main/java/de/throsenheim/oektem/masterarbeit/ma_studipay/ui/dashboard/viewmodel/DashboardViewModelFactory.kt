@@ -3,7 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 
 /**
  * Factory class for creating instances of [DashboardViewModel].
@@ -12,11 +12,11 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserReposi
  * to the DashboardViewModel.
  *
  * @property bankRepository The repository handling bank-related operations.
- * @property userRepository The repository handling user-related operations.
+ * @property userRepositoryImpl The repository handling user-related operations.
  */
 class DashboardViewModelFactory(
     private val bankRepository: BankRepository,
-    private val userRepository: UserRepository
+    private val userRepositoryImpl: UserRepositoryImpl
 ) : ViewModelProvider.Factory {
 
     /**
@@ -29,7 +29,7 @@ class DashboardViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return DashboardViewModel(bankRepository, userRepository) as T
+            return DashboardViewModel(bankRepository, userRepositoryImpl) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
@@ -61,13 +61,13 @@ class DashboardFragment : Fragment() {
      */
     private fun initViewModel() {
         val database = AppDatabase.getDatabase(requireContext())
-        val userRepository = UserRepository(
+        val userRepositoryImpl = UserRepositoryImpl(
             userDao = database.userDao(),
             apiService = RetrofitInstance.api,
             context = requireContext()
         )
         val bankRepository = BankRepository(database.bankDao())
-        val viewModelFactory = DashboardViewModelFactory(bankRepository, userRepository)
+        val viewModelFactory = DashboardViewModelFactory(bankRepository, userRepositoryImpl)
         viewModel = ViewModelProvider(this, viewModelFactory)[DashboardViewModel::class.java]
     }
 

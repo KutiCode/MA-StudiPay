@@ -6,7 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ import kotlinx.coroutines.withContext
  */
 class DashboardViewModel(
     private val bankRepository: BankRepository,
-    private val userRepository: UserRepository
+    private val userRepositoryImpl: UserRepositoryImpl
 ) : ViewModel() {
 
     private val _userData = MutableLiveData<DashboardUiState>()
@@ -28,7 +29,7 @@ class DashboardViewModel(
     /**
      * Helper function to map a user object to DashboardUiState.
      */
-    private fun mapUserToDashboardUiState(user: de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User?): DashboardUiState {
+    private fun mapUserToDashboardUiState(user: User?): DashboardUiState {
         return if (user != null) {
             DashboardUiState(
                 firstName = user.firstName,
@@ -54,7 +55,7 @@ class DashboardViewModel(
         viewModelScope.launch {
             // Fetch local user data on the IO dispatcher
             val localUser = withContext(Dispatchers.IO) {
-                userRepository.getUserByMatrikelnumber(matrikelnummer)
+                userRepositoryImpl.getUserByImmatriculationNumber(matrikelnummer)
             }
             _userData.value = mapUserToDashboardUiState(localUser)
 
@@ -62,7 +63,7 @@ class DashboardViewModel(
             try {
                 withContext(Dispatchers.IO) {
                     bankRepository.syncBanksFromBackend()
-                    userRepository.syncDatabase()
+                    userRepositoryImpl.syncDatabase()
                 }
             } catch (e: Exception) {
                 Log.e("DashboardViewModel", "Backend sync failed: ${e.message}")
@@ -70,7 +71,7 @@ class DashboardViewModel(
 
             // Fetch updated user data after synchronization
             val updatedUser = withContext(Dispatchers.IO) {
-                userRepository.getUserByMatrikelnumber(matrikelnummer)
+                userRepositoryImpl.getUserByImmatriculationNumber(matrikelnummer)
             }
             _userData.value = mapUserToDashboardUiState(updatedUser)
         }

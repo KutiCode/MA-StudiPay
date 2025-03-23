@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.viewmodel.BankSelectViewModel
@@ -40,12 +40,12 @@ class BankSelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userRepository = UserRepository(
+        val userRepositoryImpl = UserRepositoryImpl(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
             apiService = RetrofitInstance.api,
             context = requireContext()
         )
-        val factory = BankSelectViewModelFactory(requireContext(), userRepository)
+        val factory = BankSelectViewModelFactory(requireContext(), userRepositoryImpl)
         bankSelectViewModel = ViewModelProvider(this, factory).get(BankSelectViewModel::class.java)
 
         view.findViewById<Button>(R.id.topGiroBankButton).setOnClickListener {

@@ -5,14 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import at.favre.lib.crypto.bcrypt.BCrypt
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.UserRegistrationRequest
 import kotlinx.coroutines.launch
 
 
-class RegisterViewModel(private val userRepository: UserRepository) : ViewModel() {
+class RegisterViewModel(private val userRepositoryImpl: UserRepositoryImpl) : ViewModel() {
 
     private val _registrationResult = MutableLiveData<Boolean>()
     val registrationResult: LiveData<Boolean> get() = _registrationResult
@@ -41,7 +41,7 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
         }
 
         viewModelScope.launch {
-            val userExists = userRepository.getUserByMatrikelnumber(matrikelnummer) != null
+            val userExists = userRepositoryImpl.getUserByImmatriculationNumber(matrikelnummer) != null
             if (userExists) {
                 _errorMessage.value = "Matrikelnummer existiert bereits"
             } else {
@@ -70,8 +70,8 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
                 try {
                     val response = RetrofitInstance.api.registerUser(request)
                     if (response.isSuccessful) {
-                        userRepository.insertUser(user)
-                        userRepository.syncDatabase()
+                        userRepositoryImpl.insertUser(user)
+                        userRepositoryImpl.syncDatabase()
                         _registrationResult.value = true
                     } else {
                         _errorMessage.value = "Registrierung beim Backend fehlgeschlagen"
@@ -91,7 +91,7 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
         var kontonummer: String
         do {
             kontonummer = (100000..999999).random().toString()
-        } while (userRepository.userDao.getAllUsers().any { it.accountNumber == kontonummer })
+        } while (userRepositoryImpl.userDao.getAllUsers().any { it.accountNumber == kontonummer })
         return kontonummer
     }
 }

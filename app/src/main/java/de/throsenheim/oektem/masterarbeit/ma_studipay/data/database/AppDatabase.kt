@@ -8,9 +8,9 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.BankDao
 
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dao.UserDao
 
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.BankSecrets
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
 
 @Database(
     entities = [User::class, Bank::class, BankSecrets::class],

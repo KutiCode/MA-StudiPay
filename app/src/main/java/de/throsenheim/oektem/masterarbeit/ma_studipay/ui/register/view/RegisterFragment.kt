@@ -11,7 +11,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentRegisterBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.viewmodel.RegisterViewModel
@@ -36,12 +36,12 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userRepository = UserRepository(
+        val userRepositoryImpl = UserRepositoryImpl(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
             apiService = RetrofitInstance.api,
             context = requireContext()
         )
-        val viewModelFactory = RegisterViewModelFactory(userRepository)
+        val viewModelFactory = RegisterViewModelFactory(userRepositoryImpl)
         viewModel = ViewModelProvider(this, viewModelFactory)[RegisterViewModel::class.java]
 
         setupObservers()

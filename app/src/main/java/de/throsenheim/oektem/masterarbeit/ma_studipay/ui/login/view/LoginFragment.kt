@@ -12,7 +12,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentLoginBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.viewmodel.LoginViewModel
@@ -58,12 +58,12 @@ class LoginFragment : Fragment() {
      */
     private fun initViewModel() {
         val database = AppDatabase.getDatabase(requireContext())
-        val userRepository = UserRepository(
+        val userRepositoryImpl = UserRepositoryImpl(
             userDao = database.userDao(),
             apiService = RetrofitInstance.api,
             context = requireContext()
         )
-        val viewModelFactory = LoginViewModelFactory(requireActivity().application, userRepository)
+        val viewModelFactory = LoginViewModelFactory(requireActivity().application, userRepositoryImpl)
         viewModel = ViewModelProvider(this, viewModelFactory)[LoginViewModel::class.java]
     }
 

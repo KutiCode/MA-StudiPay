@@ -16,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.viewmodel.UserPinEntryViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.viewmodel.UserPinEntryViewModelFactory
@@ -41,13 +41,13 @@ class UserPinEntryFragment : Fragment() {
         val navController = findNavController()
         pinInput = view.findViewById(R.id.pin_entry)
 
-        val userRepository = UserRepository(
+        val userRepositoryImpl = UserRepositoryImpl(
             userDao = AppDatabase.getDatabase(requireContext()).userDao(),
             apiService = RetrofitInstance.api,
             context = requireContext()
         )
 
-        val viewModelFactory = UserPinEntryViewModelFactory(userRepository)
+        val viewModelFactory = UserPinEntryViewModelFactory(userRepositoryImpl)
         viewModel = ViewModelProvider(this, viewModelFactory)[UserPinEntryViewModel::class.java]
 
 

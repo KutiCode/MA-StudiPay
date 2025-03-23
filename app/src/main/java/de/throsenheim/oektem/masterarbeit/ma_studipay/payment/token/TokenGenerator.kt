@@ -4,7 +4,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token
 import android.content.Context
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import java.text.SimpleDateFormat
@@ -33,12 +33,12 @@ object TokenGenerator {
         // 2. User-Daten abrufen
         val userApi = RetrofitInstance.api
         val userDao = AppDatabase.getDatabase(context).userDao()
-        val userRepository = UserRepository(
+        val userRepositoryImpl = UserRepositoryImpl(
             userDao,
             userApi,
             context
         ) // Falls API nicht benötigt, übergib null oder passe an.
-        val user = userRepository.getUserByMatrikelnumber(matrikelNumber)
+        val user = userRepositoryImpl.getUserByImmatriculationNumber(matrikelNumber)
             ?: throw Exception("User mit Matrikelnummer $matrikelNumber nicht gefunden")
 
         // 3. Bank-Daten abrufen anhand des Bank-Codes des Users

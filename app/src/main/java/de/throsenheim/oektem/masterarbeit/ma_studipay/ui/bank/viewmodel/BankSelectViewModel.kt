@@ -6,12 +6,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import kotlinx.coroutines.launch
 
 class BankSelectViewModel(
     private val context: Context,
-    private val userRepository: UserRepository
+    private val userRepositoryImpl: UserRepositoryImpl
 ) : ViewModel() {
 
 
@@ -20,7 +20,7 @@ class BankSelectViewModel(
             val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
             val currentUsername = sharedPreferences.getString("current_username", null)
             if (currentUsername != null) {
-                val user = userRepository.getUserByMatrikelnumber(currentUsername)
+                val user = userRepositoryImpl.getUserByImmatriculationNumber(currentUsername)
                 if (user != null) {
                     // Protokolliere den neuen bankCode
                     Log.d(
@@ -31,7 +31,7 @@ class BankSelectViewModel(
 
                     try {
                         // Aktualisiere den User in der lokalen DB und im Backend
-                        userRepository.syncUserWithBackend(user)
+                        userRepositoryImpl.syncUserWithBackend(user)
                         // Speichere den neuen Bankcode in SharedPreferences (falls genutzt)
                         sharedPreferences.edit().putString("current_user_bank", bank.bank_code)
                             .apply()
