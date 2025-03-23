@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.Bank
 
 @Entity(
     tableName = "user",

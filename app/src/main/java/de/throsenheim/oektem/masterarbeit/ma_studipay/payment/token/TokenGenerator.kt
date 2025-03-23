@@ -3,7 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token
 
 import android.content.Context
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.PaymentToken
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
@@ -43,9 +43,9 @@ object TokenGenerator {
 
         // 3. Bank-Daten abrufen anhand des Bank-Codes des Users
         val bankDao = AppDatabase.getDatabase(context).bankDao()
-        val bankRepository = BankRepository(bankDao)
+        val bankRepositoryImpl = BankRepositoryImpl(bankDao)
         // Hier verwenden wir die Methode, die auch die BankSecrets liefert
-        val bankWithSecrets = bankRepository.getBankWithSecrets(user.bank_code ?: "")
+        val bankWithSecrets = bankRepositoryImpl.getBankWithSecrets(user.bank_code ?: "")
         // Wähle ein Secret aus; hier einfach das erste Element (du kannst auch eine Zufallsauswahl machen)
         val bankSecret = bankWithSecrets?.secrets?.firstOrNull()?.secretCode
             ?: throw Exception("Kein BankSecret für Bank-Code ${user.bank_code} gefunden")

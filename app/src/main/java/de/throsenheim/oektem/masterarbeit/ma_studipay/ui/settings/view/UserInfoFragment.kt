@@ -16,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.viewmodel.UserInfoViewModel
@@ -41,12 +41,12 @@ class UserInfoFragment : Fragment() {
             apiService = RetrofitInstance.api,
             context = requireContext()
         )
-        val bankRepository = BankRepository(
+        val bankRepositoryImpl = BankRepositoryImpl(
             bankDao = AppDatabase.getDatabase(requireContext()).bankDao()
 
         )
 
-        val viewModelFactory = UserInfoViewModelFactory(userRepositoryImpl, bankRepository)
+        val viewModelFactory = UserInfoViewModelFactory(userRepositoryImpl, bankRepositoryImpl)
         viewModel = ViewModelProvider(this, viewModelFactory)[UserInfoViewModel::class.java]
 
 

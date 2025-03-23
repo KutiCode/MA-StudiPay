@@ -13,7 +13,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.viewmodel.BankConnectionViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.viewmodel.BankConnectionViewModelFactory
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
@@ -24,13 +24,13 @@ class BankConnectionFragment : Fragment() {
     private val viewModel: BankConnectionViewModel by viewModels {
         BankConnectionViewModelFactory(requireContext())
     }
-    private lateinit var bankRepository: BankRepository
+    private lateinit var bankRepositoryImpl: BankRepositoryImpl
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        bankRepository = BankRepository(AppDatabase.getDatabase(requireContext()).bankDao())
+        bankRepositoryImpl = BankRepositoryImpl(AppDatabase.getDatabase(requireContext()).bankDao())
         return inflater.inflate(R.layout.fragment_bank_connection, container, false)
     }
 

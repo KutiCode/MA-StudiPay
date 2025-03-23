@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.DashboardUiState
@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
  * It loads and synchronizes user data, then updates the UI state.
  */
 class DashboardViewModel(
-    private val bankRepository: BankRepository,
+    private val bankRepositoryImpl: BankRepositoryImpl,
     private val userRepositoryImpl: UserRepositoryImpl
 ) : ViewModel() {
 
@@ -62,7 +62,7 @@ class DashboardViewModel(
             // Attempt backend synchronization on the IO dispatcher
             try {
                 withContext(Dispatchers.IO) {
-                    bankRepository.syncBanksFromBackend()
+                    bankRepositoryImpl.syncBanksFromBackend()
                     userRepositoryImpl.syncDatabase()
                 }
             } catch (e: Exception) {

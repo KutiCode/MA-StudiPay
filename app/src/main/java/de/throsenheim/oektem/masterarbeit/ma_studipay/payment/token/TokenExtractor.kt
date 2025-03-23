@@ -2,12 +2,9 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token
 
 import android.content.Context
 import android.util.Log
-import androidx.fragment.app.FragmentActivity
-import androidx.navigation.Navigation
-import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.model.PaymentToken
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.BalanceUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RiskValueUpdateRequest
@@ -134,8 +131,8 @@ object TokenExtractor {
     private suspend fun verifyBankSecret(context: Context, paymentToken: PaymentToken): Boolean {
         // Hole die lokale Bank (inklusive Secrets) anhand des BankCodes
         val bankDao = AppDatabase.getDatabase(context).bankDao()
-        val bankRepository = BankRepository(bankDao)
-        val bankWithSecrets = bankRepository.getBankWithSecrets(paymentToken.bankCode)
+        val bankRepositoryImpl = BankRepositoryImpl(bankDao)
+        val bankWithSecrets = bankRepositoryImpl.getBankWithSecrets(paymentToken.bankCode)
 
         // Wenn keine Bank oder keine Secrets gefunden wurden, ist die Überprüfung fehlgeschlagen
         if (bankWithSecrets == null || bankWithSecrets.secrets.isEmpty()) {

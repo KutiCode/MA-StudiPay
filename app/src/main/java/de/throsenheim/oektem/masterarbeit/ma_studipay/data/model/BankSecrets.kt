@@ -3,6 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.data.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import de.throsenheim.oektem.masterarbeit.ma_studipay.model.Bank
 
 @Entity(
     tableName = "bank_secrets",
