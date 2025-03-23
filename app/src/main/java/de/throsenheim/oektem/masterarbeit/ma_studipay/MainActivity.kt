@@ -1,7 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay
 
 /**
- * Benötigte Imports
+ * Required imports
  */
 import android.content.Context
 import android.os.Bundle
@@ -17,39 +17,34 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 /**
- * MainActivity ist der Einstiegspunkt der Anwendung.
+ * MainActivity is the entry point of the application.
  *
- * Diese Activity initialisiert die Datenbank-Repositories, setzt das Layout und
- * steuert die Navigation basierend auf dem Anmeldestatus des Benutzers. Zudem werden
- * Daten synchronisiert, wenn die Activity gestartet oder wieder in den Vordergrund tritt.
+ * This activity initializes the database repositories, sets the layout, and manages navigation
+ * based on the user's login status. Additionally, it synchronizes data when the activity is started
+ * or resumed.
  */
-
 class MainActivity : AppCompatActivity() {
 
-    /** Repository für benutzerbezogene Operationen. */
+    /** Repository for user-related operations. */
     private lateinit var userRepository: UserRepository
 
-    /** Repository für bankbezogene Operationen. */
+    /** Repository for bank-related operations. */
     private lateinit var bankRepository: BankRepository
 
     /**
-     * Wird aufgerufen, wenn die Activity erstellt wird.
+     * Called when the activity is created.
      *
-     * Hier wird zunächst das Layout gesetzt, dann werden die Repositories
-     * mithilfe der zentralisierten Datenbankinstanz initialisiert. Außerdem wird
-     * die Navigation basierend auf dem Login-Status des Benutzers gesteuert und
-     * die Synchronisation der Daten angestoßen.
+     * This method sets the layout, initializes the repositories using the centralized database instance,
+     * manages navigation based on the user's login status, and starts data synchronization.
      *
-     * @param savedInstanceState Falls vorhanden, enthält dieses Bundle die zuletzt
-     *                           gespeicherten Zustandsinformationen.
+     * @param savedInstanceState If available, contains the last saved state information.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Zentrale Initialisierung der Datenbank und Repositories
+        // Central initialization of the database and repositories
         val database = AppDatabase.getDatabase(this)
         bankRepository = BankRepository(bankDao = database.bankDao())
         userRepository = UserRepository(
@@ -58,25 +53,24 @@ class MainActivity : AppCompatActivity() {
             context = this
         )
 
-        // Zurück-Taste wird deaktiviert um unerwünschte Navigationen zu vermeiden
+        // Disable the back button to avoid unwanted navigation
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Keine Aktion bei Betätigung der Zurück-Taste
+                // Do nothing when the back button is pressed
             }
         })
 
-        // Navigation basierend auf dem Anmeldestatus steuern
+        // Manage navigation based on the user's login status
         navigateBasedOnLoginStatus()
 
-        // Starte asynchrone Daten-Synchronisation
+        // Start asynchronous data synchronization
         syncData()
     }
 
     /**
-     * Wird aufgerufen, wenn die Activity wieder in den Vordergrund tritt.
+     * Called when the activity is resumed.
      *
-     * Hier wird erneut die Daten-Synchronisation angestoßen, um stets aktuelle
-     * Informationen anzuzeigen.
+     * Triggers data synchronization to always display up-to-date information.
      */
     override fun onResume() {
         super.onResume()
@@ -84,32 +78,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Führt die Synchronisation der Bank- und Benutzerdaten asynchron im Hintergrund aus.
+     * Performs asynchronous synchronization of bank and user data in the background.
      */
     private fun syncData() {
         lifecycleScope.launch(Dispatchers.IO) {
             bankRepository.syncBanksFromBackend()
             userRepository.syncDatabase()
-            Log.d("MainActivity", "Datenbank synchronisiert")
-            Log.d("MainActivity", "Bank-Daten synchronisiert")
+            Log.d("MainActivity", "Database synchronized")
+            Log.d("MainActivity", "Bank data synchronized")
         }
     }
 
     /**
-     * Steuert die Navigation basierend auf dem Anmeldestatus des Benutzers.
+     * Manages navigation based on the user's login status.
      *
-     * Liest den Login-Status aus den SharedPreferences aus und navigiert dann zum
-     * Dashboard, wenn der Benutzer angemeldet ist, oder zum Welcome-Fragment andernfalls.
+     * Reads the login status from SharedPreferences and navigates to the dashboard if the user is logged in,
+     * or to the welcome fragment otherwise.
      */
     private fun navigateBasedOnLoginStatus() {
         val sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPref.getBoolean("is_logged_in", false)
 
-        // Verzögerte Navigation, bis der NavController initialisiert ist
+        // Delayed navigation until the NavController is initialized
         window.decorView.post {
             val navController = findNavController(R.id.nav_host_fragment)
             if (isLoggedIn) {
-                Log.d("MainActivity", "Benutzer ist angemeldet: ${sharedPref.getString("username", "matrikelnumber")}")
+                Log.d(
+                    "MainActivity",
+                    "User is logged in: ${sharedPref.getString("username", "matrikelnumber")}"
+                )
                 navController.navigate(R.id.navigation_dashboard)
             } else {
                 navController.navigate(R.id.welcomeFragment)

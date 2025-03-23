@@ -19,7 +19,13 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionS
 import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel.DashboardViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel.DashboardViewModelFactory
+import java.util.Calendar
 
+/**
+ * DashboardFragment serves as the main screen for the dashboard.
+ *
+ * It initializes the ViewModel, observes UI state changes, and sets up navigation listeners.
+ */
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
@@ -36,86 +42,119 @@ class DashboardFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Called when the view has been created.
+     *
+     * Initializes the ViewModel, sets up observers and listeners, and loads user data.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         TransactionStatusHolder.reset()
-        val userRepository = UserRepository(
-            userDao = AppDatabase.getDatabase(requireContext()).userDao(),
-            apiService = RetrofitInstance.api,
-            context = requireContext()
-        )
-        val bankRepository = BankRepository(AppDatabase.getDatabase(requireContext()).bankDao())
-        val viewModelFactory = DashboardViewModelFactory(bankRepository, userRepository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[DashboardViewModel::class.java]
-
+        initViewModel()
         setupObservers()
         setupListeners()
         loadUserData()
     }
 
+    /**
+     * Initializes the ViewModel by creating repository instances and a ViewModelFactory.
+     */
+    private fun initViewModel() {
+        val database = AppDatabase.getDatabase(requireContext())
+        val userRepository = UserRepository(
+            userDao = database.userDao(),
+            apiService = RetrofitInstance.api,
+            context = requireContext()
+        )
+        val bankRepository = BankRepository(database.bankDao())
+        val viewModelFactory = DashboardViewModelFactory(bankRepository, userRepository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[DashboardViewModel::class.java]
+    }
+
+    /**
+     * Sets up LiveData observers to update the UI when the ViewModel's state changes.
+     */
     private fun setupObservers() {
         viewModel.userData.observe(viewLifecycleOwner) { uiState ->
-            binding.welcomeText.text = "Hallo, ${uiState.firstName}"
+            // Set a dynamic greeting based on the time of day.
+            val greeting = getGreetingPrefix()
+            binding.welcomeText.text = "$greeting, ${uiState.firstName}"
             binding.cardDashboardBalance.text = "Dein Guthaben:"
             binding.balanceText.text = uiState.balance
             binding.matrikelnummerText.text = "Matrikelnummer: ${uiState.matrikelNumber}"
         }
     }
 
-    private fun setupListeners() {
-        // Navigation für Send-Button
-        binding.sendButton.setOnClickListener {
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
+    /**
+     * Returns a greeting prefix based on the current time.
+     *
+     * @return The greeting prefix.
+     */
+    private fun getGreetingPrefix(): String {
+        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        return when {
+            hour < 5 -> "Nachteule"
+            hour < 12 -> "Guten Morgen"
+            hour < 17 -> "Guten Tag"
+            hour < 21 -> "Guten Abend"
+            else -> "Schönen Spätabend"
+        }
+    }
 
+    /**
+     * Sets up click listeners for UI elements to handle navigation.
+     */
+    private fun setupListeners() {
+        // Navigation for the send button
+        binding.sendButton.setOnClickListener {
+            val navOptions = buildNavOptions(
+                enter = R.anim.slide_in_right,
+                exit = R.anim.slide_out_left,
+                popEnter = R.anim.slide_in_left,
+                popExit = R.anim.slide_out_right
+            )
             findNavController().navigate(
                 R.id.action_UserInfoFragment_to_userPinEntryFragment,
                 Bundle().apply {
                     putBoolean("isChangePin", false)
                     Log.d(
-                        "DashboarFragment",
-                        "Navigating to UserPinEntryFragment with NOT Change Pin"
+                        "DashboardFragment",
+                        "Navigating to UserPinEntryFragment without changing PIN"
                     )
                 },
                 navOptions
             )
         }
 
-        // Navigation für Receive-Button
+        // Navigation for the receive button
         binding.receiveButton.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("TRANSACTION_TYPE", "RECEIVE")
                 putString("SOURCE", "dashboard")
             }
-            val navOptions = NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build()
+            val navOptions = buildNavOptions(
+                enter = R.anim.slide_in_right,
+                exit = R.anim.slide_out_left,
+                popEnter = R.anim.slide_in_left,
+                popExit = R.anim.slide_out_right
+            )
             findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
-
         }
 
-        // Navigation für Karten-Details
+        // Navigation for card details
         binding.balanceCard.setOnClickListener {
             navigateWithFadeAnimation(R.id.orangeDetailsFragment)
         }
 
-        // Bottom Navigation View
-        val bottomNavigationView = binding.bottomNavigation
-        bottomNavigationView.setOnItemSelectedListener { item ->
+        // Bottom Navigation View item selection
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_settings -> {
                     navigateWithSlideAnimation(R.id.navigation_settings)
                     true
                 }
                 R.id.navigation_home -> {
-                    // Bleib auf dem Dashboard, keine Navigation erforderlich
+                    // Remain on the dashboard; no navigation required.
                     true
                 }
                 else -> false
@@ -123,36 +162,68 @@ class DashboardFragment : Fragment() {
         }
     }
 
+    /**
+     * Loads user data using the matriculation number stored in SharedPreferences.
+     * If no matriculation number is found, displays a default greeting.
+     */
     private fun loadUserData() {
         val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val matrikelnummer = sharedPreferences.getString("current_username", null)
-        matrikelnummer?.let {
-            viewModel.loadUserData(it)
-        } ?: run {
+        val matriculationNumber = sharedPreferences.getString("current_username", null)
+        if (matriculationNumber != null) {
+            viewModel.loadUserData(matriculationNumber)
+        } else {
             binding.welcomeText.text = "Hallo, Gast"
         }
     }
 
+    /**
+     * Constructs NavOptions with the specified animations.
+     *
+     * @param enter Animation resource for entering the destination.
+     * @param exit Animation resource for exiting the current screen.
+     * @param popEnter Animation resource for entering when navigating back.
+     * @param popExit Animation resource for exiting when navigating back.
+     * @return The constructed NavOptions.
+     */
+    private fun buildNavOptions(enter: Int, exit: Int, popEnter: Int, popExit: Int): NavOptions {
+        return NavOptions.Builder()
+            .setEnterAnim(enter)
+            .setExitAnim(exit)
+            .setPopEnterAnim(popEnter)
+            .setPopExitAnim(popExit)
+            .build()
+    }
+
+    /**
+     * Navigates to the specified destination using slide animations.
+     *
+     * @param destinationId The ID of the destination.
+     */
     private fun navigateWithSlideAnimation(destinationId: Int) {
-        val navOptions = NavOptions.Builder()
-            .setEnterAnim(R.anim.slide_in_right)
-            .setExitAnim(R.anim.slide_out_left)
-            .setPopEnterAnim(R.anim.slide_in_left)
-            .setPopExitAnim(R.anim.slide_out_right)
-            .build()
-
+        val navOptions = buildNavOptions(
+            enter = R.anim.slide_in_right,
+            exit = R.anim.slide_out_left,
+            popEnter = R.anim.slide_in_left,
+            popExit = R.anim.slide_out_right
+        )
         findNavController().navigate(destinationId, null, navOptions)
     }
+
+    /**
+     * Navigates to the specified destination using fade animations.
+     *
+     * @param destinationId The ID of the destination.
+     */
     private fun navigateWithFadeAnimation(destinationId: Int) {
-        val navOptions = NavOptions.Builder()
-            .setEnterAnim(R.anim.fade_in)
-            .setExitAnim(R.anim.fade_out)
-            .setPopEnterAnim(R.anim.fade_in)
-            .setPopExitAnim(R.anim.fade_out)
-            .build()
-
+        val navOptions = buildNavOptions(
+            enter = R.anim.fade_in,
+            exit = R.anim.fade_out,
+            popEnter = R.anim.fade_in,
+            popExit = R.anim.fade_out
+        )
         findNavController().navigate(destinationId, null, navOptions)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -162,5 +233,4 @@ class DashboardFragment : Fragment() {
         super.onResume()
         TransactionStatusHolder.reset()
     }
-
 }

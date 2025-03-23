@@ -8,9 +8,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import at.favre.lib.crypto.bcrypt.BCrypt
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepository
-
 import kotlinx.coroutines.launch
 
+/**
+ * LoginViewModel handles user login.
+ *
+ * It validates input, checks user credentials, and manages login retries.
+ */
 class LoginViewModel(application: Application, private val userRepository: UserRepository) : AndroidViewModel(application) {
 
     private val _loginResult = MutableLiveData<Boolean>()
@@ -19,10 +23,18 @@ class LoginViewModel(application: Application, private val userRepository: UserR
     val errorMessage: LiveData<String> get() = _errorMessage
     private var _errorCount: Int = 0
 
-
+    /**
+     * Attempts to log in using the provided matriculation number and password.
+     *
+     * If any field is blank, an error message is set immediately.
+     * Otherwise, it checks the credentials and may retry login after synchronizing the database.
+     *
+     * @param matrikelnummer The matriculation number.
+     * @param password The user's password.
+     */
     fun login(matrikelnummer: String, password: String) {
         if (matrikelnummer.isBlank() || password.isBlank()) {
-            _errorMessage.value = "Bitte alle Felder ausfüllen"
+            _errorMessage.value = "Bitte fülle alle Felder aus"
             return
         }
 
@@ -30,41 +42,36 @@ class LoginViewModel(application: Application, private val userRepository: UserR
             val user = userRepository.getUserByMatrikelnumber(matrikelnummer)
 
             if (user != null && verifyPassword(password, user.password)) {
-                // Login erfolgreich
+                // Login successful
                 saveUserToPreferences(matrikelnummer)
                 _loginResult.value = true
-                _errorCount = 0 // Fehlerzähler zurücksetzen
+                _errorCount = 0 // Reset error counter
             } else {
                 _errorCount++
                 when (_errorCount) {
                     in 1..2 -> {
-                        // Bei den ersten beiden Fehlversuchen:
-                        // Versuche, die Daten mit syncDatabase() zu aktualisieren und
-                        // rufe dann erneut die Login-Funktion auf.
+                        // On the first two failed attempts:
+                        // Try to update the data with syncDatabase() and then call login() again.
                         userRepository.syncDatabase()
                         login(matrikelnummer, password)
                     }
-
                     3 -> {
-                        userRepository
                         _errorMessage.value =
-                            "Login fehlgeschlagen – bitte überprüfe deine Eingaben."
+                            "Login fehlgeschlagen - Bitte überprüfe deine Eingabe."
                     }
-
                     4 -> {
-                        // Versuch nach 4 Fehlversuchen nochmal (optional):
+                        // On the fourth attempt (optional):
+                        // Try again after synchronizing the data.
                         userRepository.syncDatabase()
                         login(matrikelnummer, password)
                     }
-
                     5 -> {
                         userRepository.syncDatabase()
                         _errorMessage.value =
-                            "Login fehlgeschlagen – eine Internetverbindung ist nötig zum Einloggen."
+                            "Login fehlgeschlagen - Eine Internetverbindung ist erforderlich."
                     }
-
                     else -> {
-                        // Bei mehr als 5 Fehlversuchen:
+                        // After more than 5 failed attempts:
                         _errorMessage.value = "Login fehlgeschlagen."
                     }
                 }
@@ -72,16 +79,24 @@ class LoginViewModel(application: Application, private val userRepository: UserR
         }
     }
 
-
-
+    /**
+     * Verifies that the provided plain text password matches the hashed password.
+     *
+     * @param password The plain text password.
+     * @param hashedPassword The hashed password stored for the user.
+     * @return True if the password matches, false otherwise.
+     */
     fun verifyPassword(password: String, hashedPassword: String): Boolean {
         return BCrypt.verifyer().verify(password.toCharArray(), hashedPassword).verified
     }
 
-    fun hashPassword(password: String): String {
-        return BCrypt.withDefaults().hashToString(12, password.toCharArray())
-    }
-    fun saveUserToPreferences( matrikelnummer: String) {
+
+    /**
+     * Saves the user's matriculation number to SharedPreferences and marks the user as logged in.
+     *
+     * @param matrikelnummer The matriculation number.
+     */
+    fun saveUserToPreferences(matrikelnummer: String) {
         val sharedPreferences = getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putString("current_username", matrikelnummer)
@@ -89,5 +104,4 @@ class LoginViewModel(application: Application, private val userRepository: UserR
             apply()
         }
     }
-
 }

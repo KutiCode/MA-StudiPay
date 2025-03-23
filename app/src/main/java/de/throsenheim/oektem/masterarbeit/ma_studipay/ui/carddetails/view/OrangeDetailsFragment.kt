@@ -12,16 +12,26 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepository
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentOrangeDetailsBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails.viewmodel.OrangeDetailsViewModel
 
+/**
+ * OrangeDetailsFragment displays the details for the orange card.
+ *
+ * It handles loading user details from the database, setting up UI buttons for transactions,
+ * and configuring the bottom navigation. It also handles the back button press.
+ */
 class OrangeDetailsFragment : Fragment() {
 
+    // Binding for the fragment's layout.
     private lateinit var binding: FragmentOrangeDetailsBinding
+
+    // ViewModel to manage user detail data.
     private val viewModel: OrangeDetailsViewModel by viewModels()
 
+    /**
+     * Inflates the layout for the fragment.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,6 +40,12 @@ class OrangeDetailsFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Called when the view is created.
+     *
+     * Sets up the back press handler, loads user details from SharedPreferences,
+     * sets up button click listeners, and configures bottom navigation.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -39,17 +55,25 @@ class OrangeDetailsFragment : Fragment() {
         setupBottomNavigation()
     }
 
+    /**
+     * Configures a back press callback that ignores the back button.
+     */
     private fun setupBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    // Ignore the back button
+                    // Back button is ignored.
                 }
             }
         )
     }
 
+    /**
+     * Loads the current user's matriculation number from SharedPreferences.
+     * If found, instructs the ViewModel to load user details; otherwise, shows missing values.
+     * Observes the userDetails LiveData to update the UI.
+     */
     private fun setupSharedPreferences() {
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
         val currentMatrikelnumber = sharedPref.getString("current_username", null)
@@ -60,6 +84,7 @@ class OrangeDetailsFragment : Fragment() {
             showMissingValues()
         }
 
+        // Observe changes in user details from the ViewModel.
         viewModel.userDetails.observe(viewLifecycleOwner, Observer { user ->
             if (user != null) {
                 updateUserDetails(user.balance, user.matrikelnumber, user.accountNumber)
@@ -69,35 +94,57 @@ class OrangeDetailsFragment : Fragment() {
         })
     }
 
+    /**
+     * Updates the UI with the provided user details.
+     *
+     * @param balance The user's balance.
+     * @param matrikelNumber The user's matriculation number.
+     * @param accountNumber The user's account number.
+     */
     private fun updateUserDetails(balance: Double, matrikelNumber: String, accountNumber: String) {
         binding.cardBalanceValue.text = "$balance €"
         binding.matrikelnummerValue.text = matrikelNumber
         binding.acountnumberValue.text = accountNumber
     }
 
+    /**
+     * Displays default values in the UI if user details are missing.
+     */
     private fun showMissingValues() {
-        binding.cardBalanceValue.text = "Fehlende Werte"
-        binding.matrikelnummerValue.text = "Fehlende Werte"
+        binding.cardBalanceValue.text = "Ungültige Werte"
+        binding.matrikelnummerValue.text = "Ungültige Werte"
     }
 
+    /**
+     * Sets up click listeners for various buttons to navigate to different fragments.
+     */
     private fun setupButtons() {
+        // When the "Send to Bank" button is clicked, navigate to the transaction fragment with "SEND" type.
         binding.sendToBankButton.setOnClickListener {
             navigateToTransactionFragment("SEND")
         }
 
+        // When the "Get from Bank" button is clicked, navigate to the transaction fragment with "RECEIVE" type.
         binding.getFromBankButton.setOnClickListener {
             navigateToTransactionFragment("RECEIVE")
         }
 
+        // When the balance card is clicked, navigate back to the dashboard.
         binding.balanceCardDetail.setOnClickListener {
             navigateToDashboardFragment()
         }
 
+        // When the transaction button is clicked, navigate to the last transactions fragment.
         binding.transactionButton.setOnClickListener {
             navigateToLastTransactionsFragment()
         }
     }
 
+    /**
+     * Navigates to the transaction fragment with a specified transaction type.
+     *
+     * @param transactionType The type of transaction ("SEND" or "RECEIVE").
+     */
     private fun navigateToTransactionFragment(transactionType: String) {
         val bundle = Bundle().apply {
             putString("TRANSACTION_TYPE", transactionType)
@@ -112,11 +159,17 @@ class OrangeDetailsFragment : Fragment() {
         findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
     }
 
+    /**
+     * Navigates to the dashboard fragment using fade animations.
+     */
     private fun navigateToDashboardFragment() {
         val navOptions = createNavOptions(R.anim.fade_in, R.anim.fade_out)
         findNavController().navigate(R.id.action_orangeDetailsFragment_to_dashboardFragment, null, navOptions)
     }
 
+    /**
+     * Navigates to the last transactions fragment using slide animations.
+     */
     private fun navigateToLastTransactionsFragment() {
         val navOptions = createNavOptions(
             enterAnim = R.anim.slide_in_right,
@@ -127,6 +180,15 @@ class OrangeDetailsFragment : Fragment() {
         findNavController().navigate(R.id.action_orangeDetailsFragment_to_lastTransactionsFragment, null, navOptions)
     }
 
+    /**
+     * Creates navigation options with specified animation resources.
+     *
+     * @param enterAnim Animation resource for entering the destination.
+     * @param exitAnim Animation resource for exiting the current screen.
+     * @param popEnterAnim Animation resource for entering when navigating back (default: same as enterAnim).
+     * @param popExitAnim Animation resource for exiting when navigating back (default: same as exitAnim).
+     * @return Constructed NavOptions.
+     */
     private fun createNavOptions(
         enterAnim: Int,
         exitAnim: Int,
@@ -141,6 +203,10 @@ class OrangeDetailsFragment : Fragment() {
             .build()
     }
 
+    /**
+     * Configures the bottom navigation view to work with the NavController,
+     * and sets up item selection to navigate to the corresponding destinations.
+     */
     private fun setupBottomNavigation() {
         val bottomNavigationView = binding.bottomNavigation
         val navController = findNavController()
@@ -163,6 +229,11 @@ class OrangeDetailsFragment : Fragment() {
         }
     }
 
+    /**
+     * Navigates to the specified destination using slide animations via NavOptions.
+     *
+     * @param destinationId The destination fragment's ID.
+     */
     private fun navigateWithNavOptions(destinationId: Int) {
         val navOptions = createNavOptions(
             enterAnim = R.anim.slide_in_right,

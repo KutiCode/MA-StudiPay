@@ -1,5 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,7 @@ class BeginningRecieveFragment : Fragment() {
         nfcReader.amount = amount
         nfcReader.tokenReceivedLiveData.observe(viewLifecycleOwner) { tokenReceived ->
             if (tokenReceived) {
+                playSinglePing()
                 findNavController().navigate(R.id.fragment_receiving_hold)
             }
         }
@@ -63,6 +65,11 @@ class BeginningRecieveFragment : Fragment() {
 
     companion object {
         var amount: Double = 0.0
+    }
+
+    private fun playSinglePing() {
+        val mp: MediaPlayer = MediaPlayer.create(context, R.raw.notification_decorative_01)
+        mp.start()
     }
 
 
