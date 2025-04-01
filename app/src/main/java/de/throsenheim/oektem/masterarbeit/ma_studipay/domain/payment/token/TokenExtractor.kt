@@ -1,9 +1,9 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token
+package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token
 
 import android.content.Context
 import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.PaymentToken
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.BalanceUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance

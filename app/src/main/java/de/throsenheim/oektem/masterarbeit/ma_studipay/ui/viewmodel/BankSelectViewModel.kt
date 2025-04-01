@@ -5,7 +5,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.Bank
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import kotlinx.coroutines.launch
 

@@ -3,14 +3,15 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository
 import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.BankDao
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.dto.BankResponseDto
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.Bank
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.BankSecrets
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.BankWithSecrets
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.Bank
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.BankSecrets
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.BankWithSecrets
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.repository.BankRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class BankRepositoryImpl(private val bankDao: BankDao): BankRepository{
+class BankRepositoryImpl(private val bankDao: BankDao) : BankRepository {
 
     override suspend fun getBankByCode(bankCode: String): Bank? {
         return bankDao.getBankByCode(bankCode)

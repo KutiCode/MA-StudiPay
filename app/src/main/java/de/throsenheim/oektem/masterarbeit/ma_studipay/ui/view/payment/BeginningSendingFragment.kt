@@ -10,9 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginningSendingBinding
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.hce.AppHostApduService
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatus
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatusHolder
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.hce.AppHostApduService
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatus
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BeginningSendingViewModel
 
 class BeginningSendingFragment : Fragment() {

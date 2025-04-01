@@ -1,7 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote
 
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.dto.BankResponseDto
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.BalanceUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.RiskValueUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.SecurePinUpdateRequest

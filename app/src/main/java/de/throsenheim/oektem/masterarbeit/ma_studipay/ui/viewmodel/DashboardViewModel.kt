@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.dashboard.DashboardUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

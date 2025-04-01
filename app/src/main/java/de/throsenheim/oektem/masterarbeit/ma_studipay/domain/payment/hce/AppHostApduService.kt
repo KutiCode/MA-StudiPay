@@ -1,12 +1,11 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.hce
+package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.hce
 
 import android.nfc.cardemulation.HostApduService
 import android.os.Bundle
 import android.util.Log
 import com.google.gson.Gson
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TokenGenerator
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatus
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatusHolder
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TokenGenerator
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper
 import kotlinx.coroutines.runBlocking
 

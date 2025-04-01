@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 
 @Dao
 interface UserDao {

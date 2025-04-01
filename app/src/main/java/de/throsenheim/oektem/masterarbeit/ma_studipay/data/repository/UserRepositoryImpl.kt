@@ -3,11 +3,12 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository
 import android.content.Context
 import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.UserDao
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.ApiService
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.SecurePinUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.response.UserResponse
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

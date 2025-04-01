@@ -1,6 +1,6 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository
+package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.repository
 
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 
 interface UserRepository {
 

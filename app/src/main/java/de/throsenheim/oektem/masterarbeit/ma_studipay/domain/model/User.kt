@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.model
+package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginningRecieveBinding
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.nfc.NfcPaymentReceiver
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.nfc.NfcPaymentReceiver
 
 class BeginningRecieveFragment : Fragment() {
 

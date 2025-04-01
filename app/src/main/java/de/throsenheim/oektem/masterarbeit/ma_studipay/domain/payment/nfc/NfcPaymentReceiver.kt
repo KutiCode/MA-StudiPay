@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.payment.nfc
+package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.nfc
 
 import android.app.Activity
 import android.content.Context
@@ -11,9 +11,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import com.google.gson.Gson
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.model.PaymentToken
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TokenExtractor
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionOutcome
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.PaymentToken
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TokenExtractor
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionOutcome
 import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

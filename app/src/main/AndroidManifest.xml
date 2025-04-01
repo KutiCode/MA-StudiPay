@@ -37,7 +37,7 @@
 
         <!-- 📌 Hier wird der HCE-Service eingefügt -->
         <service
-            android:name=".payment.hce.AppHostApduService"
+            android:name=".domain.payment.hce.AppHostApduService"
             android:exported="true"
             android:permission="android.permission.BIND_NFC_SERVICE">
             <intent-filter>
