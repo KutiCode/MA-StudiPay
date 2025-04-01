@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.service
+package de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request
 
 data class UserRegistrationRequest(
     val matrikelnumber: String,

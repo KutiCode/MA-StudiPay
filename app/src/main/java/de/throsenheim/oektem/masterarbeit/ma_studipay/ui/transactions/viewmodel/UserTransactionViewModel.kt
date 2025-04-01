@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.BalanceUpdateRequest
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.BalanceUpdateRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -35,7 +35,7 @@ class UserTransactionViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
-                    var user = userDao.getUserByMatrikelnumber(matrikelnumber)
+                    val user = userDao.getUserByMatrikelnumber(matrikelnumber)
                     user?.let {
                         it.balance += amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)
@@ -63,7 +63,7 @@ class UserTransactionViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
-                    var user = userDao.getUserByMatrikelnumber(matrikelnumber)
+                    val user = userDao.getUserByMatrikelnumber(matrikelnumber)
                     user?.let {
                         it.balance -= amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)

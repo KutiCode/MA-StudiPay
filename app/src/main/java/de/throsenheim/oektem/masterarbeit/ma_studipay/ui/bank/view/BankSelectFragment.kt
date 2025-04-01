@@ -15,7 +15,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.Bank
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.viewmodel.BankSelectViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.viewmodel.BankSelectViewModelFactory
 

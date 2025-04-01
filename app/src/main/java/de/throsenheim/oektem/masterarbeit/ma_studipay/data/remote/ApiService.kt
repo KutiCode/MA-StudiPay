@@ -1,7 +1,14 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.service
+package de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote
 
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.dto.BankResponseDto
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.BalanceUpdateRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.RiskValueUpdateRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.SecurePinUpdateRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.TransactionVerificationRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.response.UpdateUserResponse
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.UserRegistrationRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

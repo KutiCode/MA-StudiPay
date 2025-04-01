@@ -5,10 +5,10 @@ import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.BalanceUpdateRequest
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RiskValueUpdateRequest
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.TransactionVerificationRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.BalanceUpdateRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.RiskValueUpdateRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.TransactionVerificationRequest
 import java.text.SimpleDateFormat
 import java.util.*
 

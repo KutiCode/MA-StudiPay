@@ -16,7 +16,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.token.TransactionStatusHolder
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel.DashboardViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.viewmodel.DashboardViewModelFactory
 import java.util.Calendar

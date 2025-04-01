@@ -17,7 +17,7 @@ import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.viewmodel.UserPinEntryViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.viewmodel.UserPinEntryViewModelFactory
 

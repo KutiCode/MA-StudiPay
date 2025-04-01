@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 
 class BankConnectionViewModel(private val context: Context) : ViewModel() {
     private val _currentUserBank = MutableLiveData<String?>()

@@ -6,7 +6,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import java.text.SimpleDateFormat
 import java.util.*
 

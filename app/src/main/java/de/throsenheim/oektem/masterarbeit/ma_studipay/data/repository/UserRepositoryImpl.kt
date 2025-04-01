@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.local.dao.UserDao
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.User
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.ApiService
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.RetrofitInstance
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.SecurePinUpdateRequest
-import de.throsenheim.oektem.masterarbeit.ma_studipay.service.UserResponse
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.ApiService
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.SecurePinUpdateRequest
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.response.UserResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
