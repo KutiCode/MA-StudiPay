@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.data.dto
+package de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.dto
 
 data class SecretDto(
     val code: String,

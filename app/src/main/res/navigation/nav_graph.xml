@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.welcome.WelcomeFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.WelcomeFragment"
         android:label="Welcome"
         tools:layout="@layout/fragment_welcome">
         <action
@@ -100,7 +100,7 @@
         tools:layout="@layout/fragment_no_wifi" />
     <fragment
         android:id="@+id/userTransactionFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view.UserTransactionFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.UserTransactionFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_user_transaction" />
     <action

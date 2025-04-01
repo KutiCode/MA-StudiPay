@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -20,7 +20,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.payment.nfc.NfcPaymentReceiver
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningRecieveFragment
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.viewmodel.UserTransactionViewModel
 

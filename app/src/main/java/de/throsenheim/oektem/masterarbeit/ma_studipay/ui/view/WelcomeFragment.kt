@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.welcome
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
