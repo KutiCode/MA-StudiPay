@@ -22,7 +22,7 @@ class UserTransactionViewModel : ViewModel() {
     fun loadUserBalance(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
             val userDao = AppDatabase.getDatabase(context).userDao()
-            val user = userDao.getUserByMatrikelnumber(matrikelnumber)
+            val user = userDao.getUserByMatriculationNumber(matrikelnumber)
             _balance.value = user?.balance?.let { "$it €" } ?: "Fehlender Wert"
         }
     }
@@ -35,7 +35,7 @@ class UserTransactionViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
-                    val user = userDao.getUserByMatrikelnumber(matrikelnumber)
+                    val user = userDao.getUserByMatriculationNumber(matrikelnumber)
                     user?.let {
                         it.balance += amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)
@@ -63,7 +63,7 @@ class UserTransactionViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     // Aktualisiere den Betrag des Nutzers in der Datenbank
                     val userDao = AppDatabase.getDatabase(context).userDao()
-                    val user = userDao.getUserByMatrikelnumber(matrikelnumber)
+                    val user = userDao.getUserByMatriculationNumber(matrikelnumber)
                     user?.let {
                         it.balance -= amount
                         userDao.updateUserBalance(matrikelnumber, it.balance)

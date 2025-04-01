@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.uiHelper
 import kotlinx.coroutines.launch
 
 /**
@@ -30,12 +30,8 @@ class OrangeDetailsViewModel : ViewModel() {
      */
     fun loadUserDetails(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
-            // Obtain the UserDao instance from the AppDatabase.
-            val userDao = AppDatabase.getDatabase(context).userDao()
-            // Retrieve the user by their matriculation number.
-            val user = userDao.getUserByMatrikelnumber(matrikelnumber)
-            // Update the LiveData with the retrieved user.
-            _userDetails.value = user
+
+            _userDetails.value = uiHelper.loadUser(context, matrikelnumber)
         }
     }
 }

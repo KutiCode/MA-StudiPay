@@ -160,7 +160,7 @@ object TokenExtractor {
 
             val responseAdd = RetrofitInstance.api.addBalance(requestAdd)
             if (responseAdd.isSuccessful) {
-                val user = userDao.getUserByMatrikelnumber(matrikelNumber)
+                val user = userDao.getUserByMatriculationNumber(matrikelNumber)
                 user?.let {
                     it.balance += amount
                     userDao.updateUserBalance(matrikelNumber, it.balance)
@@ -171,7 +171,7 @@ object TokenExtractor {
 
             val responseDeduct = RetrofitInstance.api.deductBalance(requestDeduct)
             if (responseDeduct.isSuccessful) {
-                val userHold = userDao.getUserByMatrikelnumber(paymentToken.matrikelNumber)
+                val userHold = userDao.getUserByMatriculationNumber(paymentToken.matrikelNumber)
                 val userHoldNewBalance = userHold?.balance?.minus(amount)
                 if (userHold != null) {
                     userDao.updateUserBalance(userHold.matrikelnumber, userHoldNewBalance!!)

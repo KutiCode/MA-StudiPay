@@ -16,7 +16,7 @@ class SettingsViewModel : ViewModel() {
     fun loadUserName(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
             val userDao = AppDatabase.getDatabase(context).userDao()
-            val user = userDao.getUserByMatrikelnumber(matrikelnumber)
+            val user = userDao.getUserByMatriculationNumber(matrikelnumber)
             _userName.value = user?.let { "${it.firstName} ${it.lastName}" } ?: "Hallo, Benutzer"
         }
     }

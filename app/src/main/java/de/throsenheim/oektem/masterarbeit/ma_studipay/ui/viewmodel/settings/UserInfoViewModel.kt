@@ -25,7 +25,7 @@ class UserInfoViewModel(
     fun loadUser(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
             val userDao = AppDatabase.getDatabase(context).userDao()
-            val user = userDao.getUserByMatrikelnumber(matrikelnumber)
+            val user = userDao.getUserByMatriculationNumber(matrikelnumber)
             _user.value = user
             user?.bank_code?.let { loadBank(it) }
         }

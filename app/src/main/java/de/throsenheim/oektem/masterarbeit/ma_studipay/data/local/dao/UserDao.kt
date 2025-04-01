@@ -16,8 +16,8 @@ interface UserDao {
 
 
     // Benutzer anhand der Matrikelnummer abrufen (Primary Key)
-    @Query("SELECT * FROM user WHERE matrikelnumber = :matrikelnumber")
-    suspend fun getUserByMatrikelnumber(matrikelnumber: String): User?
+    @Query("SELECT * FROM user WHERE matrikelnumber = :matriculationNumber")
+    suspend fun getUserByMatriculationNumber(matriculationNumber: String): User?
 
     // Alle Benutzer abrufen (z. B. für Debugging)
     @Query("SELECT * FROM user")

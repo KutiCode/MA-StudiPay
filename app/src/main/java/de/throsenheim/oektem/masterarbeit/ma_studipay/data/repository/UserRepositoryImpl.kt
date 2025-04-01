@@ -25,7 +25,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getUserByImmatriculationNumber(immatriculationNumber: String): User? {
-        return userDao.getUserByMatrikelnumber(immatriculationNumber)
+        return userDao.getUserByMatriculationNumber(immatriculationNumber)
     }
 
     override suspend fun syncDatabase() {
@@ -80,7 +80,7 @@ class UserRepositoryImpl(
         return withContext(Dispatchers.IO) {
             val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
             val matrikelnumber = sharedPreferences.getString("current_username", null)
-            matrikelnumber?.let { userDao.getUserByMatrikelnumber(it) }
+            matrikelnumber?.let { userDao.getUserByMatriculationNumber(it) }
         }
     }
 
