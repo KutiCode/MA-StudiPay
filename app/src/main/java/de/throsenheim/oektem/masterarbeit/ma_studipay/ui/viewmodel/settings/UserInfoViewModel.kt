@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.uiHelper
 import kotlinx.coroutines.launch
 
 class UserInfoViewModel(
@@ -22,10 +22,9 @@ class UserInfoViewModel(
     private val _bank = MutableLiveData<Bank?>()
     val bank: LiveData<Bank?> get() = _bank
 
-    fun loadUser(context: Context, matrikelnumber: String) {
+    fun fetchUser(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
-            val userDao = AppDatabase.getDatabase(context).userDao()
-            val user = userDao.getUserByMatriculationNumber(matrikelnumber)
+            val user = uiHelper.loadUser(context, matrikelnumber)
             _user.value = user
             user?.bank_code?.let { loadBank(it) }
         }

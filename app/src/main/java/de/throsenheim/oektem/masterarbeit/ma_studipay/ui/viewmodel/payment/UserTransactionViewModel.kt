@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.BalanceUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.uiHelper
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -19,10 +20,9 @@ class UserTransactionViewModel : ViewModel() {
     private val _balance = MutableLiveData<String>()
     val balance: LiveData<String> get() = _balance
 
-    fun loadUserBalance(context: Context, matrikelnumber: String) {
+    fun fetchUserBalance(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
-            val userDao = AppDatabase.getDatabase(context).userDao()
-            val user = userDao.getUserByMatriculationNumber(matrikelnumber)
+            val user = uiHelper.loadUser(context, matrikelnumber)
             _balance.value = user?.balance?.let { "$it €" } ?: "Fehlender Wert"
         }
     }

@@ -77,7 +77,7 @@ class UserInfoFragment : Fragment() {
         })
 
         currentUsername?.let {
-            viewModel.loadUser(requireContext(), it)
+            viewModel.fetchUser(requireContext(), it)
         } ?: run {
             infoFullNameValue.text = "Fehlende Werte"
             infoMatrikelnummerValue.text = "Fehlende Werte"

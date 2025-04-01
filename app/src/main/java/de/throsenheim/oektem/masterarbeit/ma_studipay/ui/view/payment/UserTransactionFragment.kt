@@ -1,9 +1,5 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.uiHelper
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.payment.UserTransactionViewModel
 
 class UserTransactionFragment : Fragment() {
@@ -54,7 +51,7 @@ class UserTransactionFragment : Fragment() {
         val balanceAmount = view.findViewById<TextView>(R.id.user_transaction_balance_amount)
 
         currentUsername?.let {
-            viewModel.loadUserBalance(requireContext(), it)
+            viewModel.fetchUserBalance(requireContext(), it)
         } ?: run {
             balanceAmount.text = "Fehlender Wert"
         }
@@ -86,7 +83,10 @@ class UserTransactionFragment : Fragment() {
                     } else {
 
                         if (inputAmount != 0.0) {
-                            if (isWifiEnabled(requireContext()) && isWifiConnected(requireContext())) {
+                            if (uiHelper.isWifiEnabled(requireContext()) && uiHelper.isWifiConnected(
+                                    requireContext()
+                                )
+                            ) {
 
                                 BeginningRecieveFragment.amount = inputAmount
                                 findNavController().navigate(R.id.action_userPin_to_beginningRecieveFragment)
@@ -142,19 +142,6 @@ class UserTransactionFragment : Fragment() {
         }
     }
 
-    fun isWifiEnabled(context: Context): Boolean {
-        val wifiManager =
-            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        return wifiManager.isWifiEnabled
-    }
 
-
-    fun isWifiConnected(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-    }
 
 }
