@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.WelcomeFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.welcome.WelcomeFragment"
         android:label="Welcome"
         tools:layout="@layout/fragment_welcome">
         <action
@@ -14,13 +14,13 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_sender_success"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.SenderSuccessFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.SenderSuccessFragment"
         android:label="Transaktion erfolgreich"
         tools:layout="@layout/fragment_sender_success" />
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.login.view.LoginFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
@@ -33,7 +33,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.register.view.RegisterFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.register.RegisterFragment"
         android:label="Registrieren"
         tools:layout="@layout/fragment_register" />
     <action
@@ -42,65 +42,58 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.dashboard.view.DashboardFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.dashboard.DashboardFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_dashboard" />
-    <fragment
-        android:id="@+id/lastTransactionsFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.transactions.view.LastTransactionsFragment"
-        android:label="Letzte Transaktionen"
-        tools:layout="@layout/fragment_last_transaction" />
-    <action
-        android:id="@+id/action_orangeDetailsFragment_to_lastTransactionsFragment"
-        app:destination="@id/lastTransactionsFragment" />
+
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.view.SettingsFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.settings.SettingsFragment"
         android:label="Einstellungen"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/fragmentUserInfo"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.settings.view.UserInfoFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.settings.UserInfoFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_user_info" />
     <fragment
         android:id="@+id/fragnentBankConnection"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.view.BankConnectionFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.bank.BankConnectionFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_bank_connection" />
     <fragment
         android:id="@+id/beginningRecieveFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningRecieveFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.BeginningRecieveFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_beginning_recieve" />
     <fragment
         android:id="@+id/beginningSendingFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.BeginningSendingFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.BeginningSendingFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_beginning_sending" />
     <fragment
         android:id="@+id/fragment_receiving_hold"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.ReceivingHoldFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.ReceivingHoldFragment"
         android:label="Einstellungen"
         tools:layout="@layout/fragment_receiving_hold" />
     <fragment
         android:id="@+id/fragment_payment_success"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.SuccessPaymentFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.SuccessPaymentFragment"
         android:label="Einstellungen"
         tools:layout="@layout/fragment_success_payment" />
     <fragment
         android:id="@+id/fragment_payment_failed"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.FailedPaymentFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.FailedPaymentFragment"
         android:label="Einstellungen"
         tools:layout="@layout/fragment_failed_payment" />
     <fragment
         android:id="@+id/fragment_no_wifi"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.payment.view.NoWifiFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.NoWifiFragment"
         android:label="Einstellungen"
         tools:layout="@layout/fragment_no_wifi" />
     <fragment
         android:id="@+id/userTransactionFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.UserTransactionFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.UserTransactionFragment"
         android:label="dashboard"
         tools:layout="@layout/fragment_user_transaction" />
     <action
@@ -119,19 +112,19 @@
 
     <fragment
         android:id="@+id/orangeDetailsFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.carddetails.view.OrangeDetailsFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.carddetails.OrangeDetailsFragment"
         android:label="Orange Details"
         tools:layout="@layout/fragment_orange_details" />
 
     <fragment
         android:id="@+id/userPinEntryFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.security.view.UserPinEntryFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.settings.UserPinEntryFragment"
         android:label="Orange Details"
         tools:layout="@layout/fragment_pin_entry" />
     <!-- res/navigation/nav_graph.xml -->
     <fragment
         android:id="@+id/bankSelectFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.bank.view.BankSelectFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.bank.BankSelectFragment"
         android:label="Bank Select"
         tools:layout="@layout/fragment_bank_select" />
 
