@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.bank
 
 import android.content.Context
 import androidx.lifecycle.LiveData

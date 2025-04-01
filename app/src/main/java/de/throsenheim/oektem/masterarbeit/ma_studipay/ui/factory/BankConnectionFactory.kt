@@ -3,7 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BankConnectionViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.bank.BankConnectionViewModel
 
 
 class BankConnectionFactory(private val context: Context) : ViewModelProvider.Factory {

@@ -3,7 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.UserPinEntryViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings.UserPinEntryViewModel
 
 class UserPinEntryFactory(private val userRepositoryImpl: UserRepositoryImpl) :
     ViewModelProvider.Factory {

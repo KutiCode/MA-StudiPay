@@ -20,7 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.UserTransactionViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.payment.UserTransactionViewModel
 
 class UserTransactionFragment : Fragment() {
 

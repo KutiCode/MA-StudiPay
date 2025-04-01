@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentOrangeDetailsBinding
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.OrangeDetailsViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.carddetails.OrangeDetailsViewModel
 
 /**
  * OrangeDetailsFragment displays the details for the orange card.

@@ -13,7 +13,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginn
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.hce.AppHostApduService
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatus
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatusHolder
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BeginningSendingViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.payment.BeginningSendingViewModel
 
 class BeginningSendingFragment : Fragment() {
 

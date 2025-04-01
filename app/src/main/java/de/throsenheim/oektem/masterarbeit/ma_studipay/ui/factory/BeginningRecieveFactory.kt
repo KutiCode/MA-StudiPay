@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BeginningRecieveViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.payment.BeginningRecieveViewModel
 
 class BeginningRecieveFactory(
     private val context: Context,

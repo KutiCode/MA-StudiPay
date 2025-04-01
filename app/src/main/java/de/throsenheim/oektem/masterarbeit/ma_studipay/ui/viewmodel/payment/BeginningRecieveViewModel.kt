@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.payment
 
 import android.app.Activity
 import android.content.Context

@@ -19,7 +19,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.UserInfoViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings.UserInfoViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.UserInfoFactory
 
 class UserInfoFragment : Fragment() {

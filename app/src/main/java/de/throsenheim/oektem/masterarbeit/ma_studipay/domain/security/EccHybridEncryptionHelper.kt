@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.security
+package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.security
 
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec

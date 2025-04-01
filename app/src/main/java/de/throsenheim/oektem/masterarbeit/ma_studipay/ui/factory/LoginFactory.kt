@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.LoginViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.login.LoginViewModel
 
 /**
  * Factory for creating instances of [LoginViewModel].

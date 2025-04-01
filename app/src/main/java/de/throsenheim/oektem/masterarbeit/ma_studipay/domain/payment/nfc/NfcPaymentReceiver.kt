@@ -14,7 +14,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TokenExtractor
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionOutcome
-import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.security.EccHybridEncryptionHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

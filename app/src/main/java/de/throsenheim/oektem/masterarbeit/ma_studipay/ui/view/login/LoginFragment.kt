@@ -15,7 +15,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentLoginBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.LoginViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.login.LoginViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.LoginFactory
 
 /**

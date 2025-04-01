@@ -1,4 +1,4 @@
-package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel
+package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.register
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

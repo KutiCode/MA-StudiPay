@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BankSelectViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.bank.BankSelectViewModel
 
 class BankSelectFactory(
     private val context: Context,

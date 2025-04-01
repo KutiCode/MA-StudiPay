@@ -14,7 +14,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentRegisterBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.RegisterViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.register.RegisterViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.RegisterFactory
 import android.widget.TextView
 class RegisterFragment : Fragment() {

@@ -14,7 +14,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.SettingsViewModel
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings.SettingsViewModel
 
 class SettingsFragment : Fragment() {
 

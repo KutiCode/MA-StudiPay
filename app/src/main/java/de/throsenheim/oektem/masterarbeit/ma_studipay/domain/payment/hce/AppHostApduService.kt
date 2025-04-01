@@ -6,7 +6,7 @@ import android.util.Log
 import com.google.gson.Gson
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TokenGenerator
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatusHolder
-import de.throsenheim.oektem.masterarbeit.ma_studipay.security.EccHybridEncryptionHelper
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.security.EccHybridEncryptionHelper
 import kotlinx.coroutines.runBlocking
 
 public class AppHostApduService : HostApduService() {
