@@ -17,7 +17,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BankSelectViewModel
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.BankSelectViewModelFactory
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.BankSelectFactory
 
 class BankSelectFragment : Fragment() {
 
@@ -45,7 +45,7 @@ class BankSelectFragment : Fragment() {
             apiService = RetrofitInstance.api,
             context = requireContext()
         )
-        val factory = BankSelectViewModelFactory(requireContext(), userRepositoryImpl)
+        val factory = BankSelectFactory(requireContext(), userRepositoryImpl)
         bankSelectViewModel = ViewModelProvider(this, factory).get(BankSelectViewModel::class.java)
 
         view.findViewById<Button>(R.id.topGiroBankButton).setOnClickListener {

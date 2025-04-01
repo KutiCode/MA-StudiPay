@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BeginningRecieveViewModel
 
-class BeginningRecieveViewModelFactory(
+class BeginningRecieveFactory(
     private val context: Context,
     private val activity: Activity
 ) : ViewModelProvider.Factory {

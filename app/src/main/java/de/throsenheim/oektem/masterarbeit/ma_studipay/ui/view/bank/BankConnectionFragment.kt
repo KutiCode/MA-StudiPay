@@ -15,14 +15,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BankConnectionViewModel
-import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.BankConnectionViewModelFactory
+import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.BankConnectionFactory
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import kotlinx.coroutines.launch
 
 class BankConnectionFragment : Fragment() {
 
     private val viewModel: BankConnectionViewModel by viewModels {
-        BankConnectionViewModelFactory(requireContext())
+        BankConnectionFactory(requireContext())
     }
     private lateinit var bankRepositoryImpl: BankRepositoryImpl
 

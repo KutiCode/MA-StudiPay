@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BankConnectionViewModel
 
 
-class BankConnectionViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+class BankConnectionFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BankConnectionViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.BankSelectViewModel
 
-class BankSelectViewModelFactory(
+class BankSelectFactory(
     private val context: Context,
     private val userRepositoryImpl: UserRepositoryImpl
 ) : ViewModelProvider.Factory {
