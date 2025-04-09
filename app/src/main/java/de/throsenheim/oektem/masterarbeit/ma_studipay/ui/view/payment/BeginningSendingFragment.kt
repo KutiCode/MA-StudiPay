@@ -47,7 +47,7 @@ class BeginningSendingFragment : Fragment() {
         TransactionStatusHolder.transactionStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
                 TransactionStatus.FINISHED -> {
-                    findNavController().navigate(R.id.fragment_sender_success)
+                    findNavController().navigate(R.id.senderSuccessFragment)
                 }
 
                 TransactionStatus.RESET -> {
@@ -59,7 +59,7 @@ class BeginningSendingFragment : Fragment() {
 
         binding.cancelButton.setOnClickListener {
             AppHostApduService.isTokenTransmissionAllowed = false
-        findNavController().navigate(R.id.navigation_dashboard)
+            findNavController().navigate(R.id.dashboardFragment)
         }
     }
 

@@ -42,7 +42,7 @@ class BeginningRecieveFragment : Fragment() {
 
         binding.cancelButton.setOnClickListener {
             nfcReader.disableNfcReader()
-            findNavController().navigate(R.id.navigation_dashboard)
+            findNavController().navigate(R.id.dashboardFragment)
         }
 
 

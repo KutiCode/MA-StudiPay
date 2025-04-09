@@ -31,7 +31,7 @@ class SuccessPaymentFragment : Fragment() {
         view.findViewById<TextView>(R.id.sender_text_view).text = "$sender, hat dir Geld gesendet"
         binding.successDashboardButton.setOnClickListener {
             // Navigate to the dashboard
-            findNavController().navigate(R.id.navigation_dashboard)
+            findNavController().navigate(R.id.dashboardFragment)
         }
     }
 

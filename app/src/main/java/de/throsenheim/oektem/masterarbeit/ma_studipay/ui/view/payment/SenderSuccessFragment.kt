@@ -31,7 +31,7 @@ class SenderSuccessFragment : Fragment() {
         val dashboardButton = view.findViewById<MaterialButton>(R.id.dashboardButton)
         dashboardButton.setOnClickListener {
             TransactionStatusHolder.reset()
-            findNavController().navigate(R.id.navigation_dashboard)
+            findNavController().navigate(R.id.dashboardFragment)
         }
     }
 

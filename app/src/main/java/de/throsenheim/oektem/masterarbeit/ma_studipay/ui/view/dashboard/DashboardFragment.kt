@@ -149,8 +149,8 @@ class DashboardFragment : Fragment() {
         // Bottom Navigation View item selection
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_settings -> {
-                    navigateWithSlideAnimation(R.id.navigation_settings)
+                R.id.settingsFragment -> {
+                    navigateWithSlideAnimation(R.id.settingsFragment)
                     true
                 }
                 R.id.navigation_home -> {

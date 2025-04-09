@@ -44,13 +44,13 @@ class BankConnectionFragment : Fragment() {
 
 
         val bankInfoTextView = view.findViewById<TextView>(R.id.bank_connection_label)
-        viewModel.currentUserBank.observe(viewLifecycleOwner, Observer { bankName ->
+        viewModel.currentUserBank.observe(viewLifecycleOwner) { bankName ->
             bankInfoTextView.text = bankName ?: "Keine Bankverbindung gefunden"
-        })
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.loadCurrentUserBank()
         }
-        viewModel.navigateToSettings.observe(viewLifecycleOwner, Observer { navigate ->
+        viewModel.navigateToSettings.observe(viewLifecycleOwner) { navigate ->
             if (navigate) {
                 val navOptions = NavOptions.Builder()
                     .setEnterAnim(R.anim.fade_in)
@@ -65,7 +65,7 @@ class BankConnectionFragment : Fragment() {
                 )
                 viewModel.onNavigatedToSettings()
             }
-        })
+        }
 
         val changeBankConnectionButton = view.findViewById<View>(R.id.change_bank_connection_button)
         changeBankConnectionButton.setOnClickListener {
@@ -91,25 +91,25 @@ class BankConnectionFragment : Fragment() {
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_dashboard -> {
+                R.id.dashboardFragment -> {
                     val navOptions = NavOptions.Builder()
                         .setEnterAnim(R.anim.slide_in_right)
                         .setExitAnim(R.anim.slide_out_left)
                         .setPopEnterAnim(R.anim.slide_in_left)
                         .setPopExitAnim(R.anim.slide_out_right)
                         .build()
-                    navController.navigate(R.id.navigation_dashboard, null, navOptions)
+                    navController.navigate(R.id.dashboardFragment, null, navOptions)
                     true
                 }
                 R.id.navigation_home -> {
-                    if (navController.currentDestination?.id != R.id.navigation_dashboard) {
+                    if (navController.currentDestination?.id != R.id.dashboardFragment) {
                         val navOptions = NavOptions.Builder()
                             .setEnterAnim(R.anim.slide_in_right)
                             .setExitAnim(R.anim.slide_out_left)
                             .setPopEnterAnim(R.anim.slide_in_left)
                             .setPopExitAnim(R.anim.slide_out_right)
                             .build()
-                        navController.navigate(R.id.navigation_dashboard, null, navOptions)
+                        navController.navigate(R.id.dashboardFragment, null, navOptions)
                     }
                     true
                 }
