@@ -15,9 +15,9 @@ import kotlinx.coroutines.withContext
 object UiHelper {
 
 
-    suspend fun loadUser(context: Context, immatriculationNumber: String): User? {
+    suspend fun loadUser(context: Context, matriculationNumber: String): User? {
         val userDao = AppDatabase.getDatabase(context).userDao()
-        return userDao.getUserByMatriculationNumber(immatriculationNumber)
+        return userDao.getUserByMatriculationNumber(matriculationNumber)
     }
 
 
@@ -52,7 +52,7 @@ object UiHelper {
 
         // Fetch updated user data after synchronization
         val updatedUser = withContext(Dispatchers.IO) {
-            userRepositoryImpl.getUserByImmatriculationNumber(matriculationNumber)
+            userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber)
         }
         return updatedUser
     }

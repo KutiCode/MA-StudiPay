@@ -6,7 +6,7 @@ interface UserRepository {
 
     suspend fun insertUser(user: User)
 
-    suspend fun getUserByImmatriculationNumber(immatriculationNumber: String): User?
+    suspend fun getUserByMatriculationNumber(immatriculationNumber: String): User?
 
     suspend fun syncDatabase()
 

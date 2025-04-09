@@ -14,11 +14,11 @@ object BankService {
         bank: Bank
     ): Boolean {
         return runBlocking {
-            val user = userRepositoryImpl.getUserByImmatriculationNumber(matriculationNumber)
+            val user = userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber)
             if (user != null) {
                 Log.d(
                     "BankService",
-                    "Aktualisiere User ${user.matrikelnumber} mit bankCode: ${bank.bank_code}"
+                    "Aktualisiere User ${user.matriculationNumber} mit bankCode: ${bank.bank_code}"
                 )
                 user.bank_code = bank.bank_code
                 userRepositoryImpl.syncUserWithBackend(user)

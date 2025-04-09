@@ -32,7 +32,7 @@ class DashboardViewModel(
             DashboardUiState(
                 firstName = user.firstName,
                 balance = "${user.balance} €",
-                matriculationNumber = user.matrikelnumber
+                matriculationNumber = user.matriculationNumber
             )
         } else {
             DashboardUiState(

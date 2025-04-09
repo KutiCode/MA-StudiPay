@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
     )]
 )
 data class User(
-    @PrimaryKey val matrikelnumber: String,
+    @PrimaryKey val matriculationNumber: String,
     @ColumnInfo(name = "lastName") val lastName: String,
     @ColumnInfo(name = "firstName") val firstName: String,
     @ColumnInfo(name = "password") val password: String,

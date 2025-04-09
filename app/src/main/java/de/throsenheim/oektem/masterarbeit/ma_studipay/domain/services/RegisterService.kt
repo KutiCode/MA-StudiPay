@@ -11,7 +11,7 @@ object RegisterService {
 
 
     fun registerService(
-        immatriculationNumber: String,
+        matriculationNumber: String,
         firstName: String,
         lastName: String,
         password: String,
@@ -19,13 +19,13 @@ object RegisterService {
     ): String {
         return runBlocking {
             val userExists =
-                userRepositoryImpl.getUserByImmatriculationNumber(immatriculationNumber) != null
+                userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber) != null
             if (userExists) {
                 return@runBlocking "Nutzer existiert bereits"
             } else {
                 val hashedPassword = hashPassword(password)
                 val user = User(
-                    matrikelnumber = immatriculationNumber,
+                    matriculationNumber = matriculationNumber,
                     firstName = firstName,
                     lastName = lastName,
                     password = hashedPassword,
@@ -35,7 +35,7 @@ object RegisterService {
                     bank_code = null
                 )
                 val request = UserRegistrationRequest(
-                    matrikelnumber = immatriculationNumber,
+                    matriculationNumber = matriculationNumber,
                     firstName = firstName,
                     lastName = lastName,
                     password = hashedPassword,
@@ -69,10 +69,10 @@ object RegisterService {
     }
 
     private suspend fun generateUniqueAccountNumber(userRepositoryImpl: UserRepositoryImpl): String {
-        var kontonummer: String
+        var accountNumber: String
         do {
-            kontonummer = (100000..999999).random().toString()
-        } while (userRepositoryImpl.userDao.getAllUsers().any { it.accountNumber == kontonummer })
-        return kontonummer
+            accountNumber = (100000..999999).random().toString()
+        } while (userRepositoryImpl.userDao.getAllUsers().any { it.accountNumber == accountNumber })
+        return accountNumber
     }
 }

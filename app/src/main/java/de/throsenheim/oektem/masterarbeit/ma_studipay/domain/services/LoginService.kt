@@ -11,7 +11,7 @@ object LoginService {
         userRepositoryImpl: UserRepositoryImpl
     ): Boolean {
         return runBlocking {
-            val user = userRepositoryImpl.getUserByImmatriculationNumber(matriculationNumber)
+            val user = userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber)
 
             if (user != null && verifyPassword(password, user.password)) {
                 // Login successful

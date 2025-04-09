@@ -82,7 +82,7 @@ class UserInfoFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 infoFullNameValue.text = "${user.firstName} ${user.lastName}"
-                infoMatriculationNumberValue.text = user.matrikelnumber
+                infoMatriculationNumberValue.text = user.matriculationNumber
                 infoAccountNumberValue.text = user.accountNumber
             } else {
                 infoFullNameValue.text = "Fehlende Werte"

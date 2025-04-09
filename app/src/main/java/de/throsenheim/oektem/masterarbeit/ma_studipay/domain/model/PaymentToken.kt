@@ -3,7 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model
 data class PaymentToken(
     val firstName: String,
     val lastName: String,
-    val matrikelNumber: String,
+    val matriculationNumber: String,
     val accountNumber: String,
     val balance: Double,
     val bankCode: String,

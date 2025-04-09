@@ -8,7 +8,6 @@ enum class TransactionStatus {
 }
 
 object TransactionStatusHolder {
-    // Diese LiveData wird vom Service aktualisiert und im Fragment beobachtet.
     val transactionStatus = MutableLiveData<TransactionStatus>()
 
 

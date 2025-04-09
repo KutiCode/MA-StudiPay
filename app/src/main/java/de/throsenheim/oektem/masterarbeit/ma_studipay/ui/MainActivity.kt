@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             if (isLoggedIn) {
                 Log.d(
                     "MainActivity",
-                    "User is logged in: ${sharedPref.getString("username", "matrikelnumber")}"
+                    "User is logged in: ${sharedPref.getString("username", "matriculationNumber")}"
                 )
                 navController.navigate(R.id.dashboardFragment)
             } else {

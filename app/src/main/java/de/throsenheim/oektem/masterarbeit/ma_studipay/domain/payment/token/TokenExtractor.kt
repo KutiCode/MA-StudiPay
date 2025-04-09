@@ -33,13 +33,12 @@ object TokenExtractor {
             }
 
             riskValue < 90 -> {
-                // Hier könnte ein zusätzlicher Autorisierungsschritt erfolgen.
                 authorizationRequestCheck(context, paymentToken, amount)
 
             }
 
             else -> {
-                transactionRejectionCertificate(context, paymentToken, amount)
+                transactionRejectionCertificate(paymentToken)
                 TransactionOutcome.Rejection
             }
         }
@@ -47,13 +46,10 @@ object TokenExtractor {
 
 
     private fun isTokenRecent(tokenDateString: String): Boolean {
-        // Angenommener Datumsformat, wie es im Token vorliegt:
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val tokenDate: Date = sdf.parse(tokenDateString) ?: return false
         val currentTime = Date()
-        // Differenz in Millisekunden:
         val diffMillis = currentTime.time - tokenDate.time
-        // Wenn die Differenz 10 Sekunden (10.000 ms) oder weniger beträgt, ist der Token aktuell.
         return diffMillis <= 10_000
     }
 
@@ -129,17 +125,14 @@ object TokenExtractor {
     }
 
     private suspend fun verifyBankSecret(context: Context, paymentToken: PaymentToken): Boolean {
-        // Hole die lokale Bank (inklusive Secrets) anhand des BankCodes
         val bankDao = AppDatabase.getDatabase(context).bankDao()
         val bankRepositoryImpl = BankRepositoryImpl(bankDao)
         val bankWithSecrets = bankRepositoryImpl.getBankWithSecrets(paymentToken.bankCode)
 
-        // Wenn keine Bank oder keine Secrets gefunden wurden, ist die Überprüfung fehlgeschlagen
         if (bankWithSecrets == null || bankWithSecrets.secrets.isEmpty()) {
             return false
         }
 
-        // Vergleiche das im Token enthaltene Secret mit den in der DB hinterlegten Secrets
         return bankWithSecrets.secrets.any { it.secretCode == paymentToken.bankSecret }
     }
 
@@ -149,41 +142,40 @@ object TokenExtractor {
         amount: Double
     ) {
         if (paymentToken.balance < amount) {
-            transactionRejectionCertificate(context, paymentToken, amount)
+            transactionRejectionCertificate(paymentToken)
         } else {
-            // In dieser Funktion werden die nötigen Informationen und schritte durchgeführt, um die Transaktion zu bestätigen.
             val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-            val matrikelNumber = sharedPref.getString("current_username", null)
+            val matriculationNumber = sharedPref.getString("current_username", null)
             val userDao = AppDatabase.getDatabase(context).userDao()
-            val requestAdd = BalanceUpdateRequest(matrikelNumber!!, amount)
-            val requestDeduct = BalanceUpdateRequest(paymentToken.matrikelNumber, amount)
+            val requestAdd = BalanceUpdateRequest(matriculationNumber!!, amount)
+            val requestDeduct = BalanceUpdateRequest(paymentToken.matriculationNumber, amount)
 
             val responseAdd = RetrofitInstance.api.addBalance(requestAdd)
             if (responseAdd.isSuccessful) {
-                val user = userDao.getUserByMatriculationNumber(matrikelNumber)
+                val user = userDao.getUserByMatriculationNumber(matriculationNumber)
                 user?.let {
                     it.balance += amount
-                    userDao.updateUserBalance(matrikelNumber, it.balance)
+                    userDao.updateUserBalance(matriculationNumber, it.balance)
                 }
             } else {
-                transactionRejectionCertificate(context, paymentToken, amount)
+                transactionRejectionCertificate(paymentToken)
             }
 
             val responseDeduct = RetrofitInstance.api.deductBalance(requestDeduct)
             if (responseDeduct.isSuccessful) {
-                val userHold = userDao.getUserByMatriculationNumber(paymentToken.matrikelNumber)
+                val userHold =
+                    userDao.getUserByMatriculationNumber(paymentToken.matriculationNumber)
                 val userHoldNewBalance = userHold?.balance?.minus(amount)
                 if (userHold != null) {
-                    userDao.updateUserBalance(userHold.matrikelnumber, userHoldNewBalance!!)
+                    userDao.updateUserBalance(userHold.matriculationNumber, userHoldNewBalance!!)
                 }
 
             } else {
-                transactionRejectionCertificate(context, paymentToken, amount)
+                transactionRejectionCertificate(paymentToken)
             }
 
             updateRiskParams(
-                context,
-                paymentToken.matrikelNumber,
+                paymentToken.matriculationNumber,
                 paymentToken.dailyTransactionCount + 1,
                 today,
                 0,
@@ -199,13 +191,12 @@ object TokenExtractor {
         paymentToken: PaymentToken,
         amount: Double
     ): TransactionOutcome {
-        val requestAuth = TransactionVerificationRequest(paymentToken.matrikelNumber, amount)
+        val requestAuth = TransactionVerificationRequest(paymentToken.matriculationNumber, amount)
         val responseAuth = RetrofitInstance.api.verifyTransaction(requestAuth)
 
         if (responseAuth.isSuccessful) {
             val riskParamsUpdated = updateRiskParams(
-                context,
-                paymentToken.matrikelNumber,
+                paymentToken.matriculationNumber,
                 paymentToken.dailyTransactionCount + 1,
                 today,
                 paymentToken.highRiskAbortedCount,
@@ -215,24 +206,22 @@ object TokenExtractor {
                 transactionCertificate(context, paymentToken, amount)
                 return TransactionOutcome.Success
             } else {
-                transactionRejectionCertificate(context, paymentToken, amount)
+                transactionRejectionCertificate(paymentToken)
                 return TransactionOutcome.Rejection
             }
 
 
         } else {
-            transactionRejectionCertificate(context, paymentToken, amount)
+            transactionRejectionCertificate(paymentToken)
             return TransactionOutcome.Rejection
         }
     }
 
     private suspend fun transactionRejectionCertificate(
-        context: Context,
         paymentToken: PaymentToken,
-        amount: Double
     ): TransactionOutcome {
         val requestRiskValueUpdate = RiskValueUpdateRequest(
-            paymentToken.matrikelNumber,
+            paymentToken.matriculationNumber,
             paymentToken.dailyTransactionCount + 1,
             today,
             paymentToken.highRiskAbortedCount + 1,
@@ -243,17 +232,16 @@ object TokenExtractor {
     }
 
     private suspend fun updateRiskParams(
-        context: Context,
-        matrikelNumber: String,
+        
+        matriculationNumber: String,
         dailyTransactionCount: Int,
         lastTransactionDate: String,
         highRiskAbortedCount: Int,
         lastTransactionRiskValue: Int
     ): Boolean {
-        // In dieser Funktion werden die Risikoparameter des Nutzers aktualisiert.
 
         val requestParamUpdate = RiskValueUpdateRequest(
-            matrikelNumber,
+            matriculationNumber,
             dailyTransactionCount,
             lastTransactionDate,
             highRiskAbortedCount,

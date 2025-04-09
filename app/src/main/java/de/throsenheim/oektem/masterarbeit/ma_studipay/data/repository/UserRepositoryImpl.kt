@@ -24,7 +24,7 @@ class UserRepositoryImpl(
         userDao.insertUser(user)
     }
 
-    override suspend fun getUserByImmatriculationNumber(immatriculationNumber: String): User? {
+    override suspend fun getUserByMatriculationNumber(immatriculationNumber: String): User? {
         return userDao.getUserByMatriculationNumber(immatriculationNumber)
     }
 

@@ -86,7 +86,7 @@ class OrangeDetailsFragment : Fragment() {
         // Observe changes in user details from the ViewModel.
         viewModel.userDetails.observe(viewLifecycleOwner) { user ->
             if (user != null) {
-                updateUserDetails(user.balance, user.matrikelnumber, user.accountNumber)
+                updateUserDetails(user.balance, user.matriculationNumber, user.accountNumber)
             } else {
                 showMissingValues()
             }
