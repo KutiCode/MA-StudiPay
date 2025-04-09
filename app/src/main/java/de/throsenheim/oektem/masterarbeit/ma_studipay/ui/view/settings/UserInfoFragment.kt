@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -17,8 +16,7 @@ import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
+
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings.UserInfoViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.UserInfoFactory
 
