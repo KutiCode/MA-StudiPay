@@ -30,7 +30,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Haken-Icon -->
     <ImageView
         android:id="@+id/check_icon"
         android:layout_width="150dp"
@@ -41,9 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/completion_text" />
 
-    <!-- Neuer Info-Text unter dem Haken -->
 
-    <!-- Dashboard Button -->
 
     <TextView
         android:id="@+id/info_text"
