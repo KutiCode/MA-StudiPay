@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-
-    <!-- Begrüßungstext -->
     <TextView
         android:id="@+id/sending_text_beginning"
         android:layout_width="wrap_content"
@@ -21,7 +18,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp" />
 
-    <!-- Orangefarbener CardView -->
     <androidx.cardview.widget.CardView
         android:id="@+id/sending_card"
         android:layout_width="0dp"
@@ -35,13 +31,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Innerer Container als ConstraintLayout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="197dp"
             android:padding="16dp">
 
-            <!-- Name des Senders -->
             <TextView
                 android:id="@+id/user_info_sender"
                 android:layout_width="wrap_content"
@@ -52,10 +46,6 @@
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-
-            <!-- EMV-Chip Bild unterhalb des Namens -->
-
-            <!-- Studi-Pay Logo unten rechts -->
 
             <ImageView
                 android:id="@+id/emv_chip"
@@ -83,7 +73,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Roter Button zum Abbrechen des Empfangs -->
 
     <TextView
         android:id="@+id/nfc_sending_text"

@@ -81,7 +81,7 @@ class DashboardFragment : Fragment() {
             binding.welcomeText.text = "$greeting, ${uiState.firstName}"
             binding.cardDashboardBalance.text = "Dein Guthaben:"
             binding.balanceText.text = uiState.balance
-            binding.matrikelnummerText.text = "Matrikelnummer: ${uiState.matriculationNumber}"
+            binding.matriculationNumberText.text = "Matrikelnummer: ${uiState.matriculationNumber}"
         }
     }
 

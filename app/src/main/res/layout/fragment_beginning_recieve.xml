@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Hellblauer Kasten als Container -->
     <androidx.cardview.widget.CardView
         android:id="@+id/blueContainer"
         android:layout_width="379dp"
@@ -24,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="513dp">
 
-            <!-- Überschrift oben -->
             <TextView
                 android:id="@+id/headerTextView"
                 android:layout_width="0dp"
@@ -39,9 +36,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- NFC-Symbol in der Mitte -->
-
-            <!-- Anweisungstext unten -->
 
             <ImageView
                 android:id="@+id/nfcIconImageView"
@@ -74,7 +68,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Roter Button zum Abbrechen des Empfangs -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cancelButton"
         android:layout_width="0dp"

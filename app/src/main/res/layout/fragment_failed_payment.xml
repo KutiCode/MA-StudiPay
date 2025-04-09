@@ -8,7 +8,6 @@
     android:background="@color/white"
     tools:context=".ui.MainActivity">
 
-    <!-- Hellblauer Kasten als Container -->
     <androidx.cardview.widget.CardView
         android:id="@+id/blueContainer"
         android:layout_width="379dp"
@@ -24,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="513dp">
 
-            <!-- Überschrift oben -->
             <TextView
                 android:id="@+id/headerTextView"
                 android:layout_width="0dp"
@@ -40,9 +38,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Gefahren-/Warnsymbol zwischen den TextViews -->
-
-            <!-- Anweisungstext unten -->
             <ImageView
                 android:id="@+id/dangerIcon"
                 android:layout_width="241dp"
@@ -91,6 +86,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/blueContainer" />
-    <!-- Hier kannst du noch den roten Abbrechen-Button hinzufügen -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

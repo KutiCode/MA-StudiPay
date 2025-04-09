@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="513dp">
 
+
             <TextView
                 android:id="@+id/headerTextView"
                 android:layout_width="0dp"
