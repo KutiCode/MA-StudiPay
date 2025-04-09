@@ -5,10 +5,9 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import at.favre.lib.crypto.bcrypt.BCrypt
+
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-import kotlinx.coroutines.launch
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services.LoginService
 
 /**
  * LoginViewModel handles user login.
@@ -37,23 +36,17 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
             _errorMessage.value = "Bitte fülle alle Felder aus"
             return
         }
-
-        viewModelScope.launch {
-            val user = userRepositoryImpl.getUserByImmatriculationNumber(matrikelnummer)
-
-            if (user != null && verifyPassword(password, user.password)) {
-                // Login successful
-                saveUserToPreferences(matrikelnummer)
-                _loginResult.value = true
-                _errorCount = 0 // Reset error counter
-            } else {
+        if (LoginService.loginService(matrikelnummer, password, userRepositoryImpl)) {
+            saveUserToPreferences(matrikelnummer)
+            _loginResult.value = true
+            _errorCount = 0 // Reset error counter
+        } else {
                 _errorCount++
                 when (_errorCount) {
                     in 1..2 -> {
                         // On the first two failed attempts:
                         // Try to update the data with syncDatabase() and then call login() again.
-                        userRepositoryImpl.syncDatabase()
-                        login(matrikelnummer, password)
+                        LoginService.loginService(matrikelnummer, password, userRepositoryImpl)
                     }
                     3 -> {
                         _errorMessage.value =
@@ -62,11 +55,9 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
                     4 -> {
                         // On the fourth attempt (optional):
                         // Try again after synchronizing the data.
-                        userRepositoryImpl.syncDatabase()
-                        login(matrikelnummer, password)
+                        LoginService.loginService(matrikelnummer, password, userRepositoryImpl)
                     }
                     5 -> {
-                        userRepositoryImpl.syncDatabase()
                         _errorMessage.value =
                             "Login fehlgeschlagen - Eine Internetverbindung ist erforderlich."
                     }
@@ -77,18 +68,7 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
                 }
             }
         }
-    }
 
-    /**
-     * Verifies that the provided plain text password matches the hashed password.
-     *
-     * @param password The plain text password.
-     * @param hashedPassword The hashed password stored for the user.
-     * @return True if the password matches, false otherwise.
-     */
-    fun verifyPassword(password: String, hashedPassword: String): Boolean {
-        return BCrypt.verifyer().verify(password.toCharArray(), hashedPassword).verified
-    }
 
 
     /**
