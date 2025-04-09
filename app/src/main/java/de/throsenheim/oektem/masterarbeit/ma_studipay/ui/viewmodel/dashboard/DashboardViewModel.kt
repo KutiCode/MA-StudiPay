@@ -32,13 +32,13 @@ class DashboardViewModel(
             DashboardUiState(
                 firstName = user.firstName,
                 balance = "${user.balance} €",
-                matrikelNumber = user.matrikelnumber
+                matriculationNumber = user.matrikelnumber
             )
         } else {
             DashboardUiState(
                 firstName = "Unbekannt",
                 balance = "0 €",
-                matrikelNumber = "Nicht verfügbar"
+                matriculationNumber = "Nicht verfügbar"
             )
         }
     }

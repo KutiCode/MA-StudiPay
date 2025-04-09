@@ -34,13 +34,10 @@ class BeginningSendingFragment : Fragment() {
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentUsername = sharedPref.getString("current_username", null)
         AppHostApduService.isTokenTransmissionAllowed = true
-        // Observer für den Benutzernamen einrichten
         viewModel.userName.observe(viewLifecycleOwner) { name ->
             binding.userInfoSender.text = name
         }
 
-        // Wenn ein Username vorhanden ist, lade den Namen über das ViewModel,
-        // andernfalls setze einen Standardtext.
         currentUsername?.let {
             viewModel.loadUserName(requireContext(), it)
         } ?: run {
@@ -50,7 +47,6 @@ class BeginningSendingFragment : Fragment() {
         TransactionStatusHolder.transactionStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
                 TransactionStatus.FINISHED -> {
-                    // Navigiere zum MotionLayout-Success-Screen
                     findNavController().navigate(R.id.fragment_sender_success)
                 }
 
@@ -75,7 +71,6 @@ class BeginningSendingFragment : Fragment() {
 
     }
 
-    // Rufe diese Methode in der Activity/Fragment auf, wenn die App geschlossen wird
     override fun onDestroy() {
         super.onDestroy()
         AppHostApduService.isTokenTransmissionAllowed = false

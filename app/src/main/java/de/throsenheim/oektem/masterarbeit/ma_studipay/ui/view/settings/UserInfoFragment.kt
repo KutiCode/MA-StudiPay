@@ -62,7 +62,7 @@ class UserInfoFragment : Fragment() {
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val currentUsername = sharedPref.getString("current_username", null)
         val infoFullNameValue = view.findViewById<TextView>(R.id.infoFullNameValue)
-        val infoMatrikelnummerValue = view.findViewById<TextView>(R.id.infoMatrikelnummerValue)
+        val infoMatriculationNumberValue = view.findViewById<TextView>(R.id.infoMatrikelnummerValue)
         val infoAccountNumberValue = view.findViewById<TextView>(R.id.infoAccountNumberValue)
         val infoBankConnection = view.findViewById<TextView>(R.id.conneected_bank_value)
         viewModel.bank.observe(viewLifecycleOwner) { bank ->
@@ -73,7 +73,7 @@ class UserInfoFragment : Fragment() {
             viewModel.fetchUser(requireContext(), it)
         } ?: run {
             infoFullNameValue.text = "Fehlende Werte"
-            infoMatrikelnummerValue.text = "Fehlende Werte"
+            infoMatriculationNumberValue.text = "Fehlende Werte"
             infoAccountNumberValue.text = "Fehlende Werte"
             infoBankConnection.text = "Keine Bankverbindung"
 
@@ -82,11 +82,11 @@ class UserInfoFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 infoFullNameValue.text = "${user.firstName} ${user.lastName}"
-                infoMatrikelnummerValue.text = user.matrikelnumber
+                infoMatriculationNumberValue.text = user.matrikelnumber
                 infoAccountNumberValue.text = user.accountNumber
             } else {
                 infoFullNameValue.text = "Fehlende Werte"
-                infoMatrikelnummerValue.text = "Fehlende Werte"
+                infoMatriculationNumberValue.text = "Fehlende Werte"
                 infoAccountNumberValue.text = "Fehlende Werte"
             }
         }

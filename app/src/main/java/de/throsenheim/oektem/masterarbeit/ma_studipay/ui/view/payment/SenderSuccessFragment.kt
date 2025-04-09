@@ -18,19 +18,16 @@ class SenderSuccessFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Hier wird dein Layout mit dem MotionLayout inflatiert (z. B. fragment_sender_success.xml)
         return inflater.inflate(R.layout.fragment_sender_success, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val motionLayout = view.findViewById<MotionLayout>(R.id.motionLayout)
-        // Starte den Übergang vom Start- zum Endzustand
         motionLayout.postDelayed({
             motionLayout.transitionToEnd()
         }, 300)
 
-// Finde den Button über findViewById
         val dashboardButton = view.findViewById<MaterialButton>(R.id.dashboardButton)
         dashboardButton.setOnClickListener {
             TransactionStatusHolder.reset()

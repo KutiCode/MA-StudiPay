@@ -63,11 +63,11 @@ class RegisterFragment : Fragment() {
 
     private fun setupListeners() {
         binding.registerButton.setOnClickListener {
-            val matrikelnummer = binding.matrikelnummerInput.text.toString().trim()
+            val matriculationNumber = binding.matrikelnummerInput.text.toString().trim()
             val firstName = binding.vornameInput.text.toString().trim()
             val lastName = binding.nameInput.text.toString().trim()
             val password = binding.passwortInput.text.toString().trim()
-            viewModel.registerUser(matrikelnummer, firstName, lastName, password)
+            viewModel.registerUser(matriculationNumber, firstName, lastName, password)
 
         }
         binding.backToLoginButton.setOnClickListener{
@@ -89,33 +89,30 @@ class RegisterFragment : Fragment() {
         _binding = null
     }
     private fun showCustomMessage(message: String) {
-        // Inflatiere das benutzerdefinierte Layout
         val inflater = LayoutInflater.from(requireContext())
         val customView = inflater.inflate(R.layout.custom_message, binding.root, false)
         val messageText = customView.findViewById<TextView>(R.id.custom_message_text)
         messageText.text = message
 
-        // Füge die View dem Root-Layout hinzu
+
         binding.root.addView(customView)
 
-        // Sicherstellen, dass die View gemessen wurde, bevor die Animation startet
+
         customView.post {
-            // Setze die Startposition (über dem sichtbaren Bereich)
+
             customView.translationY = -customView.height.toFloat()
             customView.visibility = View.VISIBLE
 
-            // Blende die View mit einer Slide-in-Animation ein
             customView.animate()
                 .translationY(0f)
                 .setDuration(300)
                 .withEndAction {
-                    // Nach 2 Sekunden automatisch wieder ausblenden
-                    customView.postDelayed({
+
+                customView.postDelayed({
                         customView.animate()
                             .translationY(-customView.height.toFloat())
                             .setDuration(300)
                             .withEndAction {
-                                // Entferne die View aus dem Layout
                                 binding.root.removeView(customView)
                             }
                             .start()

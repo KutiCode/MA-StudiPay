@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -71,9 +70,9 @@ class SettingsFragment : Fragment() {
             userNameTextView.text = "Hallo, Benutzer"
         }
 
-        viewModel.userName.observe(viewLifecycleOwner, Observer { userName ->
+        viewModel.userName.observe(viewLifecycleOwner) { userName ->
             userNameTextView.text = userName
-        })
+        }
 
         val logoutSection = view.findViewById<LinearLayout>(R.id.logout_section)
         logoutSection.setOnClickListener {

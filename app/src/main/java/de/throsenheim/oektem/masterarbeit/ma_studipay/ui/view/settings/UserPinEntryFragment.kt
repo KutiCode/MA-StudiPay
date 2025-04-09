@@ -63,16 +63,16 @@ class UserPinEntryFragment : Fragment() {
             val securePin = pinInput.text.toString()
             val sharedPref =
                 requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-            val matrikelnummer = sharedPref.getString("current_username", null)
+            val matriculationNumber = sharedPref.getString("current_username", null)
             val isChangePin = arguments?.getBoolean("isChangePin") ?: false
             val storedPin = sharedPref.getString("secure_pin", null)
-            if (matrikelnummer != null) {
+            if (matriculationNumber != null) {
                 if (isChangePin) {
                     changeText.text = "Neue Secure Pin eingeben"
-                    viewModel.updateSecurePin(requireContext(), matrikelnummer, securePin)
+                    viewModel.updateSecurePin(requireContext(), matriculationNumber, securePin)
                     Log.d(
                         "UserPinEntryFragment",
-                        "Matrikelnummer: $matrikelnummer, Neue Secure Pin: $storedPin"
+                        "Matrikelnummer: $matriculationNumber, Neue Secure Pin: $storedPin"
 
                     )
                     val navOptions = NavOptions.Builder()
@@ -86,12 +86,12 @@ class UserPinEntryFragment : Fragment() {
                     viewModel.verifySecurePin(
                         requireContext(),
                         navController,
-                        matrikelnummer,
+                        matriculationNumber,
                         securePin
                     )
                     Log.d(
                         "UserPinEntryFragment",
-                        "Matrikelnummer: $matrikelnummer, Secure Pin: $storedPin"
+                        "Matrikelnummer: $matriculationNumber, Secure Pin: $storedPin"
 
                     )
                 }

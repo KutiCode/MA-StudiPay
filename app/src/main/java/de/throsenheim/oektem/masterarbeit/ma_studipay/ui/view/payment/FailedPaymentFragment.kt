@@ -26,7 +26,6 @@ class FailedPaymentFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.failedDashboardButton.setOnClickListener {
-            // Navigate to the dashboard
             findNavController().navigate(R.id.navigation_dashboard)
         }
     }

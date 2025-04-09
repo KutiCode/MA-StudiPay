@@ -76,34 +76,38 @@ class OrangeDetailsFragment : Fragment() {
      */
     private fun setupSharedPreferences() {
         val sharedPref = requireActivity().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
-        val currentMatrikelnumber = sharedPref.getString("current_username", null)
+        val currentMatriculationNumber = sharedPref.getString("current_username", null)
 
-        if (currentMatrikelnumber != null) {
-            viewModel.loadUserDetails(requireContext(), currentMatrikelnumber)
+        if (currentMatriculationNumber != null) {
+            viewModel.loadUserDetails(requireContext(), currentMatriculationNumber)
         } else {
             showMissingValues()
         }
 
         // Observe changes in user details from the ViewModel.
-        viewModel.userDetails.observe(viewLifecycleOwner, Observer { user ->
+        viewModel.userDetails.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 updateUserDetails(user.balance, user.matrikelnumber, user.accountNumber)
             } else {
                 showMissingValues()
             }
-        })
+        }
     }
 
     /**
      * Updates the UI with the provided user details.
      *
      * @param balance The user's balance.
-     * @param matrikelNumber The user's matriculation number.
+     * @param matriculationNumber The user's matriculation number.
      * @param accountNumber The user's account number.
      */
-    private fun updateUserDetails(balance: Double, matrikelNumber: String, accountNumber: String) {
+    private fun updateUserDetails(
+        balance: Double,
+        matriculationNumber: String,
+        accountNumber: String
+    ) {
         binding.cardBalanceValue.text = "$balance €"
-        binding.matrikelnummerValue.text = matrikelNumber
+        binding.matrikelnummerValue.text = matriculationNumber
         binding.acountnumberValue.text = accountNumber
     }
 
