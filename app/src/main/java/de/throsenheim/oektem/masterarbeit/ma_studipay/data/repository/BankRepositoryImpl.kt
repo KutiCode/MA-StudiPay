@@ -23,11 +23,9 @@ class BankRepositoryImpl(private val bankDao: BankDao) : BankRepository {
                 val response: BankResponseDto = RetrofitInstance.api.getAllBankSecrets()
                 Log.d("BankRepository", "Backend response: $response")
 
-                // Bestehende Daten löschen (optional)
                 bankDao.deleteAllSecrets()
                 bankDao.deleteAllBanks()
 
-                // Iteriere über alle Banken im Response
                 response.banks.forEach { bankDto ->
                     val bankEntity = Bank(
                         name = bankDto.bank_name,
@@ -52,7 +50,6 @@ class BankRepositoryImpl(private val bankDao: BankDao) : BankRepository {
                         )
                     }
                 }
-                // Überprüfe, wie viele Banken in der lokalen DB vorhanden sind:
                 val banksLocal = bankDao.getAllBanksWithSecrets()
                 Log.d("BankRepository", "Local banks count: ${banksLocal.size}")
             } catch (e: Exception) {

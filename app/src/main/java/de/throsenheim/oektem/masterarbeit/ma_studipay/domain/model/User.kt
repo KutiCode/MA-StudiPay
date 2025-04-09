@@ -22,13 +22,9 @@ data class User(
     @ColumnInfo(name = "accountNumber") val accountNumber: String,
     @ColumnInfo(name = "balance") var balance: Double,
     @ColumnInfo(name = "securePin") val securePin: String,
-    @ColumnInfo(name = "bank_code") var bank_code: String?,  // Fremdschlüssel, nullable
-    // Neue Felder:
+    @ColumnInfo(name = "bank_code") var bank_code: String?,
     @ColumnInfo(name = "dailyTransactionCount") var dailyTransactionCount: Int = 0,
-    // Datum im Format "yyyy-MM-dd" (nur Datum, ohne Uhrzeit)
     @ColumnInfo(name = "lastTransactionDate") var lastTransactionDate: String? = null,
-    // Zähler, wie oft eine Transaktion aufgrund hohen Risikos abgebrochen wurde
     @ColumnInfo(name = "highRiskAbortedCount") var highRiskAbortedCount: Int = 0,
-
     @ColumnInfo(name = "lastTransaktionRiskValue") var lastTransaktionRiskValue: Int = 0
 )

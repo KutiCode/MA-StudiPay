@@ -34,7 +34,6 @@ class UserRepositoryImpl(
             if (response.isSuccessful) {
                 val userResponse: UserResponse? = response.body()
                 val users = userResponse?.users ?: emptyList()
-                // Update local database with the fetched users
                 userDao.insertUsers(users)
                 Log.d("UserRepository", "Database synchronized successfully")
             } else {
@@ -45,7 +44,7 @@ class UserRepositoryImpl(
         }
     }
 
-    // SecurePin aktualisieren
+
     override suspend fun updateSecurePin(immatriculationNumber: String, newPin: String) {
         val request = SecurePinUpdateRequest(immatriculationNumber, newPin)
         val response = RetrofitInstance.api.updateSecurePin(request)
@@ -54,7 +53,6 @@ class UserRepositoryImpl(
         }
     }
 
-    // SecurePin abrufen
     override suspend fun getSecurePin(immatriculationNumber: String): String? {
         return userDao.getSecurePin(immatriculationNumber)
     }
@@ -63,24 +61,20 @@ class UserRepositoryImpl(
         try {
             val response = apiService.updateUser(user)
             if (response.isSuccessful) {
-                // Update the user in the local database
                 userDao.updateUser(user)
                 Log.d("UserRepository", "User synchronized with backend successfully")
             } else {
-                // Handle unsuccessful response, e.g., log the error
                 Log.e("UserRepository", "Failed to update user: ${response.errorBody()?.string()}")
             }
         } catch (e: Exception) {
-            // Handle the exception, e.g., log the error
             Log.e("UserRepository", "Exception during user sync", e)
         }
     }
-
     override suspend fun getCurrentUser(): User? {
         return withContext(Dispatchers.IO) {
             val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-            val matrikelnumber = sharedPreferences.getString("current_username", null)
-            matrikelnumber?.let { userDao.getUserByMatriculationNumber(it) }
+            val matriculationNumber = sharedPreferences.getString("current_username", null)
+            matriculationNumber?.let { userDao.getUserByMatriculationNumber(it) }
         }
     }
 
