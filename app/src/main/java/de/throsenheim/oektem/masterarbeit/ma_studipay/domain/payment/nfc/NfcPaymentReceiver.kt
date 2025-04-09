@@ -46,8 +46,6 @@ class NfcPaymentReceiver(private val activity: Activity) {
         private val NEXT_FRAGMENT_APDU = byteArrayOf(0x80.toByte(), 0x11.toByte())
 
 
-        private val TRANSACTION_SUCCESS_APDU = byteArrayOf(0x80.toByte(), 0x12.toByte())
-        private val TRANSACTION_FAILURE_APDU = byteArrayOf(0x80.toByte(), 0x13.toByte())
 
 
 
@@ -124,7 +122,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
                 Log.d(TAG, "Amount:" + amount.toString())
                 scope.launch {
                     if (matrikelnummer != paymentToken.matrikelNumber) {
-                        var outcome =
+                        val outcome =
                             TokenExtractor.extractTokenFromResponse(activity, amount, paymentToken)
                         if (outcome == TransactionOutcome.Success) {
                             withContext(Dispatchers.Main) {
@@ -136,7 +134,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
                                     )
                                     // Beispiel: Wenn die Transaktion erfolgreich war, navigiere zum SuccessFragment
                                     navController.navigate(
-                                        R.id.fragment_payment_success,
+                                        R.id.paymentSuccessFragment,
                                         Bundle().apply {
                                             putDouble("amount", amount)
                                             putString("sender", paymentToken.firstName)
@@ -152,7 +150,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
                                         R.id.nav_host_fragment
                                     )
                                     // Beispiel: Wenn die Transaktion erfolgreich war, navigiere zum SuccessFragment
-                                    navController.navigate(R.id.fragment_payment_failed)
+                                    navController.navigate(R.id.paymentFailedFragment)
                                 }
                             }
                         }
@@ -165,7 +163,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
                                     R.id.nav_host_fragment
                                 )
                                 // Beispiel: Wenn die Transaktion erfolgreich war, navigiere zum SuccessFragment
-                                navController.navigate(R.id.fragment_payment_failed)
+                                navController.navigate(R.id.paymentFailedFragment)
                             }
                         }
                     }

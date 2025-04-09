@@ -42,58 +42,56 @@
     <fragment
         android:id="@+id/userInfoFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.settings.UserInfoFragment"
-        android:label="dashboard"
+        android:label="User Info"
         tools:layout="@layout/fragment_user_info" />
+
     <fragment
-        android:id="@+id/fragnentBankConnection"
+        android:id="@+id/bankConnectionFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.bank.BankConnectionFragment"
-        android:label="dashboard"
+        android:label="Bank Connection"
         tools:layout="@layout/fragment_bank_connection" />
+
     <fragment
         android:id="@+id/beginningRecieveFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.BeginningRecieveFragment"
-        android:label="dashboard"
+        android:label="Beginning Recieve"
         tools:layout="@layout/fragment_beginning_recieve" />
+
     <fragment
         android:id="@+id/beginningSendingFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.BeginningSendingFragment"
-        android:label="dashboard"
+        android:label="Beginning Sending"
         tools:layout="@layout/fragment_beginning_sending" />
+
     <fragment
-        android:id="@+id/fragment_receiving_hold"
+        android:id="@+id/receivingHoldFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.ReceivingHoldFragment"
-        android:label="Einstellungen"
+        android:label="Receiving Hold"
         tools:layout="@layout/fragment_receiving_hold" />
+
     <fragment
-        android:id="@+id/fragment_payment_success"
+        android:id="@+id/paymentSuccessFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.SuccessPaymentFragment"
-        android:label="Einstellungen"
+        android:label="Payment Success"
         tools:layout="@layout/fragment_success_payment" />
+
     <fragment
-        android:id="@+id/fragment_payment_failed"
+        android:id="@+id/paymentFailedFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.FailedPaymentFragment"
-        android:label="Einstellungen"
+        android:label="Payment Failed"
         tools:layout="@layout/fragment_failed_payment" />
+
     <fragment
-        android:id="@+id/fragment_no_wifi"
+        android:id="@+id/noWifiFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.NoWifiFragment"
-        android:label="Einstellungen"
+        android:label="No Wifi"
         tools:layout="@layout/fragment_no_wifi" />
+
     <fragment
         android:id="@+id/userTransactionFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.UserTransactionFragment"
-        android:label="dashboard"
+        android:label="User Transaction"
         tools:layout="@layout/fragment_user_transaction" />
-    <action
-        android:id="@+id/action_settings_to_dashboard"
-        app:destination="@id/dashboardFragment" />
-
-    <action
-        android:id="@+id/action_settingsFragment_to_loginFragment"
-        app:destination="@id/loginFragment" />
-    <action
-        android:id="@+id/action_settingsFragment_to_welcomeFragment"
-        app:destination="@id/welcomeFragment" />
 
     <fragment
         android:id="@+id/orangeDetailsFragment"
@@ -104,14 +102,25 @@
     <fragment
         android:id="@+id/userPinEntryFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.settings.UserPinEntryFragment"
-        android:label="Orange Details"
+        android:label="User Pin Entry"
         tools:layout="@layout/fragment_pin_entry" />
-    <!-- res/navigation/nav_graph.xml -->
+
     <fragment
         android:id="@+id/bankSelectFragment"
         android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.bank.BankSelectFragment"
         android:label="Bank Select"
         tools:layout="@layout/fragment_bank_select" />
+
+    <action
+        android:id="@+id/action_settings_to_dashboard"
+        app:destination="@id/dashboardFragment" />
+
+    <action
+        android:id="@+id/action_settingsFragment_to_loginFragment"
+        app:destination="@id/loginFragment" />
+    <action
+        android:id="@+id/action_settingsFragment_to_welcomeFragment"
+        app:destination="@id/welcomeFragment" />
 
     <action
         android:id="@+id/action_dashboardFragment_to_orangeDetailsFragment"
@@ -131,7 +140,7 @@
         app:destination="@id/settingsFragment" />
     <action
         android:id="@+id/action_settingsFragment_to_bankConnectionFragment"
-        app:destination="@id/fragnentBankConnection" />
+        app:destination="@id/bankConnectionFragment" />
     <action
         android:id="@+id/action_BankConnectionFragment_to_settingsFragment"
         app:destination="@id/settingsFragment" />

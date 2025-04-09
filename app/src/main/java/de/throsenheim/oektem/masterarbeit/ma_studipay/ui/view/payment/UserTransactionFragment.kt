@@ -90,7 +90,7 @@ class UserTransactionFragment : Fragment() {
                                 BeginningRecieveFragment.amount = inputAmount
                                 findNavController().navigate(R.id.action_userPin_to_beginningRecieveFragment)
                             } else {
-                                findNavController().navigate(R.id.fragment_no_wifi)
+                                findNavController().navigate(R.id.noWifiFragment)
                             }
                         } else {
                             Toast.makeText(

@@ -35,7 +35,7 @@ class BeginningRecieveFragment : Fragment() {
         nfcReader.tokenReceivedLiveData.observe(viewLifecycleOwner) { tokenReceived ->
             if (tokenReceived) {
                 playSinglePing()
-                findNavController().navigate(R.id.fragment_receiving_hold)
+                findNavController().navigate(R.id.receivingHoldFragment)
             }
         }
 
