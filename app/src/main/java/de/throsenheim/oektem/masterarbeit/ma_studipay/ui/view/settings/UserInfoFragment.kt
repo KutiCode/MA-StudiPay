@@ -36,17 +36,12 @@ class UserInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userRepositoryImpl = UserRepositoryImpl(
-            userDao = AppDatabase.getDatabase(requireContext()).userDao(),
-            apiService = RetrofitInstance.api,
-            context = requireContext()
-        )
         val bankRepositoryImpl = BankRepositoryImpl(
             bankDao = AppDatabase.getDatabase(requireContext()).bankDao()
 
         )
 
-        val viewModelFactory = UserInfoFactory(userRepositoryImpl, bankRepositoryImpl)
+        val viewModelFactory = UserInfoFactory(bankRepositoryImpl)
         viewModel = ViewModelProvider(this, viewModelFactory)[UserInfoViewModel::class.java]
 
 
@@ -72,9 +67,9 @@ class UserInfoFragment : Fragment() {
         val infoMatrikelnummerValue = view.findViewById<TextView>(R.id.infoMatrikelnummerValue)
         val infoAccountNumberValue = view.findViewById<TextView>(R.id.infoAccountNumberValue)
         val infoBankConnection = view.findViewById<TextView>(R.id.conneected_bank_value)
-        viewModel.bank.observe(viewLifecycleOwner, Observer { bank ->
+        viewModel.bank.observe(viewLifecycleOwner) { bank ->
             infoBankConnection.text = bank?.name ?: "Keine Bankverbindung"
-        })
+        }
 
         currentUsername?.let {
             viewModel.fetchUser(requireContext(), it)
@@ -86,7 +81,7 @@ class UserInfoFragment : Fragment() {
 
         }
 
-        viewModel.user.observe(viewLifecycleOwner, Observer { user ->
+        viewModel.user.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 infoFullNameValue.text = "${user.firstName} ${user.lastName}"
                 infoMatrikelnummerValue.text = user.matrikelnumber
@@ -96,7 +91,7 @@ class UserInfoFragment : Fragment() {
                 infoMatrikelnummerValue.text = "Fehlende Werte"
                 infoAccountNumberValue.text = "Fehlende Werte"
             }
-        })
+        }
         val navController = findNavController()
         val changePinButton = view.findViewById<MaterialButton>(R.id.change_secure_pin_button)
 

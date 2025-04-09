@@ -3,9 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.register
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
-
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services.RegisterService
 
 
@@ -19,18 +17,21 @@ class RegisterViewModel(private val userRepositoryImpl: UserRepositoryImpl) : Vi
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> get() = _errorMessage
 
-    fun registerUser(matrikelnummer: String, firstName: String, lastName: String, password: String) {
-        if (matrikelnummer.isBlank() || firstName.isBlank() || lastName.isBlank() || password.isBlank()) {
+    fun registerUser(
+        matriculationNumber: String,
+        firstName: String,
+        lastName: String,
+        password: String
+    ) {
+        if (matriculationNumber.isBlank() || firstName.isBlank() || lastName.isBlank() || password.isBlank()) {
             _errorMessage.value = "Bitte alle Felder ausfüllen"
             return
         }
-
         // Mindestanforderung: Passwort muss mindestens 8 Zeichen lang sein
         if (password.length < 8) {
             _errorMessage.value = "Das Passwort muss mindestens 8 Zeichen lang sein"
             return
         }
-
         // Optional: Weitere Prüfungen, z.B. ob das Passwort mindestens eine Zahl und einen Großbuchstaben enthält
         val regex = Regex("^(?=.*[A-Z])(?=.*\\d).{8,}\$")
         if (!regex.containsMatchIn(password)) {
@@ -39,7 +40,7 @@ class RegisterViewModel(private val userRepositoryImpl: UserRepositoryImpl) : Vi
             return
         }
         val registerResponse = RegisterService.registerService(
-            matrikelnummer,
+            matriculationNumber,
             firstName,
             lastName,
             password,

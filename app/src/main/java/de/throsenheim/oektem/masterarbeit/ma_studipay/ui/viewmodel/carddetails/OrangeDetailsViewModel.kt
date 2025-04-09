@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
-import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.uiHelper
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.launch
 
 /**
@@ -31,7 +31,7 @@ class OrangeDetailsViewModel : ViewModel() {
     fun loadUserDetails(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
 
-            _userDetails.value = uiHelper.loadUser(context, matrikelnumber)
+            _userDetails.value = UiHelper.loadUser(context, matrikelnumber)
         }
     }
 }

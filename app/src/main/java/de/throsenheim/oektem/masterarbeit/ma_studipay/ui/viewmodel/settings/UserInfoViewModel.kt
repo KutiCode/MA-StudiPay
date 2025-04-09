@@ -7,13 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.Bank
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
-import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
-import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.uiHelper
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.launch
 
 class UserInfoViewModel(
-    private val userRepositoryImpl: UserRepositoryImpl,
     private val bankRepositoryImpl: BankRepositoryImpl
 ) : ViewModel() {
 
@@ -24,7 +22,7 @@ class UserInfoViewModel(
 
     fun fetchUser(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
-            val user = uiHelper.loadUser(context, matrikelnumber)
+            val user = UiHelper.loadUser(context, matrikelnumber)
             _user.value = user
             user?.bank_code?.let { loadBank(it) }
         }

@@ -28,16 +28,16 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
      * If any field is blank, an error message is set immediately.
      * Otherwise, it checks the credentials and may retry login after synchronizing the database.
      *
-     * @param matrikelnummer The matriculation number.
+     * @param matriculationNumber The matriculation number.
      * @param password The user's password.
      */
-    fun login(matrikelnummer: String, password: String) {
-        if (matrikelnummer.isBlank() || password.isBlank()) {
+    fun login(matriculationNumber: String, password: String) {
+        if (matriculationNumber.isBlank() || password.isBlank()) {
             _errorMessage.value = "Bitte fülle alle Felder aus"
             return
         }
-        if (LoginService.loginService(matrikelnummer, password, userRepositoryImpl)) {
-            saveUserToPreferences(matrikelnummer)
+        if (LoginService.loginService(matriculationNumber, password, userRepositoryImpl)) {
+            saveUserToPreferences(matriculationNumber)
             _loginResult.value = true
             _errorCount = 0 // Reset error counter
         } else {
@@ -46,7 +46,7 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
                     in 1..2 -> {
                         // On the first two failed attempts:
                         // Try to update the data with syncDatabase() and then call login() again.
-                        LoginService.loginService(matrikelnummer, password, userRepositoryImpl)
+                        LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
                     }
                     3 -> {
                         _errorMessage.value =
@@ -55,7 +55,7 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
                     4 -> {
                         // On the fourth attempt (optional):
                         // Try again after synchronizing the data.
-                        LoginService.loginService(matrikelnummer, password, userRepositoryImpl)
+                        LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
                     }
                     5 -> {
                         _errorMessage.value =
@@ -74,12 +74,12 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
     /**
      * Saves the user's matriculation number to SharedPreferences and marks the user as logged in.
      *
-     * @param matrikelnummer The matriculation number.
+     * @param matriculationNumber The matriculation number.
      */
-    fun saveUserToPreferences(matrikelnummer: String) {
+    private fun saveUserToPreferences(matriculationNumber: String) {
         val sharedPreferences = getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putString("current_username", matrikelnummer)
+            putString("current_username", matriculationNumber)
             putBoolean("is_logged_in", true)
             apply()
         }
