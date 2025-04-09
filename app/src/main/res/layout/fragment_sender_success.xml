@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     motion:layoutDescription="@xml/fragment_sender_success_scene">
 
-    <!-- Hintergrundkarte -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/sending_card"
         android:layout_width="0dp"
@@ -18,7 +17,6 @@
         android:transitionName="expandCard"
         android:backgroundTint="@color/orange" />
 
-    <!-- Abschluss-Text -->
     <TextView
         android:id="@+id/completion_text"
         android:layout_width="wrap_content"
