@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
-import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services.updateBalanceService
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services.BalanceService
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ class UserTransactionViewModel : ViewModel() {
 
     fun addBalance(context: Context, matriculationNumber: String, amount: Double) {
         val balanceReponse =
-            updateBalanceService.addBalanceService(context, matriculationNumber, amount)
+            BalanceService.addBalanceService(context, matriculationNumber, amount)
         if (balanceReponse) {
             viewModelScope.launch {
                 val user = UiHelper.loadUser(context, matriculationNumber)
@@ -49,7 +49,7 @@ class UserTransactionViewModel : ViewModel() {
 
     fun deductBalance(context: Context, matriculationNumber: String, amount: Double) {
         val balanceReponse =
-            updateBalanceService.reduceBalanceService(context, matriculationNumber, amount)
+            BalanceService.reduceBalanceService(context, matriculationNumber, amount)
         if (balanceReponse) {
             viewModelScope.launch {
                 val user = UiHelper.loadUser(context, matriculationNumber)

@@ -7,7 +7,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.Balanc
 import kotlinx.coroutines.runBlocking
 import retrofit2.Response
 
-object updateBalanceService {
+object BalanceService {
 
 
     fun addBalanceService(context: Context, matriculationNumber: String, amount: Double): Boolean {
