@@ -36,7 +36,8 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
             _errorMessage.value = "Bitte fülle alle Felder aus"
             return
         }
-        if (LoginService.loginService(matriculationNumber, password, userRepositoryImpl)) {
+        val response = LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
+        if (response) {
             saveUserToPreferences(matriculationNumber)
             _loginResult.value = true
             _errorCount = 0 // Reset error counter

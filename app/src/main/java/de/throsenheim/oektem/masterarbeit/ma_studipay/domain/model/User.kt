@@ -22,7 +22,7 @@ data class User(
     @ColumnInfo(name = "accountNumber") val accountNumber: String,
     @ColumnInfo(name = "balance") var balance: Double,
     @ColumnInfo(name = "securePin") val securePin: String,
-    @ColumnInfo(name = "bank_code") var bank_code: String?,
+    @ColumnInfo(name = "bank_code") var bank_code: String? = null,
     @ColumnInfo(name = "dailyTransactionCount") var dailyTransactionCount: Int = 0,
     @ColumnInfo(name = "lastTransactionDate") var lastTransactionDate: String? = null,
     @ColumnInfo(name = "highRiskAbortedCount") var highRiskAbortedCount: Int = 0,

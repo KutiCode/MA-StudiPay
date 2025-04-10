@@ -85,8 +85,6 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             bankRepositoryImpl.syncBanksFromBackend()
             userRepositoryImpl.syncDatabase()
-            Log.d("MainActivity", "Database synchronized")
-            Log.d("MainActivity", "Bank data synchronized")
         }
     }
 

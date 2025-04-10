@@ -31,15 +31,10 @@ object RegisterService {
                     password = hashedPassword,
                     accountNumber = generateUniqueAccountNumber(userRepositoryImpl),
                     balance = 0.0,
-                    securePin = "0000",
-                    bank_code = null,
-                    dailyTransactionCount = 0,
-                    lastTransactionDate = null,
-                    highRiskAbortedCount = 0,
-                    lastTransaktionRiskValue = 0
+                    securePin = "0000"
                 )
                 val request = UserRegistrationRequest(
-                    matriculationNumber = matriculationNumber,
+                    matrikelnumber = matriculationNumber,
                     firstName = firstName,
                     lastName = lastName,
                     password = hashedPassword,

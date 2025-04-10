@@ -14,7 +14,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 
 @Database(
     entities = [User::class, Bank::class, BankSecrets::class],
-    version = 8,
+    version = 10,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

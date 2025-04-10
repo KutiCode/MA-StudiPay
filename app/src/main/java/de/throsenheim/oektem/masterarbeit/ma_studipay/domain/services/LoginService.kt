@@ -11,15 +11,10 @@ object LoginService {
         userRepositoryImpl: UserRepositoryImpl
     ): Boolean {
         return runBlocking {
+            userRepositoryImpl.syncDatabase()
             val user = userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber)
 
-            if (user != null && verifyPassword(password, user.password)) {
-                // Login successful
-                true
-            } else {
-                userRepositoryImpl.syncDatabase()
-                false
-            }
+            user != null && verifyPassword(password, user.password)
         }
     }
 
