@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -50,5 +51,6 @@ class SettingsViewModel : ViewModel() {
             clear()
             apply()
         }
+        Log.d("SettingsViewModel", "User logged out and preferences cleared.")
     }
 }
