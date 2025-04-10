@@ -8,7 +8,6 @@
     android:background="@color/white"
     tools:context=".ui.MainActivity">
 
-    <!-- Hellblauer Kasten als Container -->
     <androidx.cardview.widget.CardView
         android:id="@+id/blueContainer"
         android:layout_width="379dp"
@@ -24,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="513dp">
 
-            <!-- Überschrift oben -->
             <TextView
                 android:id="@+id/headerTextView"
                 android:layout_width="0dp"
@@ -40,7 +38,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Drehender Ladebalken -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleLarge"
@@ -54,7 +51,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/headerTextView" />
 
-            <!-- Anweisungstext unten -->
             <TextView
                 android:id="@+id/instructionTextView"
                 android:layout_width="0dp"
@@ -74,6 +70,5 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Roter Button zum Abbrechen des Empfangs -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

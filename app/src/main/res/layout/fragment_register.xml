@@ -2,12 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/orange">
 
-    <!-- Titel -->
+
     <TextView
         android:id="@+id/register_title"
         android:layout_width="wrap_content"
@@ -22,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Name Eingabe -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_input_layout"
         android:layout_width="0dp"
@@ -41,7 +40,7 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Vorname Eingabe -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/vorname_input_layout"
         android:layout_width="0dp"
@@ -60,7 +59,7 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Matrikelnummer Eingabe -->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/matrikelnummer_input_layout"
         android:layout_width="0dp"
@@ -80,10 +79,6 @@
             android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Benutzername Eingabe -->
-
-
-    <!-- Passwort Eingabe -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwort_input_layout"
         android:layout_width="0dp"
@@ -104,9 +99,6 @@
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Registrieren Button -->
-
-    <!-- Zurück zum Login Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/register_button"
         android:layout_width="0dp"

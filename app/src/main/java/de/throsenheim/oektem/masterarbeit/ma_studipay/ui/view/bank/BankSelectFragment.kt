@@ -45,7 +45,7 @@ class BankSelectFragment : Fragment() {
             apiService = RetrofitInstance.api,
             context = requireContext()
         )
-        val factory = BankSelectFactory(userRepositoryImpl)
+        val factory = BankSelectFactory(requireContext(), userRepositoryImpl)
         bankSelectViewModel = ViewModelProvider(this, factory).get(BankSelectViewModel::class.java)
 
         view.findViewById<Button>(R.id.topGiroBankButton).setOnClickListener {
