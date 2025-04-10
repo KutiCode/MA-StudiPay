@@ -1,5 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,7 +34,8 @@ class SenderSuccessFragment : Fragment() {
         motionLayout.postDelayed({
             motionLayout.transitionToEnd()
         }, 300)
-
+        // Play a notification sound to indicate success.
+        playSinglePing()
         // Find the dashboard button within the layout.
         val dashboardButton = view.findViewById<MaterialButton>(R.id.dashboardButton)
         // Set click listener on the dashboard button.
@@ -45,5 +47,10 @@ class SenderSuccessFragment : Fragment() {
             // Navigate to the dashboard fragment using the provided navigation options.
             findNavController().navigate(R.id.dashboardFragment, null, navOptions)
         }
+    }
+
+    private fun playSinglePing() {
+        val mp: MediaPlayer = MediaPlayer.create(context, R.raw.coin_win_notification)
+        mp.start()
     }
 }

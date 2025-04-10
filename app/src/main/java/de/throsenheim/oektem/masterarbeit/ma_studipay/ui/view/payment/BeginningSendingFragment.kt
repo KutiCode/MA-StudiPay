@@ -13,6 +13,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginn
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.hce.AppHostApduService
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatus
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatusHolder
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.payment.BeginningSendingViewModel
 
 class BeginningSendingFragment : Fragment() {
@@ -47,7 +48,8 @@ class BeginningSendingFragment : Fragment() {
         TransactionStatusHolder.transactionStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
                 TransactionStatus.FINISHED -> {
-                    findNavController().navigate(R.id.senderSuccessFragment)
+                    val navOptions = NavigationHelper.buildFadeNavOptions()
+                    findNavController().navigate(R.id.senderSuccessFragment, null, navOptions)
                 }
 
                 TransactionStatus.RESET -> {

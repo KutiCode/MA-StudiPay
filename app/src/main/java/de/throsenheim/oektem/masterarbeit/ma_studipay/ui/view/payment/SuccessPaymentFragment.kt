@@ -1,5 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,6 +43,7 @@ class SuccessPaymentFragment : Fragment() {
         // Display the sender's information in a descriptive text.
         view.findViewById<TextView>(R.id.sender_text_view).text = "$sender, hat dir Geld gesendet"
 
+        playSinglePing()
         // Set up the button to navigate back to the dashboard.
         binding.successDashboardButton.setOnClickListener {
             // Build fade animation options for a smooth transition.
@@ -55,5 +57,11 @@ class SuccessPaymentFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    // Play a single notification sound.
+    private fun playSinglePing() {
+        val mp: MediaPlayer = MediaPlayer.create(context, R.raw.samsung_distorted)
+        mp.start()
     }
 }
