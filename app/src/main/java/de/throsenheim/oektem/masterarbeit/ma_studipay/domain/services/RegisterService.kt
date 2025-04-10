@@ -32,7 +32,11 @@ object RegisterService {
                     accountNumber = generateUniqueAccountNumber(userRepositoryImpl),
                     balance = 0.0,
                     securePin = "0000",
-                    bank_code = null
+                    bank_code = null,
+                    dailyTransactionCount = 0,
+                    lastTransactionDate = null,
+                    highRiskAbortedCount = 0,
+                    lastTransaktionRiskValue = 0
                 )
                 val request = UserRegistrationRequest(
                     matriculationNumber = matriculationNumber,
