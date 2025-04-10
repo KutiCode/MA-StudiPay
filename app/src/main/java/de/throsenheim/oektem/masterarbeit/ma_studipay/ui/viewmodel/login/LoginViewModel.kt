@@ -2,6 +2,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.login
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,6 +49,7 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
                         // On the first two failed attempts:
                         // Try to update the data with syncDatabase() and then call login() again.
                         LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
+                        Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
                     }
                     3 -> {
                         _errorMessage.value =
@@ -57,14 +59,17 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
                         // On the fourth attempt (optional):
                         // Try again after synchronizing the data.
                         LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
+                        Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
                     }
                     5 -> {
                         _errorMessage.value =
                             "Login fehlgeschlagen - Eine Internetverbindung ist erforderlich."
+                        Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
                     }
                     else -> {
                         // After more than 5 failed attempts:
                         _errorMessage.value = "Login fehlgeschlagen."
+                        Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
                     }
                 }
             }
