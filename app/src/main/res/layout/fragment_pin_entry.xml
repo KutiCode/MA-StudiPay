@@ -39,7 +39,7 @@
         android:id="@+id/pin_entry_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Bitte gib deine PIN ein um fortzufahren:"
+        android:text="           Bitte gib deine PIN ein um fortzufahren:"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/pin_card"
@@ -93,7 +93,7 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_settings_nav"
+        app:menu="@menu/bottom_nav_menu"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent" />

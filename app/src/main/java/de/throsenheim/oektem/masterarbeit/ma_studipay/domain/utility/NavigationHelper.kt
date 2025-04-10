@@ -49,7 +49,8 @@ object NavigationHelper {
     ) {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.dashboardFragment -> {
+
+                R.id.navigation_home -> {
                     navController.navigate(
                         R.id.dashboardFragment,
                         null,
@@ -58,10 +59,10 @@ object NavigationHelper {
                     true
                 }
 
-                R.id.navigation_home -> {
+                R.id.settingsFragment -> {
                     if (navController.currentDestination?.id != R.id.dashboardFragment) {
                         navController.navigate(
-                            R.id.dashboardFragment,
+                            R.id.settingsFragment,
                             null,
                             buildSlideNavOptions()
                         )

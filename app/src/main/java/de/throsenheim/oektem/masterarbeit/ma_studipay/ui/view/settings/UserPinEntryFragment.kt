@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
@@ -18,6 +17,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings.UserPinEntryViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.UserPinEntryFactory
 
@@ -75,14 +75,10 @@ class UserPinEntryFragment : Fragment() {
                         "Matrikelnummer: $matriculationNumber, Neue Secure Pin: $storedPin"
 
                     )
-                    val navOptions = NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_right)
-                        .setExitAnim(R.anim.slide_out_left)
-                        .setPopEnterAnim(R.anim.slide_in_left)
-                        .setPopExitAnim(R.anim.slide_out_right)
-                        .build()
+                    val navOptions = NavigationHelper.buildSlideNavOptions()
                     navController.navigate(R.id.dashboardFragment, null, navOptions)
                 } else {
+                    changeText.text = "Bist du's wirklich?"
                     viewModel.verifySecurePin(
                         requireContext(),
                         navController,
@@ -101,32 +97,6 @@ class UserPinEntryFragment : Fragment() {
         }
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.dashboardFragment -> {
-                    val navOptions = NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_right)
-                        .setExitAnim(R.anim.slide_out_left)
-                        .setPopEnterAnim(R.anim.slide_in_left)
-                        .setPopExitAnim(R.anim.slide_out_right)
-                        .build()
-                    navController.navigate(R.id.dashboardFragment, null, navOptions)
-                    true
-                }
-                R.id.navigation_home -> {
-                    if (navController.currentDestination?.id != R.id.dashboardFragment) {
-                        val navOptions = NavOptions.Builder()
-                            .setEnterAnim(R.anim.slide_in_right)
-                            .setExitAnim(R.anim.slide_out_left)
-                            .setPopEnterAnim(R.anim.slide_in_left)
-                            .setPopExitAnim(R.anim.slide_out_right)
-                            .build()
-                        navController.navigate(R.id.dashboardFragment, null, navOptions)
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
+        NavigationHelper.setupBottomNavigation(bottomNavigationView, navController)
     }
 }
