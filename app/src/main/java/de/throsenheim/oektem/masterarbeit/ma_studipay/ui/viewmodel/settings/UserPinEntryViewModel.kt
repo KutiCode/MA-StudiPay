@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -44,6 +45,7 @@ class UserPinEntryViewModel(private val userRepositoryImpl: UserRepositoryImpl) 
                 apply()  // Save the changes asynchronously.
             }
         }
+        Log.d("UserPinEntryVM", "Secure Pin is updated successfully")
     }
 
     /**
@@ -73,9 +75,12 @@ class UserPinEntryViewModel(private val userRepositoryImpl: UserRepositoryImpl) 
                     .build()
                 // Navigate to the beginningSendingFragment with the specified animations.
                 navController.navigate(R.id.beginningSendingFragment, null, navOptions)
+                Log.d("UserPinEntryVM", "User entered correct secure pin")
             } else {
                 // Show a toast message to the user if the PIN does not match.
                 Toast.makeText(context, "Falsche Pin Eingabe", Toast.LENGTH_SHORT).show()
+
+                Log.d("UserPinEntryVM", "User entered wrong secure pin")
             }
         }
     }
