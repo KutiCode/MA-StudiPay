@@ -1,5 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.dashboard
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -55,7 +56,7 @@ class DashboardViewModel(
                 UiHelper.userUpdater(matriculationNumber, bankRepositoryImpl, userRepositoryImpl)
             _userData.value = mapUserToDashboardUiState(updatedUser)
 
-
+            Log.d("DashboardViewModel", "User data loaded: $updatedUser")
         }
     }
 }

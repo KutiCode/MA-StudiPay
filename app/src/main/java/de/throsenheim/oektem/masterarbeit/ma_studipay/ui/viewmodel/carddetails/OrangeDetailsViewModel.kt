@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.carddetails
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,12 +27,13 @@ class OrangeDetailsViewModel : ViewModel() {
      * This method retrieves user information from the local database using the UserDao.
      *
      * @param context The context required to access the database.
-     * @param matrikelnumber The matriculation number of the user.
+     * @param matriculationNumber The matriculation number of the user.
      */
-    fun loadUserDetails(context: Context, matrikelnumber: String) {
+    fun loadUserDetails(context: Context, matriculationNumber: String) {
         viewModelScope.launch {
 
-            _userDetails.value = UiHelper.loadUser(context, matrikelnumber)
+            _userDetails.value = UiHelper.loadUser(context, matriculationNumber)
         }
+        Log.d("OrangeDetailsViewModel", "User details loaded: ${_userDetails.value}")
     }
 }
