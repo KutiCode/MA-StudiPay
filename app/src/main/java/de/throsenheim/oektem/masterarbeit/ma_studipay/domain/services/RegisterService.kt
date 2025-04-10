@@ -34,7 +34,7 @@ object RegisterService {
                     securePin = "0000"
                 )
                 val request = UserRegistrationRequest(
-                    matrikelnumber = matriculationNumber,
+                    matriculationNumber = matriculationNumber,
                     firstName = firstName,
                     lastName = lastName,
                     password = hashedPassword,
