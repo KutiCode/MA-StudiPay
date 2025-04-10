@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
 import kotlinx.coroutines.launch
 
 // ViewModel class for handling user PIN entry and verification in the settings UI.
@@ -67,12 +68,7 @@ class UserPinEntryViewModel(private val userRepositoryImpl: UserRepositoryImpl) 
             val storedPin = userRepositoryImpl.getSecurePin(matriculationNumber)
             if (storedPin == pin) {
                 // If the entered PIN matches, build navigation options with animations.
-                val navOptions = NavOptions.Builder()
-                    .setEnterAnim(R.anim.fade_in)
-                    .setExitAnim(R.anim.fade_out)
-                    .setPopEnterAnim(R.anim.fade_in)
-                    .setPopExitAnim(R.anim.fade_out)
-                    .build()
+                val navOptions = NavigationHelper.buildFadeNavOptions()
                 // Navigate to the beginningSendingFragment with the specified animations.
                 navController.navigate(R.id.beginningSendingFragment, null, navOptions)
                 Log.d("UserPinEntryVM", "User entered correct secure pin")
