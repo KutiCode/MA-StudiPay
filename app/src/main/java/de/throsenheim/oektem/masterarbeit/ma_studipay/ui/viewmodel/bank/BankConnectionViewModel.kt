@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.bank
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 
-class BankConnectionViewModel(private val context: Context) : ViewModel() {
+class BankConnectionViewModel(context: Context) : ViewModel() {
     private val _currentUserBank = MutableLiveData<String?>()
     val currentUserBank: LiveData<String?> get() = _currentUserBank
     private val _navigateToSettings = MutableLiveData<Boolean>()
@@ -40,6 +41,8 @@ class BankConnectionViewModel(private val context: Context) : ViewModel() {
         // Hole den Banknamen anhand des bankCode
         val bankName = bankCode?.let { bankRepositoryImpl.getBankByCode(it)?.name }
         _currentUserBank.value = bankName
+
+        Log.d("BankConnectionViewModel", "Current User Bank: $bankName")
     }
 
 }
