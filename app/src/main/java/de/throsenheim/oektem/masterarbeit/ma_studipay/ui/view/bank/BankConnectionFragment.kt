@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
@@ -17,6 +15,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.bank.BankConnectionViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.BankConnectionFactory
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
 import kotlinx.coroutines.launch
 
 class BankConnectionFragment : Fragment() {
@@ -52,12 +51,7 @@ class BankConnectionFragment : Fragment() {
         }
         viewModel.navigateToSettings.observe(viewLifecycleOwner) { navigate ->
             if (navigate) {
-                val navOptions = NavOptions.Builder()
-                    .setEnterAnim(R.anim.fade_in)
-                    .setExitAnim(R.anim.fade_out)
-                    .setPopEnterAnim(R.anim.fade_in)
-                    .setPopExitAnim(R.anim.fade_out)
-                    .build()
+                val navOptions = NavigationHelper.buildFadeNavOptions()
                 findNavController().navigate(
                     R.id.action_BankConnectionFragment_to_settingsFragment,
                     null,
@@ -72,12 +66,7 @@ class BankConnectionFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.onBankConnectionClicked()
                 viewModel.loadCurrentUserBank() // Ensure the bank is reloaded after changing the connection
-                val navOptions = NavOptions.Builder()
-                    .setEnterAnim(R.anim.fade_in)
-                    .setExitAnim(R.anim.fade_out)
-                    .setPopEnterAnim(R.anim.fade_in)
-                    .setPopExitAnim(R.anim.fade_out)
-                    .build()
+                val navOptions = NavigationHelper.buildFadeNavOptions()
                 findNavController().navigate(
                     R.id.action_BankConnectionFragment_to_BankSelectionFragment,
                     null,
@@ -88,33 +77,7 @@ class BankConnectionFragment : Fragment() {
 
         val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController()
+        NavigationHelper.setupBottomNavigation(bottomNavigationView, navController)
 
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.dashboardFragment -> {
-                    val navOptions = NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_right)
-                        .setExitAnim(R.anim.slide_out_left)
-                        .setPopEnterAnim(R.anim.slide_in_left)
-                        .setPopExitAnim(R.anim.slide_out_right)
-                        .build()
-                    navController.navigate(R.id.dashboardFragment, null, navOptions)
-                    true
-                }
-                R.id.navigation_home -> {
-                    if (navController.currentDestination?.id != R.id.dashboardFragment) {
-                        val navOptions = NavOptions.Builder()
-                            .setEnterAnim(R.anim.slide_in_right)
-                            .setExitAnim(R.anim.slide_out_left)
-                            .setPopEnterAnim(R.anim.slide_in_left)
-                            .setPopExitAnim(R.anim.slide_out_right)
-                            .build()
-                        navController.navigate(R.id.dashboardFragment, null, navOptions)
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
     }
 }
