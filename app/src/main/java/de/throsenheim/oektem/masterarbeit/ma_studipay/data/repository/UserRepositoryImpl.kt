@@ -24,8 +24,8 @@ class UserRepositoryImpl(
         userDao.insertUser(user)
     }
 
-    override suspend fun getUserByMatriculationNumber(immatriculationNumber: String): User? {
-        return userDao.getUserByMatriculationNumber(immatriculationNumber)
+    override suspend fun getUserByMatriculationNumber(matriculationNumber: String): User? {
+        return userDao.getUserByMatriculationNumber(matriculationNumber)
     }
 
     override suspend fun syncDatabase() {
@@ -45,16 +45,16 @@ class UserRepositoryImpl(
     }
 
 
-    override suspend fun updateSecurePin(immatriculationNumber: String, newPin: String) {
-        val request = SecurePinUpdateRequest(immatriculationNumber, newPin)
+    override suspend fun updateSecurePin(matriculationNumber: String, newPin: String) {
+        val request = SecurePinUpdateRequest(matriculationNumber, newPin)
         val response = RetrofitInstance.api.updateSecurePin(request)
         if (response.isSuccessful) {
-            userDao.updateSecurePin(immatriculationNumber, newPin)
+            userDao.updateSecurePin(matriculationNumber, newPin)
         }
     }
 
-    override suspend fun getSecurePin(immatriculationNumber: String): String? {
-        return userDao.getSecurePin(immatriculationNumber)
+    override suspend fun getSecurePin(matriculationNumber: String): String? {
+        return userDao.getSecurePin(matriculationNumber)
     }
 
     override suspend fun syncUserWithBackend(user: User) {
