@@ -8,8 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
+
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
@@ -17,6 +18,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashboardBinding
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.dashboard.DashboardViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.DashboardFactory
 import java.util.Calendar
@@ -54,6 +56,9 @@ class DashboardFragment : Fragment() {
         setupObservers()
         setupListeners()
         loadUserData()
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val navController = findNavController()
+        NavigationHelper.setupBottomNavigation(bottomNavigationView, navController)
     }
 
     /**
@@ -107,12 +112,8 @@ class DashboardFragment : Fragment() {
     private fun setupListeners() {
         // Navigation for the send button
         binding.sendButton.setOnClickListener {
-            val navOptions = buildNavOptions(
-                enter = R.anim.slide_in_right,
-                exit = R.anim.slide_out_left,
-                popEnter = R.anim.slide_in_left,
-                popExit = R.anim.slide_out_right
-            )
+            val navOptions = NavigationHelper.buildSlideNavOptions()
+
             findNavController().navigate(
                 R.id.action_UserInfoFragment_to_userPinEntryFragment,
                 Bundle().apply {
@@ -132,34 +133,22 @@ class DashboardFragment : Fragment() {
                 putString("TRANSACTION_TYPE", "RECEIVE")
                 putString("SOURCE", "dashboard")
             }
-            val navOptions = buildNavOptions(
-                enter = R.anim.slide_in_right,
-                exit = R.anim.slide_out_left,
-                popEnter = R.anim.slide_in_left,
-                popExit = R.anim.slide_out_right
-            )
+            val navOptions = NavigationHelper.buildSlideNavOptions()
             findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
         }
 
         // Navigation for card details
         binding.balanceCard.setOnClickListener {
-            navigateWithFadeAnimation(R.id.orangeDetailsFragment)
+            val navOptions = NavigationHelper.buildFadeNavOptions()
+            findNavController().navigate(
+                R.id.orangeDetailsFragment,
+                null,
+                navOptions
+            )
+
         }
 
-        // Bottom Navigation View item selection
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.settingsFragment -> {
-                    navigateWithSlideAnimation(R.id.settingsFragment)
-                    true
-                }
-                R.id.navigation_home -> {
-                    // Remain on the dashboard; no navigation required.
-                    true
-                }
-                else -> false
-            }
-        }
+
     }
 
     /**
@@ -176,53 +165,7 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    /**
-     * Constructs NavOptions with the specified animations.
-     *
-     * @param enter Animation resource for entering the destination.
-     * @param exit Animation resource for exiting the current screen.
-     * @param popEnter Animation resource for entering when navigating back.
-     * @param popExit Animation resource for exiting when navigating back.
-     * @return The constructed NavOptions.
-     */
-    private fun buildNavOptions(enter: Int, exit: Int, popEnter: Int, popExit: Int): NavOptions {
-        return NavOptions.Builder()
-            .setEnterAnim(enter)
-            .setExitAnim(exit)
-            .setPopEnterAnim(popEnter)
-            .setPopExitAnim(popExit)
-            .build()
-    }
 
-    /**
-     * Navigates to the specified destination using slide animations.
-     *
-     * @param destinationId The ID of the destination.
-     */
-    private fun navigateWithSlideAnimation(destinationId: Int) {
-        val navOptions = buildNavOptions(
-            enter = R.anim.slide_in_right,
-            exit = R.anim.slide_out_left,
-            popEnter = R.anim.slide_in_left,
-            popExit = R.anim.slide_out_right
-        )
-        findNavController().navigate(destinationId, null, navOptions)
-    }
-
-    /**
-     * Navigates to the specified destination using fade animations.
-     *
-     * @param destinationId The ID of the destination.
-     */
-    private fun navigateWithFadeAnimation(destinationId: Int) {
-        val navOptions = buildNavOptions(
-            enter = R.anim.fade_in,
-            exit = R.anim.fade_out,
-            popEnter = R.anim.fade_in,
-            popExit = R.anim.fade_out
-        )
-        findNavController().navigate(destinationId, null, navOptions)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

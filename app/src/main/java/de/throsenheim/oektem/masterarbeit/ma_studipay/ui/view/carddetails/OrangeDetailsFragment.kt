@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentOrangeDetailsBinding
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.carddetails.OrangeDetailsViewModel
 
 /**
@@ -47,26 +46,14 @@ class OrangeDetailsFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setupBackPressHandler()
         setupSharedPreferences()
         setupButtons()
-        setupBottomNavigation()
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val navController = findNavController()
+        NavigationHelper.setupBottomNavigation(bottomNavigationView, navController)
     }
 
-    /**
-     * Configures a back press callback that ignores the back button.
-     */
-    private fun setupBackPressHandler() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    // Back button is ignored.
-                }
-            }
-        )
-    }
+
 
     /**
      * Loads the current user's matriculation number from SharedPreferences.
@@ -124,110 +111,34 @@ class OrangeDetailsFragment : Fragment() {
     private fun setupButtons() {
         // When the "Send to Bank" button is clicked, navigate to the transaction fragment with "SEND" type.
         binding.sendToBankButton.setOnClickListener {
-            navigateToTransactionFragment("SEND")
+            val bundle = Bundle().apply {
+                putString("TRANSACTION_TYPE", "SEND")
+                putString("SOURCE", "orangeDetails")
+            }
+            val navOptions = NavigationHelper.buildSlideNavOptions()
+            findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
         }
 
         // When the "Get from Bank" button is clicked, navigate to the transaction fragment with "RECEIVE" type.
         binding.getFromBankButton.setOnClickListener {
-            navigateToTransactionFragment("RECEIVE")
+            val bundle = Bundle().apply {
+                putString("TRANSACTION_TYPE", "RECEIVE")
+                putString("SOURCE", "orangeDetails")
+            }
+            val navOptions = NavigationHelper.buildSlideNavOptions()
+            findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
         }
 
         // When the balance card is clicked, navigate back to the dashboard.
         binding.balanceCardDetail.setOnClickListener {
-            navigateToDashboardFragment()
+            val navOptions = NavigationHelper.buildFadeNavOptions()
+            findNavController().navigate(R.id.dashboardFragment, null, navOptions)
+
         }
 
-    }
 
-    /**
-     * Navigates to the transaction fragment with a specified transaction type.
-     *
-     * @param transactionType The type of transaction ("SEND" or "RECEIVE").
-     */
-    private fun navigateToTransactionFragment(transactionType: String) {
-        val bundle = Bundle().apply {
-            putString("TRANSACTION_TYPE", transactionType)
-            putString("SOURCE", "orangeDetails")
-        }
-        val navOptions = createNavOptions(
-            enterAnim = R.anim.slide_in_right,
-            exitAnim = R.anim.slide_out_left,
-            popEnterAnim = R.anim.slide_in_left,
-            popExitAnim = R.anim.slide_out_right
-        )
-        findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
-    }
-
-    /**
-     * Navigates to the dashboard fragment using fade animations.
-     */
-    private fun navigateToDashboardFragment() {
-        val navOptions = createNavOptions(R.anim.fade_in, R.anim.fade_out)
-        findNavController().navigate(R.id.action_orangeDetailsFragment_to_dashboardFragment, null, navOptions)
     }
 
 
-    /**
-     * Creates navigation options with specified animation resources.
-     *
-     * @param enterAnim Animation resource for entering the destination.
-     * @param exitAnim Animation resource for exiting the current screen.
-     * @param popEnterAnim Animation resource for entering when navigating back (default: same as enterAnim).
-     * @param popExitAnim Animation resource for exiting when navigating back (default: same as exitAnim).
-     * @return Constructed NavOptions.
-     */
-    private fun createNavOptions(
-        enterAnim: Int,
-        exitAnim: Int,
-        popEnterAnim: Int = enterAnim,
-        popExitAnim: Int = exitAnim
-    ): NavOptions {
-        return NavOptions.Builder()
-            .setEnterAnim(enterAnim)
-            .setExitAnim(exitAnim)
-            .setPopEnterAnim(popEnterAnim)
-            .setPopExitAnim(popExitAnim)
-            .build()
-    }
 
-    /**
-     * Configures the bottom navigation view to work with the NavController,
-     * and sets up item selection to navigate to the corresponding destinations.
-     */
-    private fun setupBottomNavigation() {
-        val bottomNavigationView = binding.bottomNavigation
-        val navController = findNavController()
-        bottomNavigationView.setupWithNavController(navController)
-
-        bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.settingsFragment -> {
-                    navigateWithNavOptions(R.id.settingsFragment)
-                    true
-                }
-                R.id.navigation_home -> {
-                    if (navController.currentDestination?.id != R.id.dashboardFragment) {
-                        navigateWithNavOptions(R.id.dashboardFragment)
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
-    /**
-     * Navigates to the specified destination using slide animations via NavOptions.
-     *
-     * @param destinationId The destination fragment's ID.
-     */
-    private fun navigateWithNavOptions(destinationId: Int) {
-        val navOptions = createNavOptions(
-            enterAnim = R.anim.slide_in_right,
-            exitAnim = R.anim.slide_out_left,
-            popEnterAnim = R.anim.slide_in_left,
-            popExitAnim = R.anim.slide_out_right
-        )
-        findNavController().navigate(destinationId, null, navOptions)
-    }
 }
