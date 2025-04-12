@@ -11,32 +11,57 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.repository.BankRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+ * BankRepositoryImpl provides a concrete implementation for BankRepository.
+ *
+ * It is responsible for retrieving bank data from the local database,
+ * synchronizing bank details from the backend, and retrieving bank secrets.
+ */
 class BankRepositoryImpl(private val bankDao: BankDao) : BankRepository {
 
+    /**
+     * Retrieves a Bank object by its bank code from the local database.
+     *
+     * @param bankCode The unique bank code.
+     * @return A Bank object if found, or null if not.
+     */
     override suspend fun getBankByCode(bankCode: String): Bank? {
         return bankDao.getBankByCode(bankCode)
     }
 
+    /**
+     * Synchronizes bank data from the backend.
+     *
+     * This method fetches the list of banks and their secrets from the backend API,
+     * clears the current local bank and secret data, and then populates the database
+     * with the updated information.
+     */
     override suspend fun syncBanksFromBackend() {
         withContext(Dispatchers.IO) {
             try {
+                // Retrieve bank secrets from the backend
                 val response: BankResponseDto = RetrofitInstance.api.getAllBankSecrets()
                 Log.d("BankRepository", "Backend response: $response")
 
+                // Clear existing local bank and secret data.
                 bankDao.deleteAllSecrets()
                 bankDao.deleteAllBanks()
 
+                // For each bank in the response, insert the bank and its corresponding secrets.
                 response.banks.forEach { bankDto ->
+                    // Create a Bank entity from the DTO.
                     val bankEntity = Bank(
                         name = bankDto.bank_name,
                         bank_code = bankDto.bank_code
                     )
+                    // Insert the Bank entity and get its generated ID.
                     val bankId = bankDao.insertBank(bankEntity)
                     Log.d(
                         "BankRepository",
                         "Inserted Bank with bankCode: ${bankDto.bank_code} (id: $bankId)"
                     )
 
+                    // For each secret associated with the bank, create and insert a BankSecrets entity.
                     bankDto.secrets.forEach { secretDto ->
                         val secretEntity = BankSecrets(
                             bank_code = bankDto.bank_code,
@@ -50,6 +75,7 @@ class BankRepositoryImpl(private val bankDao: BankDao) : BankRepository {
                         )
                     }
                 }
+                // Log the count of local banks after synchronization.
                 val banksLocal = bankDao.getAllBanksWithSecrets()
                 Log.d("BankRepository", "Local banks count: ${banksLocal.size}")
             } catch (e: Exception) {
@@ -58,8 +84,13 @@ class BankRepositoryImpl(private val bankDao: BankDao) : BankRepository {
         }
     }
 
+    /**
+     * Retrieves detailed bank information, including sensitive secrets, by bank code.
+     *
+     * @param bankCode The unique bank code.
+     * @return A BankWithSecrets object if available; otherwise, null.
+     */
     override suspend fun getBankWithSecrets(bankCode: String): BankWithSecrets? {
         return bankDao.getBankWithSecrets(bankCode)
     }
-
 }
