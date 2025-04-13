@@ -11,9 +11,9 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentBeginn
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.nfc.NfcPaymentReceiver
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
 
-// BeginningRecieveFragment manages the receiving process of a payment through NFC.
+// BeginningReceiveFragment manages the receiving process of a payment through NFC.
 // It initializes the NFC payment receiver, observes the token, and navigates accordingly.
-class BeginningRecieveFragment : Fragment() {
+class BeginningReceiveFragment : Fragment() {
 
     // ViewBinding instance to safely access UI elements.
     private var _binding: FragmentBeginningRecieveBinding? = null

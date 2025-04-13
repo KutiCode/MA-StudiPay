@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/beginningRecieveFragment"
-        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.BeginningRecieveFragment"
+        android:name="de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment.BeginningReceiveFragment"
         android:label="Beginning Recieve"
         tools:layout="@layout/fragment_beginning_recieve" />
 

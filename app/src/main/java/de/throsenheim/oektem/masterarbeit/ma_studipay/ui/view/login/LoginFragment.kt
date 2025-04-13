@@ -110,7 +110,7 @@ class LoginFragment : Fragment() {
             val matriculationNumber = binding.username.text.toString().trim()
             val password = binding.password.text.toString().trim()
             // Call the login function in the ViewModel.
-            viewModel.login(requireContext(), matriculationNumber, password)
+            viewModel.login(matriculationNumber, password)
         }
 
         // Register button: navigate to the RegisterFragment.

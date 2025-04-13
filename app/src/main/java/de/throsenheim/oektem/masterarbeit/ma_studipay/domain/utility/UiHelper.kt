@@ -1,15 +1,15 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
+import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 import kotlinx.coroutines.Dispatchers
+
 import kotlinx.coroutines.withContext
 
 import java.net.InetSocketAddress
@@ -32,6 +32,19 @@ object UiHelper {
         return userDao.getUserByMatriculationNumber(matriculationNumber)
     }
 
+    suspend fun updateDatabase(context: Context) {
+        val database = AppDatabase.getDatabase(context)
+        val userRepositoryImpl = UserRepositoryImpl(
+            userDao = database.userDao(),
+            apiService = RetrofitInstance.api,
+            context = context
+        )
+        val bankRepositoryImpl = BankRepositoryImpl(database.bankDao())
+        // Synchronize bank data from the backend.
+        bankRepositoryImpl.syncBanksFromBackend()
+        // Synchronize user data with the backend.
+        userRepositoryImpl.syncDatabase()
+    }
     /**
      * Checks if the device's WiFi is enabled.
      *
@@ -45,30 +58,7 @@ object UiHelper {
         return wifiManager.isWifiEnabled
     }
 
-    /**
-     * Checks if the device is currently connected to a WiFi network.
-     *
-     * @param context The context used to retrieve connectivity services.
-     * @return True if connected to WiFi, false otherwise.
-     */
-    fun isWifiConnectedAndBackendReachable(context: Context): Boolean {
-        // Retrieve the ConnectivityManager to get network information.
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        // Get the current active network; return false if none exists.
-        val network = connectivityManager.activeNetwork ?: return false
-        // Get network capabilities for the active network; return false if none.
-        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
 
-        if (!capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return false
-
-        if (!isHostReachableWithSocket()) {
-            return false
-        } else {
-            return true
-        }
-
-    }
 
     /**
      * Synchronizes the backend data for banks and users, and then fetches the updated user.
@@ -108,17 +98,17 @@ object UiHelper {
     }
 
 
-    fun isHostReachableWithSocket(): Boolean {
-        return try {
-            Socket().use { socket ->
-                socket.connect(InetSocketAddress("192.168.0.10", 5000), 1500)
+    suspend fun isHostReachableWithSocket(): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                Socket().use { socket ->
+                    socket.connect(InetSocketAddress("192.168.0.10", 5000), 1500)
+                }
+                true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
             }
-            Log.d("UiHelper", "Backend is reachable")
-            true
-        } catch (e: Exception) {
-            Log.e("UiHelper", "Backend is not reachable")
-            e.printStackTrace()
-            false
         }
     }
 }
