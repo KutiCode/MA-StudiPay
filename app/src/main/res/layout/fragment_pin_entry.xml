@@ -6,9 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
-    <!-- PIN Card (Orange) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/pin_card"
         android:layout_width="0dp"
@@ -36,12 +35,11 @@
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- PIN Entry Title -->
     <TextView
         android:id="@+id/pin_entry_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Bitte gib deine PIN ein um fortzufahren:"
+        android:text="           Bitte gib deine PIN ein um fortzufahren:"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@id/pin_card"
@@ -50,7 +48,6 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp" />
 
-    <!-- PIN Entry Box -->
     <androidx.cardview.widget.CardView
         android:id="@+id/pin_entry_box"
         android:layout_width="0dp"
@@ -79,7 +76,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Weiter Button (Jetzt korrekt verankert) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/pin_continue_button"
         android:layout_width="wrap_content"
@@ -93,12 +89,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_settings_nav"
+        app:menu="@menu/bottom_nav_menu"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent" />

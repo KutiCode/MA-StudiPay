@@ -2,12 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Begrüßungstext -->
     <TextView
         android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
@@ -21,7 +19,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp" />
 
-    <!-- Karte für Guthaben -->
     <androidx.cardview.widget.CardView
         android:id="@+id/balance_card"
         android:layout_width="0dp"
@@ -41,7 +38,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Überschrift auf der Karte -->
             <TextView
                 android:id="@+id/card_dashboard_balance"
                 android:layout_width="wrap_content"
@@ -51,7 +47,6 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- Guthaben -->
             <TextView
                 android:id="@+id/balance_text"
                 android:layout_width="wrap_content"
@@ -62,9 +57,8 @@
                 android:textSize="32sp"
                 android:textStyle="bold" />
 
-            <!-- Matrikelnummer -->
             <TextView
-                android:id="@+id/matrikelnummer_text"
+                android:id="@+id/matriculationNumberText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -72,7 +66,6 @@
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <!-- Hochschule -->
             <TextView
                 android:id="@+id/university_text"
                 android:layout_width="wrap_content"
@@ -84,11 +77,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Senden Button -->
-
-    <!-- Empfangen Button -->
-
-    <!-- Navigation Bottom Bar -->
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/send_button"

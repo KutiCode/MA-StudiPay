@@ -2,11 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Titel -->
     <TextView
         android:id="@+id/login_title"
         android:layout_width="wrap_content"
@@ -19,7 +17,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp" />
 
-    <!-- Pfeil -->
     <ImageView
         android:id="@+id/arrow"
         android:layout_width="32dp"
@@ -30,7 +27,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Eingabekarte -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardInputs"
         android:layout_width="365dp"
@@ -49,7 +45,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Benutzername -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +57,6 @@
                     android:inputType="numberSigned" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Passwort -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,7 +75,6 @@
     </androidx.cardview.widget.CardView>
 
 
-    <!-- Anmelden Button -->
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"

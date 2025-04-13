@@ -6,9 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
-    <!-- Orangefarbene Karte für Guthaben -->
     <androidx.cardview.widget.CardView
         android:id="@+id/balance_card"
         android:layout_width="0dp"
@@ -47,7 +46,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Überschrift für Eingabe -->
     <TextView
         android:id="@+id/transaction_title"
         android:layout_width="wrap_content"
@@ -61,7 +59,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/balance_card" />
 
-    <!-- Eingabefeld für Betrag (Jetzt mit System-Tastatur) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/amount_input_card"
         android:layout_width="0dp"
@@ -79,7 +76,6 @@
             android:orientation="horizontal"
             android:padding="12dp">
 
-            <!-- Eingabefeld für Betrag -->
             <EditText
                 android:id="@+id/amount_input"
                 android:layout_width="0dp"
@@ -90,7 +86,6 @@
                 android:textSize="18sp"
                 android:hint="0" />
 
-            <!-- € Symbol -->
             <TextView
                 android:id="@+id/euro_symbol"
                 android:layout_width="wrap_content"
@@ -102,7 +97,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Weiter Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continue_button"
         android:layout_width="wrap_content"
@@ -116,12 +110,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_settings_nav"
+        app:menu="@menu/bottom_nav_menu"
         app:itemIconTint="@color/black"
         app:itemTextColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent" />
