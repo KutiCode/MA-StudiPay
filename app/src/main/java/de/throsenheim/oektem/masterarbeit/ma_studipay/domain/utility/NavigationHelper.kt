@@ -52,21 +52,23 @@ object NavigationHelper {
             when (item.itemId) {
 
                 // If the home navigation item is selected, navigate to the dashboard.
-                R.id.navigation_home -> {
-                    navController.navigate(
-                        R.id.dashboardFragment,
-                        null,
-                        buildSlideNavOptions() // Use slide animations for the transition.
-                    )
+                R.id.settingsFragment -> {
+                    if (navController.currentDestination?.id != R.id.settingsFragment) {
+                        navController.navigate(
+                            R.id.settingsFragment,
+                            null,
+                            buildSlideNavOptions() // Use slide animations for the transition.
+                        )
+                    }
                     true
                 }
 
                 // If the settings navigation item is selected, navigate to the settings fragment.
                 // This check ensures that if the current destination is not the dashboard, navigate to settings.
-                R.id.settingsFragment -> {
+                R.id.navigation_home -> {
                     if (navController.currentDestination?.id != R.id.dashboardFragment) {
                         navController.navigate(
-                            R.id.settingsFragment,
+                            R.id.dashboardFragment,
                             null,
                             buildSlideNavOptions() // Use slide animations.
                         )
