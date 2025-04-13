@@ -64,14 +64,27 @@ object RegisterService {
                 try {
                     // Make the registration API call using Retrofit.
                     val response = RetrofitInstance.api.registerUser(request)
-                    if (response.isSuccessful) {
+                    if (response.code() == 200) {
                         // If the backend registration is successful, insert the user into the local database.
                         userRepositoryImpl.insertUser(user)
                         // Synchronize the local user database to ensure it's up-to-date.
                         userRepositoryImpl.syncDatabase()
+                    } else if (response.code() == 400) {
+                        // Return an error message if the backend registration fails.
+                        userRepositoryImpl.syncDatabase()
+                        return@runBlocking "Nutzer existiert bereits"
+                    } else if (response.code() == 500) {
+                        // Return an error message if the backend registration fails.
+                        userRepositoryImpl.syncDatabase()
+                        return@runBlocking "Backend-Fehler: Datenbankfehler"
+                    } else if (response.code() == 404) {
+                        // Return an error message if the backend registration fails.
+                        userRepositoryImpl.syncDatabase()
+                        return@runBlocking "Fehler in der Anfrage"
                     } else {
                         // Return an error message if the backend registration fails.
-                        return@runBlocking "Registrierung beim Backend fehlgeschlagen"
+                        userRepositoryImpl.syncDatabase()
+                        return@runBlocking "Backend-Fehler"
                     }
                 } catch (e: Exception) {
                     // Catch any exceptions during the API call and return an error message containing the exception's message.
