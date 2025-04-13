@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
@@ -114,7 +113,7 @@ class UserTransactionFragment : Fragment() {
                         if (inputAmount != 0.0) {
                             // Ensure WiFi is enabled and connected before proceeding.
                             if (UiHelper.isWifiEnabled(requireContext()) &&
-                                UiHelper.isWifiConnected(requireContext())
+                                UiHelper.isWifiConnectedAndBackendReachable(requireContext())
                             ) {
                                 // Pass the input amount to BeginningRecieveFragment (static variable).
                                 BeginningRecieveFragment.amount = inputAmount

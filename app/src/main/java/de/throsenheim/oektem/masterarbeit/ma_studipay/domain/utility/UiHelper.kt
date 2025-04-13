@@ -11,6 +11,8 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.net.InetAddress
 
 // Helper object containing utility functions used throughout the app.
 object UiHelper {
@@ -48,7 +50,7 @@ object UiHelper {
      * @param context The context used to retrieve connectivity services.
      * @return True if connected to WiFi, false otherwise.
      */
-    fun isWifiConnected(context: Context): Boolean {
+    fun isWifiConnectedAndBackendReachable(context: Context): Boolean {
         // Retrieve the ConnectivityManager to get network information.
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -56,8 +58,20 @@ object UiHelper {
         val network = connectivityManager.activeNetwork ?: return false
         // Get network capabilities for the active network; return false if none.
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        // Return true if the network has WiFi transport.
-        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+
+
+
+        if (!capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return false
+
+        return try {
+            val address = InetAddress.getByName("192.168.0.10")
+            Log.d("UiHelper", "Backend IP: ${address.hostAddress} is reachable")
+            address.isReachable(1500)
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
+        }
     }
 
     /**

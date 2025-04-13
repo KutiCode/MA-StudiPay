@@ -9,13 +9,15 @@ import androidx.lifecycle.MutableLiveData
 
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services.LoginService
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 
 /**
  * LoginViewModel handles user login.
  *
  * It validates input, checks user credentials, and manages login retries.
  */
-class LoginViewModel(application: Application, private val userRepositoryImpl: UserRepositoryImpl) : AndroidViewModel(application) {
+class LoginViewModel(application: Application, private val userRepositoryImpl: UserRepositoryImpl) :
+    AndroidViewModel(application) {
 
     private val _loginResult = MutableLiveData<Boolean>()
     val loginResult: LiveData<Boolean> get() = _loginResult
@@ -32,7 +34,7 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
      * @param matriculationNumber The matriculation number.
      * @param password The user's password.
      */
-    fun login(matriculationNumber: String, password: String) {
+    fun login(context: Context, matriculationNumber: String, password: String) {
         if (matriculationNumber.isBlank() || password.isBlank()) {
             _errorMessage.value = "Bitte fülle alle Felder aus"
             return
@@ -43,38 +45,34 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
             _loginResult.value = true
             _errorCount = 0 // Reset error counter
         } else {
-                _errorCount++
-                when (_errorCount) {
-                    in 1..2 -> {
-                        // On the first two failed attempts:
-                        // Try to update the data with syncDatabase() and then call login() again.
+            _errorCount++
+            when (_errorCount) {
+                in 1..2 -> {
+                    // On the first two failed attempts:
+                    // Try to update the data with syncDatabase() and then call login() again.
+                    LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
+                    _errorMessage.value =
+                        "Login fehlgeschlagen - Bitte überprüfe deine Eingabe."
+                    Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
+                }
+
+                3 -> {
+                    if (!UiHelper.isWifiEnabled(context)) {
                         LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
-                        Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
-                    }
-                    3 -> {
                         _errorMessage.value =
-                            "Login fehlgeschlagen - Bitte überprüfe deine Eingabe."
-                    }
-                    4 -> {
-                        // On the fourth attempt (optional):
-                        // Try again after synchronizing the data.
+                            "Login fehlgeschlagen. Eine Verbindung zum Backend ist nötig."
+                    } else {
                         LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
-                        Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
                     }
-                    5 -> {
-                        _errorMessage.value =
-                            "Login fehlgeschlagen - Eine Internetverbindung ist erforderlich."
-                        Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
-                    }
-                    else -> {
-                        // After more than 5 failed attempts:
-                        _errorMessage.value = "Login fehlgeschlagen."
-                        Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
-                    }
+                }
+
+                else -> {
+                    _errorMessage.value = "Login fehlgeschlagen."
+                    Log.d("LoginViewModel", "Login attempt failed: $_errorCount")
                 }
             }
         }
-
+    }
 
 
     /**
@@ -83,7 +81,8 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
      * @param matriculationNumber The matriculation number.
      */
     private fun saveUserToPreferences(matriculationNumber: String) {
-        val sharedPreferences = getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putString("current_username", matriculationNumber)
             putBoolean("is_logged_in", true)
