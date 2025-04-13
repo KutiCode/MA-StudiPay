@@ -9,6 +9,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstan
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.SecurePinUpdateRequest
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.response.UserResponse
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.repository.UserRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -49,6 +50,7 @@ class UserRepositoryImpl(
      * Logs details on success or failure.
      */
     override suspend fun syncDatabase() {
+        if (UiHelper.isHostReachableWithSocket()) {
         try {
             // Perform an API call to fetch all users.
             val response = RetrofitInstance.api.getAllUsers()
@@ -65,6 +67,9 @@ class UserRepositoryImpl(
             }
         } catch (e: Exception) {
             Log.e("UserRepository", "Exception during database sync", e)
+        }
+        } else {
+            Log.e("UserRepository", "Host unreachable")
         }
     }
 

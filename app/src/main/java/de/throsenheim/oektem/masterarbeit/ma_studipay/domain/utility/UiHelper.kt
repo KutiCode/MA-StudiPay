@@ -108,7 +108,7 @@ object UiHelper {
     }
 
 
-    private fun isHostReachableWithSocket(): Boolean {
+    fun isHostReachableWithSocket(): Boolean {
         return try {
             Socket().use { socket ->
                 socket.connect(InetSocketAddress("192.168.0.10", 5000), 1500)

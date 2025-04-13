@@ -8,6 +8,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.BankSecrets
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.BankWithSecrets
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.repository.BankRepository
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -37,6 +38,7 @@ class BankRepositoryImpl(private val bankDao: BankDao) : BankRepository {
      * with the updated information.
      */
     override suspend fun syncBanksFromBackend() {
+        if (UiHelper.isHostReachableWithSocket()) {
         withContext(Dispatchers.IO) {
             try {
                 // Retrieve bank secrets from the backend
@@ -81,6 +83,9 @@ class BankRepositoryImpl(private val bankDao: BankDao) : BankRepository {
             } catch (e: Exception) {
                 Log.e("BankRepository", "Exception during bank sync", e)
             }
+        }
+        } else {
+            Log.e("BankRepository", "Host is not reachable")
         }
     }
 
