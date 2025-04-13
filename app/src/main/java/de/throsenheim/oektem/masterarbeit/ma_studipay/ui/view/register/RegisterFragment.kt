@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
@@ -86,7 +85,14 @@ class RegisterFragment : Fragment() {
             val firstName = binding.vornameInput.text.toString().trim()
             val lastName = binding.nameInput.text.toString().trim()
             val password = binding.passwortInput.text.toString().trim()
-            viewModel.registerUser(matriculationNumber, firstName, lastName, password)
+            viewModel.registerUser(
+                requireContext(),
+                matriculationNumber,
+                firstName,
+                lastName,
+                password
+            )
+
         }
         // On back-to-login button click, navigate back to the login fragment using slide animation.
         binding.backToLoginButton.setOnClickListener{

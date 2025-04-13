@@ -57,7 +57,7 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
                 }
 
                 3 -> {
-                    if (!UiHelper.isWifiEnabled(context)) {
+                    if (!UiHelper.isWifiConnectedAndBackendReachable(context)) {
                         LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
                         _errorMessage.value =
                             "Login fehlgeschlagen. Eine Verbindung zum Backend ist nötig."

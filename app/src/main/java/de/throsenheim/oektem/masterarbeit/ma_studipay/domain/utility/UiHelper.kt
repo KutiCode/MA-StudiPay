@@ -11,8 +11,9 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.IOException
-import java.net.InetAddress
+
+import java.net.InetSocketAddress
+import java.net.Socket
 
 // Helper object containing utility functions used throughout the app.
 object UiHelper {
@@ -59,19 +60,14 @@ object UiHelper {
         // Get network capabilities for the active network; return false if none.
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
 
-
-
         if (!capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) return false
 
-        return try {
-            val address = InetAddress.getByName("192.168.0.10")
-            Log.d("UiHelper", "Backend IP: ${address.hostAddress} is reachable")
-            address.isReachable(1500)
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
+        if (!isHostReachableWithSocket()) {
+            return false
+        } else {
+            return true
         }
+
     }
 
     /**
@@ -109,5 +105,20 @@ object UiHelper {
             userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber)
         }
         return updatedUser
+    }
+
+
+    private fun isHostReachableWithSocket(): Boolean {
+        return try {
+            Socket().use { socket ->
+                socket.connect(InetSocketAddress("192.168.0.10", 5000), 1500)
+            }
+            Log.d("UiHelper", "Backend is reachable")
+            true
+        } catch (e: Exception) {
+            Log.e("UiHelper", "Backend is not reachable")
+            e.printStackTrace()
+            false
+        }
     }
 }

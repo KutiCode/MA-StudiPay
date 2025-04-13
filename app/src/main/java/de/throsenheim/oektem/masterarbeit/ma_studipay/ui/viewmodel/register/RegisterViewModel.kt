@@ -1,10 +1,12 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.register
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services.RegisterService
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 
 // ViewModel that handles user registration, including input validation and calling the register service.
 class RegisterViewModel(private val userRepositoryImpl: UserRepositoryImpl) : ViewModel() {
@@ -34,6 +36,7 @@ class RegisterViewModel(private val userRepositoryImpl: UserRepositoryImpl) : Vi
      * @param password The password for the new account.
      */
     fun registerUser(
+        context: Context,
         matriculationNumber: String,
         firstName: String,
         lastName: String,
@@ -42,6 +45,10 @@ class RegisterViewModel(private val userRepositoryImpl: UserRepositoryImpl) : Vi
         // Validation: Check that no fields are blank.
         if (matriculationNumber.isBlank() || firstName.isBlank() || lastName.isBlank() || password.isBlank()) {
             _errorMessage.value = "Bitte alle Felder ausfüllen"
+            return
+        }
+        if (!UiHelper.isWifiConnectedAndBackendReachable(context)) {
+            _errorMessage.value = "Verbindung zum Backend nicht möglich"
             return
         }
         // Validation: Ensure the password is at least 8 characters long.
