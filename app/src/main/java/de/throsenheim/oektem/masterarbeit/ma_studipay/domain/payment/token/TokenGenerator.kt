@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token
 
 import android.content.Context
+import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
@@ -49,28 +50,34 @@ object TokenGenerator {
         // Retrieve the bank's secrets (sensitive data) using the user's bank code.
         val bankWithSecrets = bankRepositoryImpl.getBankWithSecrets(user.bank_code ?: "")
         // Extract the first secret's code or throw an exception if not found.
-        val bankSecret = bankWithSecrets?.secrets?.firstOrNull()?.secretCode
+        val bankSecrets = bankWithSecrets?.secrets?.map { it.secretCode }
             ?: throw Exception("Kein BankSecret für Bank-Code ${user.bank_code} gefunden")
 
         // Get the current date and format it as a string.
         val currentDate = Date()
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val dateString = formatter.format(currentDate)
-
-        // Create and return a PaymentToken using the gathered user and bank details.
-        return PaymentToken(
+        // Create a PaymentToken using the gathered user and bank details.
+        val generatedToken =
+            PaymentToken(
             firstName = user.firstName,                      // User's first name.
             lastName = user.lastName,                        // User's last name.
             matriculationNumber = user.matriculationNumber,  // User's matriculation number.
             accountNumber = user.accountNumber,              // User's account number.
             balance = user.balance,                          // User's account balance.
             bankCode = user.bank_code ?: "",                 // Bank code associated with the user.
-            bankSecret = bankSecret,                         // Secret associated with the bank.
+                bankSecrets = bankSecrets,                         // Secret associated with the bank.
             date = dateString,                               // Current date as a string.
             dailyTransactionCount = user.dailyTransactionCount,         // Daily transaction count.
             lastTransactionDate = user.lastTransactionDate,               // The date of the last transaction.
             highRiskAbortedCount = user.highRiskAbortedCount,             // Number of high-risk aborted transactions.
             lastTransactionRiskValue = user.lastTransaktionRiskValue      // Risk value of the last transaction.
         )
+
+
+        // Log the generated token for debugging purposes.
+        Log.d("TokenGenerator", "Generated token: $generatedToken")
+
+        return generatedToken
     }
 }

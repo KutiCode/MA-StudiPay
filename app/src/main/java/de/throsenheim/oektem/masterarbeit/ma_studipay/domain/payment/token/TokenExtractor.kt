@@ -195,7 +195,7 @@ object TokenExtractor {
         }
 
         // Return true if any secret in the bank matches the secret in the payment token.
-        return bankWithSecrets.secrets.any { it.secretCode == paymentToken.bankSecret }
+        return bankWithSecrets.secrets.any { it.secretCode in paymentToken.bankSecrets }
     }
 
     /**

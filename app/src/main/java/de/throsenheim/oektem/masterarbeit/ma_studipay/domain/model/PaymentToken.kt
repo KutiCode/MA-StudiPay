@@ -7,7 +7,7 @@ data class PaymentToken(
     val accountNumber: String,
     val balance: Double,
     val bankCode: String,
-    val bankSecret: String,
+    val bankSecrets: List<String>,
     val date: String,
     val dailyTransactionCount: Int,
     val lastTransactionDate: String?,
