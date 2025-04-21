@@ -49,7 +49,7 @@ object TokenExtractor {
         // Determine the outcome based on the calculated risk value.
         return when {
             // If risk is low, certify the transaction and mark as Success.
-            riskValue < 35 -> {
+            riskValue < 30 -> {
                 transactionCertificate(context, paymentToken, amount)
                 TransactionOutcome.Success
             }
@@ -69,7 +69,7 @@ object TokenExtractor {
      * Checks if the given token date is recent.
      *
      * Compares the token's timestamp with the current time.
-     * Returns true if the difference is less than or equal to 10,000 milliseconds.
+     * Returns true if the difference is less than or equal to 30,000 milliseconds.
      *
      * @param tokenDateString The date string from the token in "yyyy-MM-dd HH:mm:ss" format.
      * @return True if the token is recent, false otherwise.
@@ -80,7 +80,7 @@ object TokenExtractor {
         val tokenDate: Date = sdf.parse(tokenDateString) ?: return false
         val currentTime = Date()
         val diffMillis = currentTime.time - tokenDate.time
-        return diffMillis <= 10_000
+        return diffMillis <= 100_000
     }
 
     /**
@@ -105,8 +105,12 @@ object TokenExtractor {
 
         // Reduce risk if the token is recent.
         if (isTokenRecent(paymentToken.date)) {
-            Log.d("RiskValue", "Token recency reduces risk: $riskValue")
+
             riskValue -= 10
+            Log.d("RiskValue", "Token recency reduces risk: $riskValue")
+        } else {
+            Log.d("RiskValue", "Token is not recent, risk remains high: $riskValue")
+            return riskValue
         }
 
         // Adjust risk based on the transaction amount.
@@ -114,9 +118,9 @@ object TokenExtractor {
             riskValue -= 30
             Log.d("RiskValue", "Low amount reduces risk significantly: $riskValue")
         } else if (amount < 30.0) {
-            riskValue -= 20
+            riskValue -= 15
             Log.d("RiskValue", "Moderate amount reduces risk: $riskValue")
-        } else {
+        } else if (amount < 50.0) {
             riskValue -= 5
             Log.d("RiskValue", "High amount reduces risk minimally: $riskValue")
         }
@@ -126,7 +130,7 @@ object TokenExtractor {
             riskValue -= 10
             Log.d("RiskValue", "Low daily transaction count reduces risk: $riskValue")
         } else {
-            riskValue += 5
+            riskValue += 10
             Log.d("RiskValue", "High daily transaction count increases risk: $riskValue")
         }
 
@@ -145,7 +149,7 @@ object TokenExtractor {
 
         // Increase risk if there have been aborted high-risk transactions.
         if (paymentToken.highRiskAbortedCount > 0) {
-            riskValue += 10
+            riskValue += 20
             Log.d("RiskValue", "High-risk aborted transactions increase risk: $riskValue")
         }
 
@@ -153,11 +157,11 @@ object TokenExtractor {
         if (paymentToken.lastTransactionRiskValue < 50) {
             riskValue -= 10
             Log.d("RiskValue", "Low last transaction risk reduces risk: $riskValue")
-        } else if (paymentToken.lastTransactionRiskValue < 80) {
+        } else if (paymentToken.lastTransactionRiskValue < 90) {
             riskValue -= 5
             Log.d("RiskValue", "Moderate last transaction risk slightly reduces risk: $riskValue")
         } else {
-            riskValue += 10
+            riskValue += 15
             Log.d("RiskValue", "High last transaction risk increases risk: $riskValue")
         }
 
@@ -167,6 +171,7 @@ object TokenExtractor {
             Log.d("RiskValue", "Valid bank secret reduces risk: $riskValue")
         }
         // Update the payment token's last transaction risk value with the calculated risk.
+
         paymentToken.lastTransactionRiskValue = riskValue
         Log.d("RiskValue", "Final calculated risk: $riskValue")
         Log.d("LastRiskValue", paymentToken.lastTransactionRiskValue.toString())

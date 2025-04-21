@@ -2,6 +2,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token
 
 import android.content.Context
 import android.util.Log
+import com.google.gson.Gson
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
@@ -12,7 +13,8 @@ import java.util.*
 
 // TokenGenerator encapsulates the logic for generating a payment token based on user and bank details.
 object TokenGenerator {
-
+    // Gson instance for JSON conversion.
+    private val gson = Gson()
     /**
      * Generates a PaymentToken for the current user.
      *
@@ -24,7 +26,7 @@ object TokenGenerator {
      * @return A PaymentToken populated with the user's data and bank secret.
      * @throws Exception if required user data or bank secrets are missing.
      */
-    suspend fun generateToken(context: Context): PaymentToken {
+    suspend fun generateToken(context: Context): String {
         // Retrieve the current user's matriculation number from SharedPreferences.
         val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val matriculationNumber = sharedPref.getString("current_username", null)
@@ -77,7 +79,7 @@ object TokenGenerator {
 
         // Log the generated token for debugging purposes.
         Log.d("TokenGenerator", "Generated token: $generatedToken")
-
-        return generatedToken
+        val stringToken = gson.toJson(generatedToken)
+        return stringToken
     }
 }

@@ -1,5 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.register
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -64,6 +65,7 @@ class RegisterViewModel(private val userRepositoryImpl: UserRepositoryImpl) : Vi
         // Validation: Ensure the password contains at least one uppercase letter and one digit.
         val regex = Regex("^(?=.*[A-Z])(?=.*\\d).{8,}\$")
         if (!regex.containsMatchIn(password)) {
+            Log.d("RegisterViewModel", "The password does not meet the criteria.")
             _errorMessage.value =
                 "Das Passwort muss mindestens einen Großbuchstaben und eine Zahl enthalten"
             return

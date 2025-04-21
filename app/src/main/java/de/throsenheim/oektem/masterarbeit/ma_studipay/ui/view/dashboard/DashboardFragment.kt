@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,8 +20,10 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentDashbo
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.dashboard.DashboardViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.DashboardFactory
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 /**
@@ -129,25 +132,39 @@ class DashboardFragment : Fragment() {
 
         // Navigation for the receive button
         binding.receiveButton.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("TRANSACTION_TYPE", "RECEIVE")
-                putString("SOURCE", "dashboard")
+            lifecycleScope.launch {
+                // Ensure WiFi is enabled and connected before proceeding.
+                if (UiHelper.isWifiEnabled(requireContext()) &&
+                    UiHelper.isHostReachableWithSocket()
+                ) {
+                    val bundle = Bundle().apply {
+                        putString("TRANSACTION_TYPE", "RECEIVE")
+                        putString("SOURCE", "dashboard")
+                    }
+                    val navOptions = NavigationHelper.buildSlideNavOptions()
+                    findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
+                } else {
+                    // If WiFi is not connected, navigate to the NoWifiFragment.
+                    val navOptions = NavigationHelper.buildSlideNavOptions()
+                    findNavController().navigate(
+                        R.id.noWifiFragment, null,
+                        navOptions
+                    )
+                }
+
             }
-            val navOptions = NavigationHelper.buildSlideNavOptions()
-            findNavController().navigate(R.id.userTransactionFragment, bundle, navOptions)
+
+            // Navigation for card details
+            binding.balanceCard.setOnClickListener {
+                val navOptions = NavigationHelper.buildFadeNavOptions()
+                findNavController().navigate(
+                    R.id.orangeDetailsFragment,
+                    null,
+                    navOptions
+                )
+
+            }
         }
-
-        // Navigation for card details
-        binding.balanceCard.setOnClickListener {
-            val navOptions = NavigationHelper.buildFadeNavOptions()
-            findNavController().navigate(
-                R.id.orangeDetailsFragment,
-                null,
-                navOptions
-            )
-
-        }
-
 
     }
 

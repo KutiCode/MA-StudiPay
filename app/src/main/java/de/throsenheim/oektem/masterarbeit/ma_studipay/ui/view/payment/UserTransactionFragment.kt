@@ -16,7 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
-import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.payment.UserTransactionViewModel
 import kotlinx.coroutines.launch
 
@@ -119,29 +118,16 @@ class UserTransactionFragment : Fragment() {
                         } else {
                             // For other sources: Ensure valid amount and check WiFi status.
                             if (inputAmount != 0.0) {
+                                // Pass the input amount to BeginningReceiveFragment (static variable).
+                                BeginningReceiveFragment.amount = inputAmount
+                                val navOptions = NavigationHelper.buildSlideNavOptions()
+                                // Navigate to BeginningReceiveFragment with slide animation.
+                                findNavController().navigate(
+                                    R.id.action_userPin_to_beginningRecieveFragment,
+                                    null,
+                                    navOptions
+                                )
 
-                                // Ensure WiFi is enabled and connected before proceeding.
-                                if (UiHelper.isWifiEnabled(requireContext()) &&
-                                    UiHelper.isHostReachableWithSocket()
-                                ) {
-
-                                    // Pass the input amount to BeginningReceiveFragment (static variable).
-                                    BeginningReceiveFragment.amount = inputAmount
-                                    val navOptions = NavigationHelper.buildSlideNavOptions()
-                                    // Navigate to BeginningReceiveFragment with slide animation.
-                                    findNavController().navigate(
-                                        R.id.action_userPin_to_beginningRecieveFragment,
-                                        null,
-                                        navOptions
-                                    )
-                                } else {
-                                    // If WiFi is not connected, navigate to the NoWifiFragment.
-                                    val navOptions = NavigationHelper.buildSlideNavOptions()
-                                    findNavController().navigate(
-                                        R.id.noWifiFragment, null,
-                                        navOptions
-                                    )
-                                }
                             } else {
                                 // If input amount is invalid (e.g., 0.0), show a toast message.
                                 Toast.makeText(

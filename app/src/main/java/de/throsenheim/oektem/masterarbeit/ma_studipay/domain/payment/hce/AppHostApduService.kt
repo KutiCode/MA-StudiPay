@@ -3,7 +3,6 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.hce
 import android.nfc.cardemulation.HostApduService
 import android.os.Bundle
 import android.util.Log
-import com.google.gson.Gson
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TokenGenerator
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionStatusHolder
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.security.EccHybridEncryptionHelper
@@ -18,14 +17,13 @@ import kotlinx.coroutines.runBlocking
  */
 class AppHostApduService : HostApduService() {
     // Tag for logging purposes.
-    private val TAG = "HCEDEMO"
+    private val TAG = "HCEService"
 
     // Response APDUs indicating success (0x90, 0x00) or conflict/error (0x6A, 0x82).
     private val okayMessage: ByteArray = byteArrayOf(0x90.toByte(), 0x00.toByte())
     private val conflictMessage: ByteArray = byteArrayOf(0x6A.toByte(), 0x82.toByte())
 
-    // Gson instance for JSON conversion.
-    private val gson = Gson()
+
 
     // Maximum allowed payload size for each fragment.
     private val MAX_FRAGMENT_SIZE = 240
@@ -102,12 +100,12 @@ class AppHostApduService : HostApduService() {
                 try {
                     // Generate a new payment token using TokenGenerator.
                     val paymentToken = TokenGenerator.generateToken(applicationContext)
-                    val paymentTokenJson = gson.toJson(paymentToken)
-                    Log.i(TAG, "Generated token: $paymentTokenJson")
+
+                    Log.i(TAG, "Generated token: $paymentToken")
 
                     // Encrypt the payment token using ECC hybrid encryption.
                     val encryptedTokenString = EccHybridEncryptionHelper.encryptForReceiver(
-                        paymentTokenJson,
+                        paymentToken,
                         publicKeyString
                     )
                     Log.i(TAG, "Encrypted token: $encryptedTokenString")
@@ -237,13 +235,6 @@ class AppHostApduService : HostApduService() {
         if (apdu.size < 5 + lc) return null
         return apdu.copyOfRange(5, 5 + lc)
     }
-
-    /**
-     * Extension function that converts a ByteArray to a hexadecimal string.
-     *
-     * @return A string representation of the ByteArray in hexadecimal format.
-     */
-    private fun ByteArray.toHexString() = joinToString("") { "%02X".format(it) }
 
     /**
      * Called when the NFC reader is deactivated.

@@ -106,7 +106,7 @@ object UiHelper {
                 }
                 true
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("UiHelper", "Backend is not reachable: ${e.message}")
                 false
             }
         }

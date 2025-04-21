@@ -139,13 +139,13 @@ class NfcPaymentReceiver(private val activity: Activity) {
                 Log.d(TAG, "Öffentlicher Schlüssel: $publicKeyString")
                 // Prepare the public key bytes and construct an APDU command to send it.
                 val publicKeyBytes = publicKeyString.toByteArray(Charsets.UTF_8)
-                val Lc: Byte = publicKeyBytes.size.toByte()
+                val keyLength: Byte = publicKeyBytes.size.toByte()
                 val sendPublicKeyApdu = byteArrayOf(
                     PUBLIC_KEY_CLA,
                     PUBLIC_KEY_INS,
                     PUBLIC_KEY_P1,
                     PUBLIC_KEY_P2,
-                    Lc
+                    keyLength
                 ) + publicKeyBytes
                 // Send the APDU command and receive the first fragment.
                 val firstFragment = isoDep.transceive(sendPublicKeyApdu)
