@@ -25,7 +25,9 @@ object UiHelper {
      * @param matriculationNumber The matriculation number to identify the user.
      * @return A User object if found, otherwise null.
      */
-    suspend fun loadUser(context: Context, matriculationNumber: String): User? {
+    suspend fun loadUser(context: Context): User? {
+        val sharedUser = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val matriculationNumber = sharedUser.getString("current_username", "") ?: ""
         // Get an instance of the user DAO from the database.
         val userDao = AppDatabase.getDatabase(context).userDao()
         // Return the user matching the matriculation number.
@@ -45,20 +47,6 @@ object UiHelper {
         // Synchronize user data with the backend.
         userRepositoryImpl.syncDatabase()
     }
-    /**
-     * Checks if the device's WiFi is enabled.
-     *
-     * @param context The context used to access the WiFi service.
-     * @return True if WiFi is enabled, false otherwise.
-     */
-    fun isWifiEnabled(context: Context): Boolean {
-        // Retrieve the WifiManager from the application context.
-        val wifiManager =
-            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        return wifiManager.isWifiEnabled
-    }
-
-
 
     /**
      * Synchronizes the backend data for banks and users, and then fetches the updated user.

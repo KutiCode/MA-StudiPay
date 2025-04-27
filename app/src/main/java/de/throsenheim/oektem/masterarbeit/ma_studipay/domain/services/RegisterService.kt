@@ -1,5 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services
 
+import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.request.UserRegistrationRequest
@@ -36,6 +37,7 @@ object RegisterService {
             val userExists =
                 userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber) != null
             if (userExists) {
+                Log.d("RegisterService", "User already exists")
                 // If a user is found, return an error message.
                 return@runBlocking "Nutzer existiert bereits"
             } else {
@@ -47,9 +49,7 @@ object RegisterService {
                     firstName = firstName,
                     lastName = lastName,
                     password = hashedPassword,
-                    accountNumber = generateUniqueAccountNumber(userRepositoryImpl),
-                    balance = 0.0,        // Default balance is set to 0.0 for new users.
-                    securePin = "0000"    // Default secure PIN is set; can be updated by the user later.
+                    accountNumber = generateUniqueAccountNumber(userRepositoryImpl)
                 )
                 // Create a registration request object containing all necessary user data.
                 val request = UserRegistrationRequest(
@@ -58,8 +58,8 @@ object RegisterService {
                     lastName = lastName,
                     password = hashedPassword,
                     accountNumber = user.accountNumber,
-                    balance = user.balance,
-                    securePin = user.securePin
+                    balance = 0.0
+
                 )
                 try {
                     // Make the registration API call using Retrofit.

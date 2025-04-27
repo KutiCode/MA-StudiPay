@@ -115,28 +115,14 @@ class DashboardFragment : Fragment() {
     private fun setupListeners() {
         // Navigation for the send button
         binding.sendButton.setOnClickListener {
-            val navOptions = NavigationHelper.buildSlideNavOptions()
-
-            findNavController().navigate(
-                R.id.action_UserInfoFragment_to_userPinEntryFragment,
-                Bundle().apply {
-                    putBoolean("isChangePin", false)
-                    Log.d(
-                        "DashboardFragment",
-                        "Navigating to UserPinEntryFragment without changing PIN"
-                    )
-                },
-                navOptions
-            )
+            viewModel.pinManagement(requireContext(), findNavController())
         }
 
         // Navigation for the receive button
         binding.receiveButton.setOnClickListener {
             lifecycleScope.launch {
                 // Ensure WiFi is enabled and connected before proceeding.
-                if (UiHelper.isWifiEnabled(requireContext()) &&
-                    UiHelper.isHostReachableWithSocket()
-                ) {
+                if (UiHelper.isHostReachableWithSocket()) {
                     val bundle = Bundle().apply {
                         putString("TRANSACTION_TYPE", "RECEIVE")
                         putString("SOURCE", "dashboard")
@@ -155,17 +141,17 @@ class DashboardFragment : Fragment() {
             }
 
             // Navigation for card details
-            binding.balanceCard.setOnClickListener {
-                val navOptions = NavigationHelper.buildFadeNavOptions()
-                findNavController().navigate(
-                    R.id.orangeDetailsFragment,
-                    null,
-                    navOptions
-                )
 
-            }
         }
+        binding.balanceCard.setOnClickListener {
+            val navOptions = NavigationHelper.buildFadeNavOptions()
+            findNavController().navigate(
+                R.id.orangeDetailsFragment,
+                null,
+                navOptions
+            )
 
+        }
     }
 
     /**

@@ -117,7 +117,8 @@ class NfcPaymentReceiver(private val activity: Activity) {
      * @param tag The discovered NFC Tag.
      */
     private fun handleTagDiscovered(tag: Tag) {
-        Log.d(TAG, "NFC Tag entdeckt: ${tag.id.toHexString()}")
+        Log.d(TAG, "NFC Service is started")
+        Log.d(TAG, "NFC Tag detected: ${tag.id.toHexString()}")
         // Use IsoDep technology to communicate with ISO-DEP compliant NFC tags.
         IsoDep.get(tag)?.use { isoDep ->
             try {

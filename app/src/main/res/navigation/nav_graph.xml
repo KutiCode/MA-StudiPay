@@ -168,4 +168,7 @@
     <action
         android:id="@+id/action_registerFragment_to_loginFragment"
         app:destination="@id/loginFragment" />
+    <action
+        android:id="@+id/action_DashboardFragment_to_userPinEntryFragment"
+        app:destination="@id/userPinEntryFragment" />
 </navigation>

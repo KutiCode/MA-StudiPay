@@ -223,6 +223,7 @@ object TokenExtractor {
         if (paymentToken.balance < amount) {
             transactionRejectionCertificate(paymentToken)
         } else {
+
             // Retrieve the matriculation number from shared preferences.
             val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
             val matriculationNumber = sharedPref.getString("current_username", null)
@@ -242,6 +243,7 @@ object TokenExtractor {
                     // Update the user's balance in the local database.
                     userDao.updateUserBalance(matriculationNumber, it.balance)
                 }
+                Log.d("RiskValue", "Transaction certificate was created")
             } else {
                 // If the add operation fails, generate a rejection certificate.
                 transactionRejectionCertificate(paymentToken)
@@ -291,6 +293,7 @@ object TokenExtractor {
         paymentToken: PaymentToken,
         amount: Double
     ): TransactionOutcome {
+        Log.d("RiskValue", "Authorization request check initiated")
         // Create a transaction verification request.
         val requestAuth = TransactionVerificationRequest(paymentToken.matriculationNumber, amount)
         // Send the request to the backend.
@@ -340,6 +343,7 @@ object TokenExtractor {
         )
         // Update the risk parameters on the backend.
         RetrofitInstance.api.updateRiskParams(requestRiskValueUpdate)
+        Log.d("RiskValue", "TransactionrejectionCertificate was created")
         return TransactionOutcome.Rejection
     }
 

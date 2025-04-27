@@ -75,10 +75,10 @@ class UserPinEntryFragment : Fragment() {
                 requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
             // Retrieve the current username (matriculation number) and stored PIN (if any).
             val matriculationNumber = sharedPref.getString("current_username", null)
-            val isChangePin = arguments?.getBoolean("isChangePin") ?: false
+            val isChangePin = arguments?.getBoolean("isChangePin")
             val storedPin = sharedPref.getString("secure_pin", null)
             if (matriculationNumber != null) {
-                if (isChangePin) {
+                if (isChangePin == true) {
                     // If in change PIN mode, update the prompt text and update the new PIN.
                     changeText.text = "Neue Secure Pin eingeben"
                     viewModel.updateSecurePin(requireContext(), matriculationNumber, securePin)

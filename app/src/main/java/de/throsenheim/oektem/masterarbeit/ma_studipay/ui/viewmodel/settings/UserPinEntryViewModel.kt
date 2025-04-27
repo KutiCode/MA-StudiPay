@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -8,10 +9,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.launch
 
 // ViewModel class for handling user PIN entry and verification in the settings UI.
