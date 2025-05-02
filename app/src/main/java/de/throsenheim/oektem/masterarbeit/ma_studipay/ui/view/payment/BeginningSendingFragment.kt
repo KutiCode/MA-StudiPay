@@ -58,7 +58,7 @@ class BeginningSendingFragment : Fragment() {
 
         // If a current username exists, load the user's full name into the ViewModel.
         currentUsername?.let {
-            viewModel.loadUserName(requireContext(), it)
+            viewModel.loadUserName(requireContext())
         } ?: run {
             // Fallback: display a default greeting if no username is found.
             binding.userInfoSender.text = "Hallo, Benutzer"

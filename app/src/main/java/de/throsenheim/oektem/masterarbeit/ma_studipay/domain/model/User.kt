@@ -26,5 +26,5 @@ data class User(
     @ColumnInfo(name = "dailyTransactionCount") var dailyTransactionCount: Int = 0,
     @ColumnInfo(name = "lastTransactionDate") var lastTransactionDate: String? = null,
     @ColumnInfo(name = "highRiskAbortedCount") var highRiskAbortedCount: Int = 0,
-    @ColumnInfo(name = "lastTransaktionRiskValue") var lastTransaktionRiskValue: Int = 0
+    @ColumnInfo(name = "lastTransactionRiskValue") var lastTransactionRiskValue: Int = 0
 )

@@ -49,6 +49,8 @@ object TokenGenerator {
         val bankDao = AppDatabase.getDatabase(context).bankDao()
         // Create a BankRepositoryImpl instance to fetch bank information.
         val bankRepositoryImpl = BankRepositoryImpl(bankDao)
+        // Synchronize the bank data from the backend to ensure it's up-to-date.
+        bankRepositoryImpl.syncBanksFromBackend()
         // Retrieve the bank's secrets (sensitive data) using the user's bank code.
         val bankWithSecrets = bankRepositoryImpl.getBankWithSecrets(user.bank_code ?: "")
         // Extract the first secret's code or throw an exception if not found.
@@ -68,12 +70,12 @@ object TokenGenerator {
             accountNumber = user.accountNumber,              // User's account number.
             balance = user.balance,                          // User's account balance.
             bankCode = user.bank_code ?: "",                 // Bank code associated with the user.
-                bankSecrets = bankSecrets,                         // Secret associated with the bank.
+                bankSecrets = bankSecrets,                   // Secret associated with the bank.
             date = dateString,                               // Current date as a string.
             dailyTransactionCount = user.dailyTransactionCount,         // Daily transaction count.
             lastTransactionDate = user.lastTransactionDate,               // The date of the last transaction.
             highRiskAbortedCount = user.highRiskAbortedCount,             // Number of high-risk aborted transactions.
-            lastTransactionRiskValue = user.lastTransaktionRiskValue      // Risk value of the last transaction.
+                lastTransactionRiskValue = user.lastTransactionRiskValue      // Risk value of the last transaction.
         )
 
 

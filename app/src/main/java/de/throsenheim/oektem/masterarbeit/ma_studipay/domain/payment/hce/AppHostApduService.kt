@@ -98,6 +98,7 @@ class AppHostApduService : HostApduService() {
             // Generate a payment token, encrypt it, and handle fragmentation if necessary.
             return runBlocking {
                 try {
+
                     // Generate a new payment token using TokenGenerator.
                     val paymentToken = TokenGenerator.generateToken(applicationContext)
 

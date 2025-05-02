@@ -28,7 +28,7 @@ class BeginningSendingViewModel : ViewModel() {
      * @param context The context used to access resources and data storage.
      * @param matriculationNumber The unique identifier for the user.
      */
-    fun loadUserName(context: Context, matriculationNumber: String) {
+    fun loadUserName(context: Context) {
         viewModelScope.launch {
             // Load the user from storage using a helper function.
             val user = UiHelper.loadUser(context)

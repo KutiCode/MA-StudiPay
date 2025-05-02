@@ -123,6 +123,9 @@ object TokenExtractor {
         } else if (amount < 50.0) {
             riskValue -= 5
             Log.d("RiskValue", "High amount reduces risk minimally: $riskValue")
+        } else {
+            riskValue += 10
+            Log.d("RiskValue", "Very high amount increases risk: $riskValue")
         }
 
         // Adjust risk based on daily transaction count.
@@ -134,11 +137,12 @@ object TokenExtractor {
             Log.d("RiskValue", "High daily transaction count increases risk: $riskValue")
         }
 
-        // Adjust risk based on last transaction date.
         if (paymentToken.lastTransactionDate != null) {
             val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val today: String = sdf.format(Date())
-            if (paymentToken.lastTransactionDate == today) {
+            val today = sdf.format(Date())
+            val lastDateIso = paymentToken.lastTransactionDate
+            val lastDateOnly = lastDateIso.substring(0, 10)
+            if (lastDateOnly == today) {
                 riskValue -= 10
                 Log.d("RiskValue", "Recent last transaction date reduces risk: $riskValue")
             } else {
@@ -146,6 +150,7 @@ object TokenExtractor {
                 Log.d("RiskValue", "Old last transaction date increases risk: $riskValue")
             }
         }
+
 
         // Increase risk if there have been aborted high-risk transactions.
         if (paymentToken.highRiskAbortedCount > 0) {
@@ -171,7 +176,9 @@ object TokenExtractor {
             Log.d("RiskValue", "Valid bank secret reduces risk: $riskValue")
         }
         // Update the payment token's last transaction risk value with the calculated risk.
-
+        if (riskValue > 100) {
+            riskValue = 100
+        }
         paymentToken.lastTransactionRiskValue = riskValue
         Log.d("RiskValue", "Final calculated risk: $riskValue")
         Log.d("LastRiskValue", paymentToken.lastTransactionRiskValue.toString())
@@ -219,11 +226,21 @@ object TokenExtractor {
         paymentToken: PaymentToken,
         amount: Double
     ) {
+        Log.d("RiskValue", "LastRiskValue:" + paymentToken.lastTransactionRiskValue.toString())
+        Log.d("DailyTransactionCount", paymentToken.dailyTransactionCount.toString())
         // If the user's balance is insufficient, generate a rejection certificate.
         if (paymentToken.balance < amount) {
             transactionRejectionCertificate(paymentToken)
         } else {
-
+            val newDailyTransactionCount =
+                paymentToken.dailyTransactionCount + 1
+            updateRiskParams(
+                paymentToken.matriculationNumber,
+                newDailyTransactionCount,
+                today,
+                0,
+                paymentToken.lastTransactionRiskValue
+            )
             // Retrieve the matriculation number from shared preferences.
             val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
             val matriculationNumber = sharedPref.getString("current_username", null)
@@ -266,13 +283,7 @@ object TokenExtractor {
             }
 
             // Update risk parameters after a successful transaction.
-            updateRiskParams(
-                paymentToken.matriculationNumber,
-                paymentToken.dailyTransactionCount + 1,
-                today,
-                0,
-                paymentToken.lastTransactionRiskValue
-            )
+
         }
     }
 
@@ -318,6 +329,7 @@ object TokenExtractor {
                 TransactionOutcome.Rejection
             }
         } else {
+            Log.d("RiskValue", responseAuth.body().toString())
             // If the authorization request fails, reject the transaction.
             transactionRejectionCertificate(paymentToken)
             return TransactionOutcome.Rejection
@@ -377,7 +389,7 @@ object TokenExtractor {
 
         // Call the API to update risk parameters.
         val response = RetrofitInstance.api.updateRiskParams(requestParamUpdate)
-
+        Log.d("RiskValue", response.toString())
         return response.isSuccessful
     }
 }
