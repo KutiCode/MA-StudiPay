@@ -15,7 +15,6 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.databinding.FragmentRegist
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.register.RegisterViewModel
 import de.throsenheim.oektem.masterarbeit.ma_studipay.ui.factory.RegisterFactory
-import android.widget.TextView
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
 
 // RegisterFragment handles user registration by collecting registration inputs,
@@ -39,7 +38,7 @@ class RegisterFragment : Fragment() {
         return binding.root
     }
 
-    // Called immediately after onCreateView; initialize ViewModel, observers and listeners.
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -73,7 +72,8 @@ class RegisterFragment : Fragment() {
         }
         // Observe error message LiveData and display the custom message if an error occurs.
         viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-            showCustomMessage(error)
+            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+
         }
     }
 
@@ -106,46 +106,4 @@ class RegisterFragment : Fragment() {
         _binding = null
     }
 
-    /**
-     * Displays a custom message using an animated view.
-     *
-     * Inflates a custom layout (custom_message.xml), sets the provided message,
-     * and animates its appearance and disappearance.
-     */
-    private fun showCustomMessage(message: String) {
-        val inflater = LayoutInflater.from(requireContext())
-        // Inflate the custom message layout.
-        val customView = inflater.inflate(R.layout.custom_message, binding.root, false)
-        // Find the TextView within the custom layout and set the message.
-        val messageText = customView.findViewById<TextView>(R.id.custom_message_text)
-        messageText.text = message
-
-        // Add the custom view to the root layout.
-        binding.root.addView(customView)
-
-        // Post animation actions to the custom view.
-        customView.post {
-            // Start with the view hidden (translated up out of view).
-            customView.translationY = -customView.height.toFloat()
-            customView.visibility = View.VISIBLE
-
-            // Animate the view sliding in from the top.
-            customView.animate()
-                .translationY(0f)
-                .setDuration(300)
-                .withEndAction {
-                    // After a delay, animate the view sliding out and remove it from the layout.
-                    customView.postDelayed({
-                        customView.animate()
-                            .translationY(-customView.height.toFloat())
-                            .setDuration(300)
-                            .withEndAction {
-                                binding.root.removeView(customView)
-                            }
-                            .start()
-                    }, 2000)
-                }
-                .start()
-        }
-    }
 }
