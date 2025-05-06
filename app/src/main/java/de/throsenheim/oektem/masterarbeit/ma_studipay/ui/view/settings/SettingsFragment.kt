@@ -47,7 +47,7 @@ class SettingsFragment : Fragment() {
 
         // If a username exists, load the user's full name via the ViewModel; otherwise, use a default greeting.
         currentUsername?.let {
-            viewModel.loadUserName(requireContext(), it)
+            viewModel.loadUserName(requireContext())
         } ?: run {
             userNameTextView.text = "Hallo, Benutzer"
         }

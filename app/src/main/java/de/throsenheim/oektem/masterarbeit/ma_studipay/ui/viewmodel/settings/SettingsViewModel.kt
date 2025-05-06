@@ -25,9 +25,8 @@ class SettingsViewModel : ViewModel() {
      * The loaded user's full name is set in the LiveData or, if user data is missing, a default greeting is used.
      *
      * @param context The context used to access resources and storage.
-     * @param matrikelnumber The matriculation number used to identify the user.
      */
-    fun loadUserName(context: Context, matrikelnumber: String) {
+    fun loadUserName(context: Context) {
         viewModelScope.launch {
             // Retrieve the user from persistent storage using a helper function.
             val user = UiHelper.loadUser(context)

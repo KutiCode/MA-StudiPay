@@ -29,9 +29,8 @@ class UserTransactionViewModel : ViewModel() {
      * If no value is found, it displays a default message ("Fehlender Wert").
      *
      * @param context The context used to access resources and storage.
-     * @param matrikelnumber The unique identifier of the user.
      */
-    fun fetchUserBalance(context: Context, matrikelnumber: String) {
+    fun fetchUserBalance(context: Context) {
         viewModelScope.launch {
             val user = UiHelper.loadUser(context)
             // If user and balance exist, append the euro symbol; else, display a fallback message.

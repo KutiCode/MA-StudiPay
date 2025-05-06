@@ -65,7 +65,7 @@ class OrangeDetailsFragment : Fragment() {
         val currentMatriculationNumber = sharedPref.getString("current_username", null)
 
         if (currentMatriculationNumber != null) {
-            viewModel.loadUserDetails(requireContext(), currentMatriculationNumber)
+            viewModel.loadUserDetails(requireContext())
         } else {
             showMissingValues()
         }
