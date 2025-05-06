@@ -47,23 +47,8 @@ class AppHostApduService : HostApduService() {
             0x03.toByte(), 0x04.toByte(), 0x05.toByte(), 0x06.toByte()
         )
 
-        // APDU command to select the payment AID.
-        private val SELECT_APDU = byteArrayOf(
-            0x00.toByte(), 0xA4.toByte(), 0x04.toByte(), 0x00.toByte(), 0x07.toByte(),
-            *PAYMENT_AID
-        )
 
-        // APDU command to request the next fragment of data.
-        private val NEXT_FRAGMENT_APDU = byteArrayOf(0x80.toByte(), 0x11.toByte())
 
-        // APDU command indicating a conflict (e.g., error or wrong request).
-        private val CONFLICT_APDU = byteArrayOf(0x6A.toByte(), 0x82.toByte())
-
-        // Constants for constructing a Public Key command APDU.
-        private const val PUBLIC_KEY_CLA: Byte = 0x80.toByte()
-        private const val PUBLIC_KEY_INS: Byte = 0x10.toByte()
-        private const val PUBLIC_KEY_P1: Byte = 0x00
-        private const val PUBLIC_KEY_P2: Byte = 0x00
     }
 
     /**
