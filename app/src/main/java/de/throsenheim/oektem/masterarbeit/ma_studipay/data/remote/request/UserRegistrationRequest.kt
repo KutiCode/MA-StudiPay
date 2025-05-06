@@ -6,7 +6,6 @@ data class UserRegistrationRequest(
     val lastName: String,
     val password: String,
     val accountNumber: String,
-    val balance: Double,
-    val securePin: String
+    val balance: Double
 )
 

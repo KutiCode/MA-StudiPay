@@ -28,10 +28,10 @@ class BeginningSendingViewModel : ViewModel() {
      * @param context The context used to access resources and data storage.
      * @param matriculationNumber The unique identifier for the user.
      */
-    fun loadUserName(context: Context, matriculationNumber: String) {
+    fun loadUserName(context: Context) {
         viewModelScope.launch {
             // Load the user from storage using a helper function.
-            val user = UiHelper.loadUser(context, matriculationNumber)
+            val user = UiHelper.loadUser(context)
             // Update LiveData with the user's full name or a default greeting if null.
             _userName.value = user?.let { "${it.firstName} ${it.lastName}" } ?: "Hallo, Benutzer"
         }

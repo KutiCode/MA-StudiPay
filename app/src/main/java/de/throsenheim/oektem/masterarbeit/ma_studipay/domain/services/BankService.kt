@@ -3,6 +3,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services
 import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.Bank
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.runBlocking
 
 // BankService object provides functions to perform bank-related operations,
@@ -28,21 +29,27 @@ object BankService {
     ): Boolean {
         // runBlocking is used to perform the operations synchronously.
         return runBlocking {
-            // Retrieve the user by matriculation number.
-            val user = userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber)
-            if (user != null) {
-                // Log information about updating the user's bank.
-                Log.d(
-                    "BankService",
-                    "Aktualisiere User ${user.matriculationNumber} mit bankCode: ${bank.bank_code}"
-                )
-                // Update the user's bank_code with the selected bank's code.
-                user.bank_code = bank.bank_code
-                // Synchronize the updated user with the backend.
-                userRepositoryImpl.syncUserWithBackend(user)
+            // Check if the device is reachable via socket.
+            if (UiHelper.isHostReachableWithSocket()) {
+                // Retrieve the user by matriculation number.
+                val user = userRepositoryImpl.getUserByMatriculationNumber(matriculationNumber)
+                if (user != null) {
+                    // Log information about updating the user's bank.
+                    Log.d(
+                        "BankService",
+                        "Aktualisiere User ${user.matriculationNumber} mit bankCode: ${bank.bank_code}"
+                    )
+                    // Update the user's bank_code with the selected bank's code.
+                    user.bank_code = bank.bank_code
+                    // Synchronize the updated user with the backend.
+                    userRepositoryImpl.syncUserWithBackend(user)
+                }
+                // In this implementation, always return true regardless of result.
+                true
+            } else {
+                Log.e("BankService", "Request will be ignored, because host is not reachable")
+                false
             }
-            // In this implementation, always return true regardless of result.
-            true
         }
     }
 }

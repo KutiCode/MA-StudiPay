@@ -15,6 +15,7 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TokenExtractor
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token.TransactionOutcome
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.security.EccHybridEncryptionHelper
+import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -116,7 +117,8 @@ class NfcPaymentReceiver(private val activity: Activity) {
      * @param tag The discovered NFC Tag.
      */
     private fun handleTagDiscovered(tag: Tag) {
-        Log.d(TAG, "NFC Tag entdeckt: ${tag.id.toHexString()}")
+        Log.d(TAG, "NFC Service is started")
+        Log.d(TAG, "NFC Tag detected: ${tag.id.toHexString()}")
         // Use IsoDep technology to communicate with ISO-DEP compliant NFC tags.
         IsoDep.get(tag)?.use { isoDep ->
             try {
@@ -138,13 +140,13 @@ class NfcPaymentReceiver(private val activity: Activity) {
                 Log.d(TAG, "Öffentlicher Schlüssel: $publicKeyString")
                 // Prepare the public key bytes and construct an APDU command to send it.
                 val publicKeyBytes = publicKeyString.toByteArray(Charsets.UTF_8)
-                val Lc: Byte = publicKeyBytes.size.toByte()
+                val keyLength: Byte = publicKeyBytes.size.toByte()
                 val sendPublicKeyApdu = byteArrayOf(
                     PUBLIC_KEY_CLA,
                     PUBLIC_KEY_INS,
                     PUBLIC_KEY_P1,
                     PUBLIC_KEY_P2,
-                    Lc
+                    keyLength
                 ) + publicKeyBytes
                 // Send the APDU command and receive the first fragment.
                 val firstFragment = isoDep.transceive(sendPublicKeyApdu)
@@ -167,6 +169,7 @@ class NfcPaymentReceiver(private val activity: Activity) {
                 Log.d(TAG, "Amount:" + amount.toString())
                 // Launch a coroutine on the IO dispatcher to process the token further.
                 scope.launch {
+                    UiHelper.updateDatabase(activity)
                     if (matriculationNumber != paymentToken.matriculationNumber) {
                         // Extract the transaction outcome (Success or Rejection) based on risk assessment.
                         val outcome =

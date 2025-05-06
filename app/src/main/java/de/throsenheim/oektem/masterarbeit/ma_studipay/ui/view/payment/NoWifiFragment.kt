@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ class NoWifiFragment : Fragment() {
     // Setup the UI behavior after the view has been created.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("NoWifiFragment", "No Connection to Backend.")
         // Set up a click listener on the dashboard button in the "no WiFi" layout.
         binding.failedDashboardButton.setOnClickListener {
             // Build fade navigation animation options.

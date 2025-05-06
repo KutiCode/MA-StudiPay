@@ -6,10 +6,12 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.services.LoginService
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
+import kotlinx.coroutines.launch
 
 /**
  * LoginViewModel handles user login.
@@ -34,7 +36,7 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
      * @param matriculationNumber The matriculation number.
      * @param password The user's password.
      */
-    fun login(context: Context, matriculationNumber: String, password: String) {
+    fun login(matriculationNumber: String, password: String) {
         if (matriculationNumber.isBlank() || password.isBlank()) {
             _errorMessage.value = "Bitte fülle alle Felder aus"
             return
@@ -57,12 +59,23 @@ class LoginViewModel(application: Application, private val userRepositoryImpl: U
                 }
 
                 3 -> {
-                    if (!UiHelper.isWifiConnectedAndBackendReachable(context)) {
-                        LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
-                        _errorMessage.value =
-                            "Login fehlgeschlagen. Eine Verbindung zum Backend ist nötig."
-                    } else {
-                        LoginService.loginService(matriculationNumber, password, userRepositoryImpl)
+                    viewModelScope.launch {
+                        if (!UiHelper.isHostReachableWithSocket()) {
+                            LoginService.loginService(
+                                matriculationNumber,
+                                password,
+                                userRepositoryImpl
+                            )
+                            _errorMessage.value =
+                                "Login fehlgeschlagen. Eine Verbindung zum Backend ist nötig."
+
+                        } else {
+                            LoginService.loginService(
+                                matriculationNumber,
+                                password,
+                                userRepositoryImpl
+                            )
+                        }
                     }
                 }
 

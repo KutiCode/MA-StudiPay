@@ -49,7 +49,7 @@ object TokenExtractor {
         // Determine the outcome based on the calculated risk value.
         return when {
             // If risk is low, certify the transaction and mark as Success.
-            riskValue < 35 -> {
+            riskValue < 30 -> {
                 transactionCertificate(context, paymentToken, amount)
                 TransactionOutcome.Success
             }
@@ -69,7 +69,7 @@ object TokenExtractor {
      * Checks if the given token date is recent.
      *
      * Compares the token's timestamp with the current time.
-     * Returns true if the difference is less than or equal to 10,000 milliseconds.
+     * Returns true if the difference is less than or equal to 30,000 milliseconds.
      *
      * @param tokenDateString The date string from the token in "yyyy-MM-dd HH:mm:ss" format.
      * @return True if the token is recent, false otherwise.
@@ -80,7 +80,7 @@ object TokenExtractor {
         val tokenDate: Date = sdf.parse(tokenDateString) ?: return false
         val currentTime = Date()
         val diffMillis = currentTime.time - tokenDate.time
-        return diffMillis <= 10_000
+        return diffMillis <= 100_000
     }
 
     /**
@@ -105,8 +105,12 @@ object TokenExtractor {
 
         // Reduce risk if the token is recent.
         if (isTokenRecent(paymentToken.date)) {
-            Log.d("RiskValue", "Token recency reduces risk: $riskValue")
+
             riskValue -= 10
+            Log.d("RiskValue", "Token recency reduces risk: $riskValue")
+        } else {
+            Log.d("RiskValue", "Token is not recent, risk remains high: $riskValue")
+            return riskValue
         }
 
         // Adjust risk based on the transaction amount.
@@ -114,11 +118,14 @@ object TokenExtractor {
             riskValue -= 30
             Log.d("RiskValue", "Low amount reduces risk significantly: $riskValue")
         } else if (amount < 30.0) {
-            riskValue -= 20
+            riskValue -= 15
             Log.d("RiskValue", "Moderate amount reduces risk: $riskValue")
-        } else {
+        } else if (amount < 50.0) {
             riskValue -= 5
             Log.d("RiskValue", "High amount reduces risk minimally: $riskValue")
+        } else {
+            riskValue += 10
+            Log.d("RiskValue", "Very high amount increases risk: $riskValue")
         }
 
         // Adjust risk based on daily transaction count.
@@ -126,15 +133,16 @@ object TokenExtractor {
             riskValue -= 10
             Log.d("RiskValue", "Low daily transaction count reduces risk: $riskValue")
         } else {
-            riskValue += 5
+            riskValue += 10
             Log.d("RiskValue", "High daily transaction count increases risk: $riskValue")
         }
 
-        // Adjust risk based on last transaction date.
         if (paymentToken.lastTransactionDate != null) {
             val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val today: String = sdf.format(Date())
-            if (paymentToken.lastTransactionDate == today) {
+            val today = sdf.format(Date())
+            val lastDateIso = paymentToken.lastTransactionDate
+            val lastDateOnly = lastDateIso.substring(0, 10)
+            if (lastDateOnly == today) {
                 riskValue -= 10
                 Log.d("RiskValue", "Recent last transaction date reduces risk: $riskValue")
             } else {
@@ -143,9 +151,10 @@ object TokenExtractor {
             }
         }
 
+
         // Increase risk if there have been aborted high-risk transactions.
         if (paymentToken.highRiskAbortedCount > 0) {
-            riskValue += 10
+            riskValue += 20
             Log.d("RiskValue", "High-risk aborted transactions increase risk: $riskValue")
         }
 
@@ -153,11 +162,11 @@ object TokenExtractor {
         if (paymentToken.lastTransactionRiskValue < 50) {
             riskValue -= 10
             Log.d("RiskValue", "Low last transaction risk reduces risk: $riskValue")
-        } else if (paymentToken.lastTransactionRiskValue < 80) {
+        } else if (paymentToken.lastTransactionRiskValue < 90) {
             riskValue -= 5
             Log.d("RiskValue", "Moderate last transaction risk slightly reduces risk: $riskValue")
         } else {
-            riskValue += 10
+            riskValue += 15
             Log.d("RiskValue", "High last transaction risk increases risk: $riskValue")
         }
 
@@ -167,6 +176,9 @@ object TokenExtractor {
             Log.d("RiskValue", "Valid bank secret reduces risk: $riskValue")
         }
         // Update the payment token's last transaction risk value with the calculated risk.
+        if (riskValue > 100) {
+            riskValue = 100
+        }
         paymentToken.lastTransactionRiskValue = riskValue
         Log.d("RiskValue", "Final calculated risk: $riskValue")
         Log.d("LastRiskValue", paymentToken.lastTransactionRiskValue.toString())
@@ -195,7 +207,7 @@ object TokenExtractor {
         }
 
         // Return true if any secret in the bank matches the secret in the payment token.
-        return bankWithSecrets.secrets.any { it.secretCode == paymentToken.bankSecret }
+        return bankWithSecrets.secrets.any { it.secretCode in paymentToken.bankSecrets }
     }
 
     /**
@@ -214,10 +226,21 @@ object TokenExtractor {
         paymentToken: PaymentToken,
         amount: Double
     ) {
+        Log.d("RiskValue", "LastRiskValue:" + paymentToken.lastTransactionRiskValue.toString())
+        Log.d("DailyTransactionCount", paymentToken.dailyTransactionCount.toString())
         // If the user's balance is insufficient, generate a rejection certificate.
         if (paymentToken.balance < amount) {
             transactionRejectionCertificate(paymentToken)
         } else {
+            val newDailyTransactionCount =
+                paymentToken.dailyTransactionCount + 1
+            updateRiskParams(
+                paymentToken.matriculationNumber,
+                newDailyTransactionCount,
+                today,
+                0,
+                paymentToken.lastTransactionRiskValue
+            )
             // Retrieve the matriculation number from shared preferences.
             val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
             val matriculationNumber = sharedPref.getString("current_username", null)
@@ -237,6 +260,7 @@ object TokenExtractor {
                     // Update the user's balance in the local database.
                     userDao.updateUserBalance(matriculationNumber, it.balance)
                 }
+                Log.d("RiskValue", "Transaction certificate was created")
             } else {
                 // If the add operation fails, generate a rejection certificate.
                 transactionRejectionCertificate(paymentToken)
@@ -259,13 +283,7 @@ object TokenExtractor {
             }
 
             // Update risk parameters after a successful transaction.
-            updateRiskParams(
-                paymentToken.matriculationNumber,
-                paymentToken.dailyTransactionCount + 1,
-                today,
-                0,
-                paymentToken.lastTransactionRiskValue
-            )
+
         }
     }
 
@@ -286,6 +304,7 @@ object TokenExtractor {
         paymentToken: PaymentToken,
         amount: Double
     ): TransactionOutcome {
+        Log.d("RiskValue", "Authorization request check initiated")
         // Create a transaction verification request.
         val requestAuth = TransactionVerificationRequest(paymentToken.matriculationNumber, amount)
         // Send the request to the backend.
@@ -310,6 +329,7 @@ object TokenExtractor {
                 TransactionOutcome.Rejection
             }
         } else {
+            Log.d("RiskValue", responseAuth.body().toString())
             // If the authorization request fails, reject the transaction.
             transactionRejectionCertificate(paymentToken)
             return TransactionOutcome.Rejection
@@ -335,6 +355,7 @@ object TokenExtractor {
         )
         // Update the risk parameters on the backend.
         RetrofitInstance.api.updateRiskParams(requestRiskValueUpdate)
+        Log.d("RiskValue", "TransactionrejectionCertificate was created")
         return TransactionOutcome.Rejection
     }
 
@@ -368,7 +389,7 @@ object TokenExtractor {
 
         // Call the API to update risk parameters.
         val response = RetrofitInstance.api.updateRiskParams(requestParamUpdate)
-
+        Log.d("RiskValue", response.toString())
         return response.isSuccessful
     }
 }

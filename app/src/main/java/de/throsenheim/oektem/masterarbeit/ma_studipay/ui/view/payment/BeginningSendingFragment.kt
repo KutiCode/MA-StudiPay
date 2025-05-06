@@ -2,6 +2,7 @@ package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.payment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,7 @@ class BeginningSendingFragment : Fragment() {
 
     // Set up UI components and observers after the view is created.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("BeginningSendingFragment", "Fragment is created")
         super.onViewCreated(view, savedInstanceState)
 
         // Get the shared preferences and retrieve the current username.
@@ -56,7 +58,7 @@ class BeginningSendingFragment : Fragment() {
 
         // If a current username exists, load the user's full name into the ViewModel.
         currentUsername?.let {
-            viewModel.loadUserName(requireContext(), it)
+            viewModel.loadUserName(requireContext())
         } ?: run {
             // Fallback: display a default greeting if no username is found.
             binding.userInfoSender.text = "Hallo, Benutzer"

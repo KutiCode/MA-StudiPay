@@ -38,7 +38,7 @@ class UserInfoViewModel(
     fun fetchUser(context: Context, matriculationNumber: String) {
         viewModelScope.launch {
             // Load user data with a helper function.
-            val user = UiHelper.loadUser(context, matriculationNumber)
+            val user = UiHelper.loadUser(context)
             // Update LiveData with the fetched user data.
             _user.value = user
             // If a user is found and they have a bank code, load the corresponding bank data.

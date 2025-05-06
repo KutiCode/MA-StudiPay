@@ -32,7 +32,7 @@ class OrangeDetailsViewModel : ViewModel() {
     fun loadUserDetails(context: Context, matriculationNumber: String) {
         viewModelScope.launch {
 
-            _userDetails.value = UiHelper.loadUser(context, matriculationNumber)
+            _userDetails.value = UiHelper.loadUser(context)
         }
         Log.d("OrangeDetailsViewModel", "User details loaded: ${_userDetails.value}")
     }

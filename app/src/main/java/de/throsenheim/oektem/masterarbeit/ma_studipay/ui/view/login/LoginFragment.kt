@@ -1,6 +1,7 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.view.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,6 +82,7 @@ class LoginFragment : Fragment() {
         // Observe loginResult LiveData to react when login is successful.
         viewModel.loginResult.observe(viewLifecycleOwner) { success ->
             if (success) {
+                Log.d("LoginFragment", "Login successful")
                 // If login succeeds, display a success Toast message.
                 Toast.makeText(requireContext(), "Login erfolgreich", Toast.LENGTH_SHORT).show()
                 // Create slide navigation options for smooth transition.
@@ -110,7 +112,7 @@ class LoginFragment : Fragment() {
             val matriculationNumber = binding.username.text.toString().trim()
             val password = binding.password.text.toString().trim()
             // Call the login function in the ViewModel.
-            viewModel.login(requireContext(), matriculationNumber, password)
+            viewModel.login(matriculationNumber, password)
         }
 
         // Register button: navigate to the RegisterFragment.

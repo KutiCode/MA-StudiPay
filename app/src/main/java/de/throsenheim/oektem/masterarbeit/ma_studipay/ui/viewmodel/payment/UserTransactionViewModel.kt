@@ -33,7 +33,7 @@ class UserTransactionViewModel : ViewModel() {
      */
     fun fetchUserBalance(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
-            val user = UiHelper.loadUser(context, matrikelnumber)
+            val user = UiHelper.loadUser(context)
             // If user and balance exist, append the euro symbol; else, display a fallback message.
             _balance.value = user?.balance?.let { "$it €" } ?: "Fehlender Wert"
         }
@@ -55,7 +55,7 @@ class UserTransactionViewModel : ViewModel() {
         if (balanceResponse) {
             // If successful, launch a coroutine to update balance and show a Snackbar.
             viewModelScope.launch {
-                val user = UiHelper.loadUser(context, matriculationNumber)
+                val user = UiHelper.loadUser(context)
                 if (user != null) {
                     // Post the updated balance (appended with the euro symbol).
                     _balance.postValue("${user.balance} €")
@@ -84,13 +84,18 @@ class UserTransactionViewModel : ViewModel() {
      * @param amount The amount to deduct from the account.
      */
     fun deductBalance(context: Context, matriculationNumber: String, amount: Double) {
-        // Attempt to reduce balance using BalanceService.
-        val balanceResponse =
-            BalanceService.reduceBalanceService(context, matriculationNumber, amount)
-        if (balanceResponse) {
-            // On success, launch a coroutine to update the balance and display success message.
-            viewModelScope.launch {
-                val user = UiHelper.loadUser(context, matriculationNumber)
+        viewModelScope.launch {
+            val user = UiHelper.loadUser(context)
+            if (user == null) {
+                Toast.makeText(context, "Du konntest kein Geld abheben", Toast.LENGTH_SHORT).show()
+            } else if (user.bank_code == null) {
+                Toast.makeText(context, "Du konntest kein Geld abheben", Toast.LENGTH_SHORT).show()
+            }
+            // Attempt to reduce balance using BalanceService.
+            val balanceResponse =
+                BalanceService.reduceBalanceService(context, matriculationNumber, amount)
+            if (balanceResponse) {
+                // On success, launch a coroutine to update the balance and display success message.
                 if (user != null) {
                     // Update LiveData with the new balance and append the euro symbol.
                     _balance.postValue("${user.balance} €")
@@ -101,10 +106,11 @@ class UserTransactionViewModel : ViewModel() {
                     "Du hast erfolgreich $amount € von deinem Konto abgehoben.",
                     Snackbar.LENGTH_SHORT
                 ).show()
+
+            } else {
+                // Inform the user of failure to deduct balance with a Toast message.
+                Toast.makeText(context, "Du konntest kein Geld abheben", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            // Inform the user of failure to deduct balance with a Toast message.
-            Toast.makeText(context, "Du konntest kein Geld abheben", Toast.LENGTH_SHORT).show()
         }
     }
 }

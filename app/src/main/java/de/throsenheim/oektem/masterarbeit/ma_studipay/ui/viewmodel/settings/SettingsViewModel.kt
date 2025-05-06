@@ -30,7 +30,7 @@ class SettingsViewModel : ViewModel() {
     fun loadUserName(context: Context, matrikelnumber: String) {
         viewModelScope.launch {
             // Retrieve the user from persistent storage using a helper function.
-            val user = UiHelper.loadUser(context, matrikelnumber)
+            val user = UiHelper.loadUser(context)
             // Update LiveData with the user's full name if available, otherwise show a default greeting.
             _userName.value = user?.let { "${it.firstName} ${it.lastName}" } ?: "Hallo, Benutzer"
         }

@@ -1,6 +1,8 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.payment.token
 
 import android.content.Context
+import android.util.Log
+import com.google.gson.Gson
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.PaymentToken
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
@@ -11,7 +13,8 @@ import java.util.*
 
 // TokenGenerator encapsulates the logic for generating a payment token based on user and bank details.
 object TokenGenerator {
-
+    // Gson instance for JSON conversion.
+    private val gson = Gson()
     /**
      * Generates a PaymentToken for the current user.
      *
@@ -23,7 +26,7 @@ object TokenGenerator {
      * @return A PaymentToken populated with the user's data and bank secret.
      * @throws Exception if required user data or bank secrets are missing.
      */
-    suspend fun generateToken(context: Context): PaymentToken {
+    suspend fun generateToken(context: Context): String {
         // Retrieve the current user's matriculation number from SharedPreferences.
         val sharedPref = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val matriculationNumber = sharedPref.getString("current_username", null)
@@ -46,31 +49,39 @@ object TokenGenerator {
         val bankDao = AppDatabase.getDatabase(context).bankDao()
         // Create a BankRepositoryImpl instance to fetch bank information.
         val bankRepositoryImpl = BankRepositoryImpl(bankDao)
+        // Synchronize the bank data from the backend to ensure it's up-to-date.
+        bankRepositoryImpl.syncBanksFromBackend()
         // Retrieve the bank's secrets (sensitive data) using the user's bank code.
         val bankWithSecrets = bankRepositoryImpl.getBankWithSecrets(user.bank_code ?: "")
         // Extract the first secret's code or throw an exception if not found.
-        val bankSecret = bankWithSecrets?.secrets?.firstOrNull()?.secretCode
+        val bankSecrets = bankWithSecrets?.secrets?.map { it.secretCode }
             ?: throw Exception("Kein BankSecret für Bank-Code ${user.bank_code} gefunden")
 
         // Get the current date and format it as a string.
         val currentDate = Date()
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val dateString = formatter.format(currentDate)
-
-        // Create and return a PaymentToken using the gathered user and bank details.
-        return PaymentToken(
+        // Create a PaymentToken using the gathered user and bank details.
+        val generatedToken =
+            PaymentToken(
             firstName = user.firstName,                      // User's first name.
             lastName = user.lastName,                        // User's last name.
             matriculationNumber = user.matriculationNumber,  // User's matriculation number.
             accountNumber = user.accountNumber,              // User's account number.
             balance = user.balance,                          // User's account balance.
             bankCode = user.bank_code ?: "",                 // Bank code associated with the user.
-            bankSecret = bankSecret,                         // Secret associated with the bank.
+                bankSecrets = bankSecrets,                   // Secret associated with the bank.
             date = dateString,                               // Current date as a string.
             dailyTransactionCount = user.dailyTransactionCount,         // Daily transaction count.
             lastTransactionDate = user.lastTransactionDate,               // The date of the last transaction.
             highRiskAbortedCount = user.highRiskAbortedCount,             // Number of high-risk aborted transactions.
-            lastTransactionRiskValue = user.lastTransaktionRiskValue      // Risk value of the last transaction.
+                lastTransactionRiskValue = user.lastTransactionRiskValue      // Risk value of the last transaction.
         )
+
+
+        // Log the generated token for debugging purposes.
+        Log.d("TokenGenerator", "Generated token: $generatedToken")
+        val stringToken = gson.toJson(generatedToken)
+        return stringToken
     }
 }
