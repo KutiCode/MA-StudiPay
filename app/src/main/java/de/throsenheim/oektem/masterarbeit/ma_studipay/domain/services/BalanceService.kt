@@ -20,11 +20,10 @@ object BalanceService {
      * If the API call is successful, the local database is updated with the new balance.
      *
      * @param context The application context used to access the local database.
-     * @param matriculationNumber The user's unique matriculation number used to identify the user.
      * @param amount The amount to be added to the user's balance.
      * @return True if the API call is successful and the local database is updated; otherwise, false.
      */
-    fun addBalanceService(context: Context, matriculationNumber: String, amount: Double): Boolean {
+    fun addBalanceService(context: Context, amount: Double): Boolean {
         return runBlocking {
             val user = UiHelper.loadUser(context)
 
@@ -74,13 +73,11 @@ object BalanceService {
      * If the API call is successful, the local database is updated with the new balance.
      *
      * @param context The application context used to access the local database.
-     * @param matriculationNumber The user's unique matriculation number used for identification.
      * @param amount The amount to be deducted from the user's balance.
      * @return True if the API call is successful and the local database is updated; otherwise, false.
      */
     fun reduceBalanceService(
         context: Context,
-        matriculationNumber: String,
         amount: Double
     ): Boolean {
         return runBlocking {

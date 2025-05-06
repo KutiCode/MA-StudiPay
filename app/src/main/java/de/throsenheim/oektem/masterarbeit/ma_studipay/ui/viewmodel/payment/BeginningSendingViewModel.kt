@@ -26,7 +26,6 @@ class BeginningSendingViewModel : ViewModel() {
      * the user's firstName and lastName. If no user is found, it sets a default greeting.
      *
      * @param context The context used to access resources and data storage.
-     * @param matriculationNumber The unique identifier for the user.
      */
     fun loadUserName(context: Context) {
         viewModelScope.launch {

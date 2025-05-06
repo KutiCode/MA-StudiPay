@@ -32,6 +32,6 @@ class ReceivingHoldFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Clean up the binding reference to avoid memory leaks.
+        _binding = null
     }
 }

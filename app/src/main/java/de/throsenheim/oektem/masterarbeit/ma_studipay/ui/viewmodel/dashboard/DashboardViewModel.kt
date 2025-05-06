@@ -67,7 +67,7 @@ class DashboardViewModel(
 
     fun pinManagement(context: Context, navController: NavController) {
         viewModelScope.launch {
-            val user = UiHelper.loadUser(context) // Replace with actual matriculation number
+            val user = UiHelper.loadUser(context)
 
             val securePin = user?.securePin
             val navOptions = NavigationHelper.buildFadeNavOptions()
@@ -77,7 +77,7 @@ class DashboardViewModel(
                     putBoolean("isChangePin", true)
                 }
                 navController.navigate(
-                    R.id.userPinEntryFragment, args,
+                    R.id.action_DashboardFragment_to_userPinEntryFragment, args,
                     navOptions
                 )
 

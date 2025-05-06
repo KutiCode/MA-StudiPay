@@ -29,9 +29,8 @@ class UserTransactionViewModel : ViewModel() {
      * If no value is found, it displays a default message ("Fehlender Wert").
      *
      * @param context The context used to access resources and storage.
-     * @param matrikelnumber The unique identifier of the user.
      */
-    fun fetchUserBalance(context: Context, matrikelnumber: String) {
+    fun fetchUserBalance(context: Context) {
         viewModelScope.launch {
             val user = UiHelper.loadUser(context)
             // If user and balance exist, append the euro symbol; else, display a fallback message.
@@ -51,7 +50,7 @@ class UserTransactionViewModel : ViewModel() {
      */
     fun addBalance(context: Context, matriculationNumber: String, amount: Double) {
         // Attempt to add balance through BalanceService.
-        val balanceResponse = BalanceService.addBalanceService(context, matriculationNumber, amount)
+        val balanceResponse = BalanceService.addBalanceService(context, amount)
         if (balanceResponse) {
             // If successful, launch a coroutine to update balance and show a Snackbar.
             viewModelScope.launch {
@@ -93,7 +92,7 @@ class UserTransactionViewModel : ViewModel() {
             }
             // Attempt to reduce balance using BalanceService.
             val balanceResponse =
-                BalanceService.reduceBalanceService(context, matriculationNumber, amount)
+                BalanceService.reduceBalanceService(context, amount)
             if (balanceResponse) {
                 // On success, launch a coroutine to update the balance and display success message.
                 if (user != null) {

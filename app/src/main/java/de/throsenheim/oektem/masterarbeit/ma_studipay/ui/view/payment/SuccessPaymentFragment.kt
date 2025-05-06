@@ -61,7 +61,7 @@ class SuccessPaymentFragment : Fragment() {
 
     // Play a single notification sound.
     private fun playSinglePing() {
-        val mp: MediaPlayer = MediaPlayer.create(context, R.raw.samsung_distorted)
+        val mp: MediaPlayer = MediaPlayer.create(context, R.raw.game_success_alert)
         mp.start()
     }
 }

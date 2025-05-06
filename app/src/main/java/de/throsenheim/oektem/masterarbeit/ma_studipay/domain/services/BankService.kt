@@ -47,6 +47,7 @@ object BankService {
                 // In this implementation, always return true regardless of result.
                 true
             } else {
+                // Log an error message if the host is not reachable.
                 Log.e("BankService", "Request will be ignored, because host is not reachable")
                 false
             }

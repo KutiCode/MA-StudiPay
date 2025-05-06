@@ -1,7 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility
 
 import android.content.Context
-import android.net.wifi.WifiManager
 import android.util.Log
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.database.AppDatabase
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.remote.RetrofitInstance
@@ -9,7 +8,6 @@ import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.BankReposi
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.model.User
 import kotlinx.coroutines.Dispatchers
-
 import kotlinx.coroutines.withContext
 
 import java.net.InetSocketAddress
@@ -22,7 +20,6 @@ object UiHelper {
      * Loads a user from the local database by matriculation number.
      *
      * @param context The context used to access the database.
-     * @param matriculationNumber The matriculation number to identify the user.
      * @return A User object if found, otherwise null.
      */
     suspend fun loadUser(context: Context): User? {
@@ -85,7 +82,11 @@ object UiHelper {
         return updatedUser
     }
 
-
+    /**
+     * Checks if the backend server is reachable by attempting to establish a socket connection.
+     *
+     * @return true if the backend is reachable, false otherwise.
+     */
     suspend fun isHostReachableWithSocket(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
