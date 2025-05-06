@@ -33,9 +33,8 @@ class UserInfoViewModel(
      * If the user exists, loads the bank details associated with the user's bank code.
      *
      * @param context Context used for resource access.
-     * @param matriculationNumber Unique identifier for the user.
      */
-    fun fetchUser(context: Context, matriculationNumber: String) {
+    fun fetchUser(context: Context) {
         viewModelScope.launch {
             // Load user data with a helper function.
             val user = UiHelper.loadUser(context)

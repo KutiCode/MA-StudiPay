@@ -78,7 +78,7 @@ class UserInfoFragment : Fragment() {
 
         // If the current username is present, fetch user details via the ViewModel.
         currentUsername?.let {
-            viewModel.fetchUser(requireContext(), it)
+            viewModel.fetchUser(requireContext())
         } ?: run {
             // If no username is found, show default text indicating missing values.
             infoFullNameValue.text = "Fehlende Werte"

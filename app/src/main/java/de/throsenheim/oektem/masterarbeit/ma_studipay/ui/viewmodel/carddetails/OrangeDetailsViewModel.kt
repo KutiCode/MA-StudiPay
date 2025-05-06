@@ -27,9 +27,8 @@ class OrangeDetailsViewModel : ViewModel() {
      * This method retrieves user information from the local database using the UserDao.
      *
      * @param context The context required to access the database.
-     * @param matriculationNumber The matriculation number of the user.
      */
-    fun loadUserDetails(context: Context, matriculationNumber: String) {
+    fun loadUserDetails(context: Context) {
         viewModelScope.launch {
 
             _userDetails.value = UiHelper.loadUser(context)

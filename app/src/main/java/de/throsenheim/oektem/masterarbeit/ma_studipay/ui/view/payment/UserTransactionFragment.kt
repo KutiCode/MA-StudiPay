@@ -67,7 +67,7 @@ class UserTransactionFragment : Fragment() {
 
         // If username is available, fetch the user balance via the ViewModel.
         currentUsername?.let {
-            viewModel.fetchUserBalance(requireContext(), it)
+            viewModel.fetchUserBalance(requireContext())
         } ?: run {
             balanceAmount.text = "Fehlender Wert"
         }

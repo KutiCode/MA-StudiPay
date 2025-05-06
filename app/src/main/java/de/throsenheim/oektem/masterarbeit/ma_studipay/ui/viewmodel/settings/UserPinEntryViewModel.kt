@@ -1,7 +1,6 @@
 package de.throsenheim.oektem.masterarbeit.ma_studipay.ui.viewmodel.settings
 
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -12,7 +11,6 @@ import androidx.navigation.NavController
 import de.throsenheim.oektem.masterarbeit.ma_studipay.R
 import de.throsenheim.oektem.masterarbeit.ma_studipay.data.repository.UserRepositoryImpl
 import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.NavigationHelper
-import de.throsenheim.oektem.masterarbeit.ma_studipay.domain.utility.UiHelper
 import kotlinx.coroutines.launch
 
 // ViewModel class for handling user PIN entry and verification in the settings UI.
@@ -76,7 +74,6 @@ class UserPinEntryViewModel(private val userRepositoryImpl: UserRepositoryImpl) 
             } else {
                 // Show a toast message to the user if the PIN does not match.
                 Toast.makeText(context, "Falsche Pin Eingabe", Toast.LENGTH_SHORT).show()
-
                 Log.d("UserPinEntryVM", "User entered wrong secure pin")
             }
         }
